@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>tab-icon</title>
+    <g id="Relize-#1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="UI-01.-Главная" transform="translate(-35.000000, -940.000000)">
+            <g id="Elements/Tab-Bottom" transform="translate(0.000000, 933.000000)">
+                <g id="tab-icon" transform="translate(35.000000, 7.000000)">
+                    <rect id="tab-item__iconsizer" x="0" y="0" width="24" height="24"></rect>
+                    <path d="M6,4.8 L18,4.8 C19.1045695,4.8 20,5.6954305 20,6.8 L20,19 C20,20.1045695 19.1045695,21 18,21 L6,21 C4.8954305,21 4,20.1045695 4,19 L4,6.8 C4,5.6954305 4.8954305,4.8 6,4.8 Z M15.5555556,3 L15.5555556,6.6 M8.44444444,3 L8.44444444,6.6 M4,10.2 L20,10.2" id="icon-cal" stroke="#748595" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
