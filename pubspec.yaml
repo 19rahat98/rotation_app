@@ -33,14 +33,17 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_svg: ^0.19.1
-  rxdart: ^0.24.1
-  mask_text_input_formatter: ^1.2.1
+  # Used for UI block
   pinput: ^0.2.6
-  flutter_calendar_carousel: ^1.5.2
+  flutter_svg: ^0.19.1
+  group_button: ^1.1.0
   md2_tab_indicator: ^1.0.2
-  url_launcher: ^5.7.10
+  mask_text_input_formatter: ^1.2.1
+  flutter_calendar_carousel: ^1.5.2
 
+  # Used for logic block
+  rxdart: ^0.24.1
+  url_launcher: ^5.7.10
 
 
 # For information on the generic Dart part of this file, see the

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
+import 'package:rotation_app/ui/user_pages/notifications_list_screen.dart';
+import 'package:rotation_app/ui/user_pages/personal_data_screen.dart';
+import 'package:rotation_app/ui/user_pages/user_documents_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -66,7 +70,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.only(left: 3, right: 18),
-                      height: 160,
+                      height: 140,
                       child: VerticalDivider(
                         color: Color(0xffC8D1DC),
                         endIndent: 10,
@@ -87,6 +91,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             child: Column(
                               children: [
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
@@ -97,7 +102,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     Container(
                                       child: Text('№00011', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),),
                                       margin: EdgeInsets.only(bottom: 5),
-                                      width: w * 0.3,
+                                      width: w * 0.4,
                                     ),
                                   ],
                                 ),
@@ -112,7 +117,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     Container(
                                       child: Text('ТОО «Kaz Minerals»', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
                                       margin: EdgeInsets.only(bottom: 5),
-                                      width: w * 0.3,
+                                      width: w * 0.4,
                                     ),
                                   ],
                                 ),
@@ -141,35 +146,43 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               SizedBox(
                 height: 14,
               ),
-              Container(
-                padding: EdgeInsets.only(left: 16, right: 24),
-                width: w,
-                height: 56,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: 22,
-                      color: Color(0xff748595),
-                    ),
-                    Container(
-                      width: w - 100,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Личные данные',
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: Color(0xff1B344F),
-                            fontWeight: FontWeight.w500),
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PersonalDataScreen()),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.only(left: 16, right: 24),
+                  width: w,
+                  height: 56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(
+                        Icons.person_outline,
+                        size: 22,
+                        color: Color(0xff748595),
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Color(0xffA2A9B3),
-                      size: 14,
-                    ),
-                  ],
+                      Container(
+                        width: w - 100,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Личные данные',
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Color(0xff1B344F),
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Color(0xffA2A9B3),
+                        size: 14,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Divider(
@@ -179,35 +192,43 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 indent: 16,
                 color: Color(0xffEBEBEB),
               ),
-              Container(
-                padding: EdgeInsets.only(left: 16, right: 24),
-                width: w,
-                height: 56,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: 22,
-                      color: Color(0xff748595),
-                    ),
-                    Container(
-                      width: w - 100,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Документы',
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: Color(0xff1B344F),
-                            fontWeight: FontWeight.w500),
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserDocumentsScreen()),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.only(left: 16, right: 24),
+                  width: w,
+                  height: 56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(
+                        Icons.person_outline,
+                        size: 22,
+                        color: Color(0xff748595),
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Color(0xffA2A9B3),
-                      size: 14,
-                    ),
-                  ],
+                      Container(
+                        width: w - 100,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Документы',
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Color(0xff1B344F),
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Color(0xffA2A9B3),
+                        size: 14,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Divider(
@@ -217,35 +238,43 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 indent: 16,
                 color: Color(0xffEBEBEB),
               ),
-              Container(
-                padding: EdgeInsets.only(left: 16, right: 24),
-                width: w,
-                height: 56,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(
-                      Icons.person_outline,
-                      size: 22,
-                      color: Color(0xff748595),
-                    ),
-                    Container(
-                      width: w - 100,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Уведомления',
-                        style: TextStyle(
-                            fontSize: 17,
-                            color: Color(0xff1B344F),
-                            fontWeight: FontWeight.w500),
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NotificationsListScreen()),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.only(left: 16, right: 24),
+                  width: w,
+                  height: 56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(
+                        Icons.person_outline,
+                        size: 22,
+                        color: Color(0xff748595),
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Color(0xffA2A9B3),
-                      size: 14,
-                    ),
-                  ],
+                      Container(
+                        width: w - 100,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Уведомления',
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Color(0xff1B344F),
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Color(0xffA2A9B3),
+                        size: 14,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Divider(
