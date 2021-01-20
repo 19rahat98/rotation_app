@@ -1,7 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+import 'package:rotation_app/logic_block/blocs/bloc.dart';
 import 'package:rotation_app/ui/login_with_id_page.dart';
+import 'package:rotation_app/ui/widgets/custom_bottom_sheet.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,19 +14,34 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   var textFieldCtrl = TextEditingController();
-  var maskFormatter = new MaskTextInputFormatter(mask: '+7 (###) ### ## ##', filter: { "#": RegExp(r'[0-9]') });
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
+
   @override
   void initState() {
     textFieldCtrl.addListener(() {});
     super.initState();
   }
 
+  ///On login
+  void _login() {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    if (maskFormatter.getUnmaskedText().length == 10) {
+      print(maskFormatter.getUnmaskedText());
+      LoginBloc().add(
+        OnLoginByPhoneNumber(
+          phoneNumber: '7' + maskFormatter.getUnmaskedText(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    BlocProvider.of<LoginBloc>(context);
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -57,8 +77,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           Text(
                             'По номеру телефона привязанному к Odyssey ID',
-                            style:
-                                TextStyle(fontSize: 14, color: Color(0xffCFD5DC)),
+                            style: TextStyle(
+                                fontSize: 14, color: Color(0xffCFD5DC)),
                           )
                         ],
                       ),
@@ -70,26 +90,39 @@ class _LoginPageState extends State<LoginPage> {
                             padding: EdgeInsets.only(left: 16, top: 5),
                             margin: EdgeInsets.only(bottom: 16),
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Color(0xff76B0FD).withOpacity(0.19),
-                                border: Border.all(
-                                    color: Colors.white.withOpacity(0.08),
-                                    width: 1),),
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color(0xff76B0FD).withOpacity(0.19),
+                              border: Border.all(
+                                  color: Colors.white.withOpacity(0.08),
+                                  width: 1),
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Телефон', style: TextStyle(fontSize: 13, color: Color(0xffEBEBEB).withOpacity(0.39)),),
+                                Text(
+                                  'Телефон',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color:
+                                          Color(0xffEBEBEB).withOpacity(0.39)),
+                                ),
                                 Container(
                                   margin: EdgeInsets.only(top: 5),
                                   child: TextFormField(
                                     inputFormatters: [maskFormatter],
                                     autofocus: false,
                                     controller: textFieldCtrl,
-                                    style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
                                     decoration: InputDecoration(
                                       hintText: '+ 7 (',
-                                      hintStyle: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+                                      hintStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
                                       isDense: true,
                                       contentPadding: EdgeInsets.all(0.0),
                                       border: InputBorder.none,
@@ -105,36 +138,173 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                           ),
-                          Container(
-                            width: w * 0.9,
-                            height: 60,
-                            decoration: new BoxDecoration(
-                              gradient: new RadialGradient(
-                                radius: 3,
-                                colors: [
-                                  Color(0xFF1989DD),
-                                  Color(0xFF1262CB),
+                          /*Stack(
+                            children: [
+                              */ /*BlocBuilder<LoginBloc, LoginState>(
+                                builder: (context, login) {
+                                  return BlocListener<LoginBloc, LoginState>(
+                                    listener: (context, state) {
+                                      if (state is EmployeeNotFound) {
+                                        print('sdssfsdfofjkjf');
+                                        return showCupertinoModalPopup(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                NoAccountBottomSheet());
+                                      }
+                                      if (state is LoginSuccess) {
+                                        */ /**/ /*Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => UserIdPage()),
+                                        );*/ /**/ /*
+                                      }
+                                    },
+                                    child: Container(
+                                      width: w * 0.9,
+                                      height: 60,
+                                      decoration: new BoxDecoration(
+                                        gradient: new RadialGradient(
+                                          radius: 3,
+                                          colors: [
+                                            Color(0xFF1989DD),
+                                            Color(0xFF1262CB),
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.12),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: Offset(0,
+                                                2), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _login();
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'Войти',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),*/ /*
+                              BlocBuilder<LoginBloc, LoginState>(
+                                  builder: (context, login) {
+                                return BlocListener<LoginBloc, LoginState>(
+                                  listener: (context, state) {
+                                    if (state is EmployeeNotFound) {
+                                      print('sdssfsdfofjkjf');
+                                      return showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              NoAccountBottomSheet());
+                                    }
+                                    if (state is LoginSuccess) {
+                                      */ /*Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => UserIdPage()),
+                                        );*/ /*
+                                    }
+                                  },
+                                  child: Container(
+                                    width: w * 0.9,
+                                    height: 60,
+                                    decoration: new BoxDecoration(
+                                      gradient: new RadialGradient(
+                                        radius: 3,
+                                        colors: [
+                                          Color(0xFF1989DD),
+                                          Color(0xFF1262CB),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                          Colors.black.withOpacity(0.12),
+                                          spreadRadius: 0,
+                                          blurRadius: 4,
+                                          offset: Offset(0,
+                                              2), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        _login();
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          'Войти',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),*/
+                          BlocListener<LoginBloc, LoginState>(
+                            listener: (context, state) {
+                              if (state is EmployeeDismissed) {
+                                print('EmployeeDismissedssssss');
+                              }
+                              if (state is EmployeeNotFound) {
+                                print('EmployeeNotFoundsssssss');
+                              }
+                            },
+                            child: Container(
+                              width: w * 0.9,
+                              height: 60,
+                              decoration: new BoxDecoration(
+                                gradient: new RadialGradient(
+                                  radius: 3,
+                                  colors: [
+                                    Color(0xFF1989DD),
+                                    Color(0xFF1262CB),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.12),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(
+                                        0, 2), // changes position of shadow
+                                  ),
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.12),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset: Offset(0, 2), // changes position of shadow
+                              child: InkWell(
+                                onTap: () {
+                                  _login();
+                                },
+                                child: Center(
+                                  child: Text(
+                                    'Войти',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: InkWell(
-                              onTap: (){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => UserIdPage()),
-                                );
-                              },
-                              child: Center(
-                                child: Text('Войти', style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),),
                               ),
                             ),
                           ),
@@ -157,12 +327,9 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         width: w * 0.9,
                         margin: EdgeInsets.only(top: 16),
-                        //child: Text('Авторизируясь вы автоматически соглашаетесь  с правилами сервиса и пользовательским соглашением сервиса Odyssey Rotation', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Color(0xffCFD5DC)),),
                         child: RichText(
                           textAlign: TextAlign.center,
                           text: new TextSpan(
-                            // Note: Styles for TextSpans must be explicitly defined.
-                            // Child text spans will inherit styles from parent
                             style: TextStyle(
                                 fontSize: 13,
                                 color: Color(0xffCFD5DC),

@@ -44,6 +44,10 @@ dev_dependencies:
   # Used for logic block
   rxdart: ^0.24.1
   url_launcher: ^5.7.10
+  dio: ^3.0.10
+  http: ^0.12.2
+  flutter_bloc: ^6.1.1
+  shared_preferences: ^0.5.12+4
 
 
 # For information on the generic Dart part of this file, see the
