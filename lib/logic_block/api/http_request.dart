@@ -73,8 +73,8 @@ class HTTPManager {
     Map<String, dynamic> params,
     Options options,
   }) async {
-    UtilLogger.log("GET URL", url);
-    UtilLogger.log("PARAMS", params);
+    UtilLogger.log("POST URL", baseOptions.baseUrl + url);
+    UtilLogger.log("DATA", params);
     Dio dio = new Dio(baseOptions);
     try {
       final response = await dio.get(
@@ -82,9 +82,10 @@ class HTTPManager {
         queryParameters: params,
         options: options,
       );
-      return response.data;
+      return {"code": response.statusCode, "data": response.data};
     } on DioError catch (error) {
-      return dioErrorHandle(error);
+      return {"code": error.response.statusCode, "data": error.response.data};
+      return error.response;
     }
   }
 

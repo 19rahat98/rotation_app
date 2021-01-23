@@ -1,48 +1,54 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:pinput/pin_put/pin_put.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import 'package:rotation_app/ui/nav_bar.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
+import 'package:rotation_app/ui/login_pages/update_employee_phone_number.dart';
+import 'package:rotation_app/ui/login_pages/sms_pin_page.dart';
 import 'package:rotation_app/ui/widgets/custom_bottom_sheet.dart';
 
-class SmsPinPage extends StatefulWidget {
+class UserIdPage extends StatefulWidget {
+  final String phoneNumber;
+
+  const UserIdPage({Key key, this.phoneNumber}) : super(key: key);
+
   @override
-  _SmsPinPageState createState() => _SmsPinPageState();
+  _UserIdPageState createState() => _UserIdPageState();
 }
 
-class _SmsPinPageState extends State<SmsPinPage> {
+class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
+
   var textFieldCtrl = TextEditingController();
-  final FocusNode _pinPutFocusNode = FocusNode();
-  StreamSubscription periodicSub;
-  int secondValue = 60;
-
-  BoxDecoration get _pinPutDecoration {
-    return BoxDecoration(
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
-        borderRadius: BorderRadius.circular(5.0),
-        color: Color(0xff76B0FD).withOpacity(0.19));
-  }
-
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '# # # # # # # # # # # #', filter: {"#": RegExp(r'[0-9]')});
+  Future<Status> _status;
   @override
   void initState() {
     textFieldCtrl.addListener(() {});
-    periodicSub = new Stream.periodic(const Duration(milliseconds: 100), (v) => v)
-        .take(60)
-        .listen((count) {
-      setState(() {
-        secondValue -= 1;
-      });
-    });
     super.initState();
+  }
+
+  ///On login
+  void _searchEmployee(){
+    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
+    FocusScope.of(context).requestFocus(new FocusNode());
+    if (maskFormatter.getUnmaskedText().length == 12) {
+      print(maskFormatter.getUnmaskedText());
+      _status = auth.searchEmployeeByIin(iin: maskFormatter.getUnmaskedText());
+      handleLogin();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    //UserLoginProvider auth = Provider.of<UserLoginProvider>(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -66,7 +72,7 @@ class _SmsPinPageState extends State<SmsPinPage> {
                       Column(
                         children: [
                           Text(
-                            'Введите код',
+                            'Номер не найден',
                             style: TextStyle(
                                 fontSize: 24,
                                 color: Colors.white,
@@ -76,10 +82,14 @@ class _SmsPinPageState extends State<SmsPinPage> {
                             height: 6,
                           ),
                           Text(
-                            'На номер +7 (701) 399 35 38 отправлено SMS с кодом авторизации',
+                            widget.phoneNumber == null
+                                ? 'Номер не найден.  Пожалуйста, введите ваш ИИН'
+                                : 'Номер ${widget.phoneNumber} не найден.  Пожалуйста, введите ваш ИИН',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 14, color: Color(0xffCFD5DC)),
+                                fontSize: 14,
+                                color: Color(0xffCFD5DC),
+                                height: 1.2),
                           ),
                           SizedBox(
                             height: 6,
@@ -100,55 +110,62 @@ class _SmsPinPageState extends State<SmsPinPage> {
                         ],
                       ),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            width: w * 0.7,
-                            child: PinPut(
-                              fieldsCount: 4,
-                              eachFieldWidth: 56.0,
-                              eachFieldHeight: 72.0,
-                              onSubmit: (String pin){
-                                print(pin);
-                                if(pin == '1111') {
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (BuildContext context) => DeactivateAccountBottomSheet());
-                                }
-                                if(pin == '2222'){
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (BuildContext context) => SocialMediaBottomSheet());
-                                }
-                                if(pin == '3333'){
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (BuildContext context) => NoAccountBottomSheet());
-                                }
-
-                              },
-                              textStyle: TextStyle(fontSize: 45, color: Colors.white, fontWeight: FontWeight.bold),
-                              focusNode: _pinPutFocusNode,
-                              controller: textFieldCtrl,
-                              submittedFieldDecoration:
-                                  _pinPutDecoration.copyWith(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              selectedFieldDecoration: _pinPutDecoration.copyWith(
-                                border: Border.all(color: Color(0xff18B9FF),width: 2),
-                              ),
-                              followingFieldDecoration:
-                                  _pinPutDecoration.copyWith(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
+                            width: w * 0.9,
+                            height: 60,
+                            padding: EdgeInsets.only(left: 16, top: 5),
+                            margin: EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color(0xff76B0FD).withOpacity(0.19),
+                              border: Border.all(
+                                  color: Colors.white.withOpacity(0.08),
+                                  width: 1),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ИИН',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color:
+                                          Color(0xffEBEBEB).withOpacity(0.39)),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 5),
+                                  child: TextFormField(
+                                    inputFormatters: [maskFormatter],
+                                    autofocus: false,
+                                    controller: textFieldCtrl,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold),
+                                    decoration: InputDecoration(
+                                      hintText: '_ _ _ _ _ _ _ _ _ _ _ _',
+                                      hintStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.all(0.0),
+                                      border: InputBorder.none,
+                                    ),
+                                    keyboardType: TextInputType.phone,
+                                    validator: (value) {
+                                      if (value.length == 0)
+                                        return ("Comments can't be empty!");
+                                      return value = null;
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          secondValue > 0 ?
                           Container(
-                            margin: EdgeInsets.only(top: 40, bottom: 20),
-                            child: Text('Переотправить SMS: $secondValue сек', style: TextStyle(fontSize: 14, color: Color(0xffCFD5DC)),),
-                          ) : Container(
-                            margin: EdgeInsets.only(top: 15),
                             width: w * 0.9,
                             height: 60,
                             decoration: new BoxDecoration(
@@ -172,10 +189,7 @@ class _SmsPinPageState extends State<SmsPinPage> {
                             ),
                             child: InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => TabsPage()),
-                                );
+                                _searchEmployee();
                               },
                               child: Center(
                                 child: Text(
@@ -250,10 +264,46 @@ class _SmsPinPageState extends State<SmsPinPage> {
     );
   }
 
+  handleLogin() {
+    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
+    print(auth.status);
+    _status.then((value){
+      switch (value) {
+        case Status.TooManyRequest:
+          return showDialog<void>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return ShowTooManyRequestAlert();
+              });
+        case Status.EmployeeDismissed:
+          return showCupertinoModalPopup<void>(
+              context: context,
+              builder: (BuildContext context) =>
+                  DeactivateAccountBottomSheet());
+        case Status.EmployeeNotFound:
+          return showCupertinoModalPopup<void>(
+              context: context,
+              builder: (BuildContext context) =>
+                  NoAccountBottomSheet());
+        case Status.Authenticating:
+          return Center(child: CircularProgressIndicator());
+        case Status.LoginFail:
+          return showCupertinoModalPopup<void>(
+              context: context,
+              builder: (BuildContext context) => SocialMediaBottomSheet());
+        case Status.EmployeeFind:
+          print('FirstStepSuccessful');
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => UpdatePhoneNumber()));
+      }
+    });
+
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
-    periodicSub.cancel();
     textFieldCtrl.dispose();
     super.dispose();
   }

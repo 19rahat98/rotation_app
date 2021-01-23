@@ -1,30 +1,39 @@
 import 'dart:convert';
 
-import 'package:rotation_app/config/Preferences_list.dart';
-import 'package:rotation_app/config/util_preferences.dart';
 import 'package:rotation_app/logic_block/api/api.dart';
 import 'package:rotation_app/logic_block/models/user_model.dart';
 
 class UserRepository {
-  ///Fetch api login
-  Future<dynamic> sendCodeLogin({String phoneNumber, String type}) async {
-    final params = {"phone": phoneNumber, "type": type};
-    return await Api.sendCodeLogin(params);
+
+
+  ///Get all employee data
+  Future<dynamic> getApplication() async {
+    final params = {
+      "page": 1,
+      "per_page": 100,
+    };
+    return await Api.getApplication(params);
   }
 
-  Future<dynamic> loginByPhoneNumber({String phoneNumber, String type, String code, int authLogId}) async {
+  ///Fetch api login
+  Future<dynamic> loginByPhoneNumber({String phoneNumber, String type}) async {
+    final params = {"phone": phoneNumber, "type": type};
+    return await Api.loginByPhoneNumber(params);
+  }
+
+  Future<dynamic> sendCodeForLogin({String phoneNumber, String type, String code, int authLogId}) async {
     final params = {
       "phone": phoneNumber,
       "code": code,
       "auth_log_id": authLogId,
       "type": type,
     };
-    return await Api.login(params);
+    return await Api.sendCodeForLogin(params);
   }
 
-  Future<dynamic> findEmployeeByIIN({String iinNumber}) async {
+  Future<dynamic> searchEmployeeByIIN({String iinNumber}) async {
     final params = {"iin": iinNumber,};
-    return await Api.findEmployeeByIIN(params);
+    return await Api.searchEmployeeByIIN(params);
   }
 
 
@@ -34,7 +43,7 @@ class UserRepository {
       "phone": phoneNumber,
       "type": type,
     };
-    return await Api.findEmployeeByIIN(params);
+    return await Api.updateEmployeePhoneNumber(params);
   }
 
   Future<dynamic> confirmPhoneNumber({String code, String phoneNumber, String type, int authLogId}) async {
@@ -44,7 +53,7 @@ class UserRepository {
       "auth_log_id": authLogId,
       "type": type,
     };
-    return await Api.findEmployeeByIIN(params);
+    return await Api.confirmPhoneNumber(params);
   }
 
   Future<dynamic> retrySendSmsCode({int authLogId}) async {
@@ -55,8 +64,14 @@ class UserRepository {
   }
 
 
-  ///Save Storage
-  Future<dynamic> saveUser({String userToken}) async {
+/*  ///Save Storage
+  Future<dynamic> saveEmployeeData({String employee}) async{
+    print('saveEmployeeDatas');
+    return await UtilPreferences.setString(Preferences.employee, employee);
+  }
+
+  Future<dynamic> saveEmployeeToken({String userToken}) async{
+    print('saveEmployeeData');
     return await UtilPreferences.setString(
       Preferences.userToken,
       userToken,
@@ -64,12 +79,21 @@ class UserRepository {
   }
 
   ///Get from Storage
-  dynamic getUserToken() {
+  dynamic getEmployeeToken() {
+    print('getEmployeeToken');
     return UtilPreferences.getString(Preferences.userToken);
   }
 
-  ///Delete Storage
-  Future<dynamic> deleteUser() async {
-    return await UtilPreferences.remove(Preferences.userToken);
+  ///Get from Storage
+  dynamic getEmployeeData() {
+    print('getEmployeeData');
+    return UtilPreferences.getString(Preferences.employee);
   }
+
+  ///Delete Storage
+  Future<dynamic> deleteEmployeeData() async {
+    print('deleteEmployeeData');
+    await UtilPreferences.remove(Preferences.employee);
+    return await UtilPreferences.remove(Preferences.userToken);
+  }*/
 }

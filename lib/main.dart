@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-import 'package:rotation_app/ui/nav_bar.dart';
 import 'package:rotation_app/ui/splash_page.dart';
-import 'package:rotation_app/ui/home_pages/home_page.dart';
-import 'package:rotation_app/config/simple_bloc_observer.dart';
-
-import 'logic_block/blocs/bloc.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
 
 void main() {
-  Bloc.observer = SimpleBlocObserver();
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
-        BlocProvider<LoginBloc>(
-          create: (context) => LoginBloc(),
+        ChangeNotifierProvider(create: (_) => UserLoginProvider()),
+        ChangeNotifierProvider<UserLoginProvider>(
+          create: (context) => UserLoginProvider(),
         ),
-        BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider<LoginProvider>(
+          create: (context) => LoginProvider(),
         ),
       ],
       child: MaterialApp(

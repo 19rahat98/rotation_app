@@ -1,4 +1,4 @@
-class User {
+/*class User {
   String token;
   Employee employee;
 
@@ -19,7 +19,7 @@ class User {
     }
     return data;
   }
-}
+}*/
 
 class Employee {
   int id;

@@ -13,10 +13,16 @@ class Api {
   static const String UPDATE_PHONE_NUMBER = "/employees/send-code-update";
   static const String CONFIRMATION_PHONE_NUMBER = "/employees/confirm-phone-update";
   static const String RETRY_SEND_SMS_CODE = "/employees/retry-send-code";
+  static const String GET_APPLICATION = "/employees/get-applications";
 
+
+  static Future<dynamic> getApplication(params) async {
+    final result = await httpManager.get(url: GET_APPLICATION, params: params);
+    return ResponseApi.fromJson(result);
+  }
 
   ///Login with phone number
-  static Future<dynamic> sendCodeLogin(params) async {
+  static Future<dynamic> loginByPhoneNumber(params) async {
     final result = await httpManager.post(url: SEND_CODE_LOGIN, data: params);
     print(result);
     return ResponseApi.fromJson(result);
@@ -24,9 +30,9 @@ class Api {
 
 
   ///Login api
-  static Future<dynamic> login(params) async {
+  static Future<dynamic> sendCodeForLogin(params) async {
     final result = await httpManager.post(url: LOGIN, data: params);
-    return ResultApiModel.fromJson(result);
+    return ResponseApi.fromJson(result);
   }
 
 
@@ -35,24 +41,24 @@ class Api {
     return ResultApiModel.fromJson(result);
   }*/
 
-  static Future<dynamic> findEmployeeByIIN(params) async {
+  static Future<dynamic> searchEmployeeByIIN(params) async {
     final result = await httpManager.get(url: FIND_EMPLOYEE_BY_IIN, params: params);
-    return ResultApiModel.fromJson(result);
+    return ResponseApi.fromJson(result);
   }
 
   static Future<dynamic> updateEmployeePhoneNumber(params) async {
     final result = await httpManager.post(url: UPDATE_PHONE_NUMBER, data: params);
-    return ResultApiModel.fromJson(result);
+    return ResponseApi.fromJson(result);
   }
 
   static Future<dynamic> confirmPhoneNumber(params) async {
-    final result = await httpManager.post(url: UPDATE_PHONE_NUMBER, data: params);
-    return ResultApiModel.fromJson(result);
+    final result = await httpManager.post(url: CONFIRMATION_PHONE_NUMBER, data: params);
+    return ResponseApi.fromJson(result);
   }
 
   static Future<dynamic> retrySendSmsCode(params) async {
-    final result = await httpManager.post(url: UPDATE_PHONE_NUMBER, data: params);
-    return ResultApiModel.fromJson(result);
+    final result = await httpManager.post(url: RETRY_SEND_SMS_CODE, data: params);
+    return ResponseApi.fromJson(result);
   }
 
 

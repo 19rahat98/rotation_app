@@ -1,11 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
 import 'package:rotation_app/ui/home_pages/home_page.dart';
 
 class NoAccountBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     return CupertinoActionSheet(
         title: Container(
           margin: EdgeInsets.only(top: 20),
@@ -20,7 +25,7 @@ class NoAccountBottomSheet extends StatelessWidget {
         message: Container(
           //margin: EdgeInsets.symmetric(vertical: 10),
           child: Text(
-            'Сотрудник с ИИН:920911300248 не найден. Внимательно проверьте ваши данные и попробуйте снова.',
+            auth.userIIN == null ? 'Сотрудник не найден. Внимательно проверьте ваши данные и попробуйте снова.' : 'Сотрудник с ИИН: ${auth.userIIN} не найден. Внимательно проверьте ваши данные и попробуйте снова.',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 15,
@@ -36,7 +41,9 @@ class NoAccountBottomSheet extends StatelessWidget {
                     color: Color(0xff1262CB),
                     fontWeight: FontWeight.bold)),
             onPressed: () {
-              print('pressed');
+              return showCupertinoModalPopup<void>(
+                  context: context,
+                  builder: (BuildContext context) => SocialMediaBottomSheet());
             },
           ),
         ],
@@ -55,9 +62,69 @@ class NoAccountBottomSheet extends StatelessWidget {
   }
 }
 
+class ShowTooManyRequestAlert extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: true);
+    return Consumer(
+        builder: (context, UserLoginProvider user, _) {
+          print(user.errorMessage);
+          return AlertDialog(
+            title: Text('Предупреждение'),
+            content: user.errorMessage == null ? SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Количество запросов в минуту превысила норму.'),
+                ],
+              ),
+            ) :  Text(user.errorMessage),
+            actions: <Widget>[
+              TextButton(
+                child: Text('ОК'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+    );
+  }
+}
+
+class ShowErrorCodeAlert extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, UserLoginProvider user, _) {
+        print(user.errorMessage);
+        return AlertDialog(
+          title: user.errorMessage == null ? Text('Коды не совпадают') : Text(user.errorMessage),
+          /*content: user.errorMessage == null ? SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Количество запросов в минуту превысила норму.'),
+              ],
+            ),
+          ) :  Text(user.errorMessage),*/
+          actions: <Widget>[
+            TextButton(
+              child: Text('ОК'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class DeactivateAccountBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     double w = MediaQuery.of(context).size.width;
     return CupertinoActionSheet(
         title: Container(
@@ -85,7 +152,7 @@ class DeactivateAccountBottomSheet extends StatelessWidget {
           width: w,
           //margin: EdgeInsets.symmetric(vertical: 5),
           child: Text(
-            'Уважаемый Руслан Владимирович, ваш аккаунт был деактивирован вашим работодателем. Если у вас есть вопросы обратитесь в службу поддержки.',
+            'Уважаемый ${auth.userPhoneNumber}, ваш аккаунт был деактивирован вашим работодателем. Если у вас есть вопросы обратитесь в службу поддержки.',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 15,

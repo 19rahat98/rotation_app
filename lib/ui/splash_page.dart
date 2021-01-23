@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'login_page.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/ui/login_pages/login_page.dart';
+import 'package:rotation_app/ui/nav_bar.dart';
+
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key}) : super(key: key);
@@ -10,10 +14,15 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
-  nextPage() {
-    var page = LoginPage();
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => page));
+
+  nextPage(){
+    final LoginProvider lp = Provider.of<LoginProvider>(context,listen: false);
+    final _isSingInState = lp.checkSignIn();
+    _isSingInState.then((value){
+      var page = value == true ? TabsPage() : LoginPage();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => page));
+    });
+    //var page = lp.isSignedIn == true ? TabsPage() : LoginPage();
   }
 
   @override

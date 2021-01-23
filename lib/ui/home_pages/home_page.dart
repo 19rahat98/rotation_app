@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_calendar_carousel/classes/event_list.dart';
+import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
-import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:flutter_calendar_carousel/classes/event_list.dart';
-import 'package:intl/intl.dart' show DateFormat;
+import 'package:rotation_app/logic_block/models/user_model.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin{
   DateTime _targetDateTime = DateTime.now();
   String _weekDay = '';
   String _monthName = '';
-
   CalendarCarousel _calendarCarouselNoHeader;
-
+  LoginProvider loginProvider;
+  Employee _employee;
   void weekDays() async {
     switch (_targetDateTime.weekday) {
       case 1:
@@ -154,16 +158,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _getUserData();
     weekDays();
     monthDays();
     super.initState();
+  }
+
+  _getUserData() async{
+    loginProvider = LoginProvider();
+    _employee = await loginProvider.getEmployeeData();
   }
 
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-
     _calendarCarouselNoHeader = CalendarCarousel<Event>(
       todayTextStyle: TextStyle(
           fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
@@ -204,7 +213,7 @@ class _HomePageState extends State<HomePage> {
       ) {
         if (day.day > DateTime.now().day) {
           return Container(
-            padding: EdgeInsets.only(top: 4, left: 7),
+            padding: EdgeInsets.only(top: 2, left: 6),
             child: Text(
               day.day.toString(),
               style: TextStyle(
@@ -247,25 +256,36 @@ class _HomePageState extends State<HomePage> {
                       height: 56,
                       margin: EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: Colors.grey),
+                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.transparent,
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/ava.png'),
+                          fit: BoxFit.fill,
+                        )
+                      ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'ТОО «Kaz Minerals»',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Color(0xff748595),
-                              fontWeight: FontWeight.w400),
+                        Container(
+                          width: w * 0.7,
+                          child: Text(
+                            _employee != null ? _employee.factoryName : 'ТОО «Kaz Minerals»',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Color(0xff748595),
+                                fontWeight: FontWeight.w400),
+                          ),
                         ),
-                        Text(
-                          'Нурдаулет Атамбаев',
-                          style: TextStyle(
-                              fontSize: 24,
-                              color: Color(0xff1B344F),
-                              fontWeight: FontWeight.bold),
+                        Container(
+                          width: w * 0.7,
+                          child: Text(
+                            _employee != null ? _employee.firstName + " " + _employee.lastName : 'Нурдаулет Атамбаев',
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Color(0xff1B344F),
+                                fontWeight: FontWeight.bold),
+                          ),
                         )
                       ],
                     )
@@ -279,20 +299,20 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
                   color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        spreadRadius: 0,
-                        blurRadius: 8,
-                        offset: Offset(0, 4), // changes position of shadow
-                      ),
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        spreadRadius: 0,
-                        blurRadius: 2,
-                        offset: Offset(0, 0), // changes position of shadow
-                      ),
-                    ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      spreadRadius: 0,
+                      blurRadius: 8,
+                      offset: Offset(0, 4), // changes position of shadow
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      spreadRadius: 0,
+                      blurRadius: 2,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: [
@@ -718,20 +738,23 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       width: w,
                       margin: EdgeInsets.only(top: 8),
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                       decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.04),
                               spreadRadius: 0,
                               blurRadius: 8,
-                              offset: Offset(0, 4), // changes position of shadow
+                              offset:
+                                  Offset(0, 4), // changes position of shadow
                             ),
                             BoxShadow(
                               color: Colors.black.withOpacity(0.04),
                               spreadRadius: 0,
                               blurRadius: 2,
-                              offset: Offset(0, 0), // changes position of shadow
+                              offset:
+                                  Offset(0, 0), // changes position of shadow
                             ),
                           ],
                           borderRadius: BorderRadius.circular(6),
@@ -746,7 +769,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -774,7 +797,7 @@ class _HomePageState extends State<HomePage> {
                                           margin: EdgeInsets.only(right: 5),
                                           decoration: BoxDecoration(
                                               borderRadius:
-                                              BorderRadius.circular(50),
+                                                  BorderRadius.circular(50),
                                               color: Color(0xffFF4242)),
                                           child: Row(
                                             children: [
@@ -789,7 +812,7 @@ class _HomePageState extends State<HomePage> {
                                                     fontSize: 14,
                                                     color: Colors.white,
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               )
                                             ],
                                           ),
@@ -799,7 +822,7 @@ class _HomePageState extends State<HomePage> {
                                               horizontal: 5, vertical: 5),
                                           decoration: BoxDecoration(
                                               borderRadius:
-                                              BorderRadius.circular(50),
+                                                  BorderRadius.circular(50),
                                               color: Color(0xff00B688)),
                                           child: Icon(
                                             Icons.train,
@@ -911,10 +934,9 @@ class _HomePageState extends State<HomePage> {
                             width: 121,
                             margin: EdgeInsets.only(right: 10),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Color(0xffD0DAE7)),
-                              color: Colors.white
-                            ),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Color(0xffD0DAE7)),
+                                color: Colors.white),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -923,9 +945,23 @@ class _HomePageState extends State<HomePage> {
                                   color: Color(0xff1C7CD8),
                                   size: 30,
                                 ),
-                                SizedBox(height: 20,),
-                                Text('Позвонить', style: TextStyle(fontSize: 18, color: Color(0xff385780), fontWeight: FontWeight.bold),),
-                                Text('в колл-центр', style: TextStyle(fontSize: 14, color: Color(0xff385780).withOpacity(0.5), fontWeight: FontWeight.w400),)
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  'Позвонить',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color(0xff385780),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'в колл-центр',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xff385780).withOpacity(0.5),
+                                      fontWeight: FontWeight.w400),
+                                )
                               ],
                             ),
                           ),
@@ -936,8 +972,7 @@ class _HomePageState extends State<HomePage> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(color: Color(0xffD0DAE7)),
-                                color: Colors.white
-                            ),
+                                color: Colors.white),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -946,9 +981,23 @@ class _HomePageState extends State<HomePage> {
                                   color: Color(0xff1C7CD8),
                                   size: 30,
                                 ),
-                                SizedBox(height: 20,),
-                                Text('Написать', style: TextStyle(fontSize: 18, color: Color(0xff385780), fontWeight: FontWeight.bold),),
-                                Text('в онлайн-чат', style: TextStyle(fontSize: 14, color: Color(0xff385780).withOpacity(0.5), fontWeight: FontWeight.w400),)
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  'Написать',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color(0xff385780),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'в онлайн-чат',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xff385780).withOpacity(0.5),
+                                      fontWeight: FontWeight.w400),
+                                )
                               ],
                             ),
                           ),
@@ -959,8 +1008,7 @@ class _HomePageState extends State<HomePage> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(color: Color(0xffD0DAE7)),
-                                color: Colors.white
-                            ),
+                                color: Colors.white),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -969,9 +1017,23 @@ class _HomePageState extends State<HomePage> {
                                   color: Color(0xff1C7CD8),
                                   size: 30,
                                 ),
-                                SizedBox(height: 20,),
-                                Text('Прочитать', style: TextStyle(fontSize: 18, color: Color(0xff385780), fontWeight: FontWeight.bold),),
-                                Text('Вопросы/Ответы', style: TextStyle(fontSize: 14, color: Color(0xff385780).withOpacity(0.5), fontWeight: FontWeight.w400),)
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  'Прочитать',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Color(0xff385780),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'Вопросы/Ответы',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xff385780).withOpacity(0.5),
+                                      fontWeight: FontWeight.w400),
+                                )
                               ],
                             ),
                           ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
 
 import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
 import 'package:rotation_app/ui/user_pages/notifications_list_screen.dart';
@@ -15,6 +17,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    lp.getEmployeeData();
     return Scaffold(
       backgroundColor: Color(0xffF3F6FB),
       appBar: AppBar(
@@ -81,7 +85,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: Column(
                         children: [
                           Container(
-                            child: Text('Баталгазиев Руслан Владимирович', style: TextStyle(fontSize: 20, color: Color(0xff1B344F), fontWeight: FontWeight.bold),),
+                            child: lp.employee != null ? Text(lp.employee.firstName + " " + lp.employee.lastName + " " + lp.employee.patronymic, style: TextStyle(fontSize: 20, color: Color(0xff1B344F), fontWeight: FontWeight.bold),) : Text('Баталгазиев Руслан Владимирович', style: TextStyle(fontSize: 20, color: Color(0xff1B344F), fontWeight: FontWeight.bold),),
                             margin: EdgeInsets.only(bottom: 10),
                             width: w * 0.7,
                           ),
@@ -100,7 +104,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       width: w * 0.3,
                                     ),
                                     Container(
-                                      child: Text('№00011', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),),
+                                      child: lp.employee != null ? Text('№ ' + lp.employee.docNumber, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),) : Text('№00011', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),),
                                       margin: EdgeInsets.only(bottom: 5),
                                       width: w * 0.4,
                                     ),
@@ -115,7 +119,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       width: w * 0.3,
                                     ),
                                     Container(
-                                      child: Text('ТОО «Kaz Minerals»', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
+                                      child: lp.employee != null ? Text(lp.employee.factoryName, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),) : Text('ТОО «Kaz Minerals»', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
                                       margin: EdgeInsets.only(bottom: 5),
                                       width: w * 0.4,
                                     ),
@@ -129,7 +133,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       width: w * 0.3,
                                     ),
                                     Container(
-                                      child: Text('Старший бригадир', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
+                                      child: lp.employee != null ? Text(lp.employee.position, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),) : Text('Старший бригадир', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
                                       width: w * 0.4,
                                     ),
                                   ],
