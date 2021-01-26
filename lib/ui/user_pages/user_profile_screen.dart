@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/ui/login_pages/login_page.dart';
 
 import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
 import 'package:rotation_app/ui/user_pages/notifications_list_screen.dart';
@@ -119,7 +120,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                       width: w * 0.3,
                                     ),
                                     Container(
-                                      child: lp.employee != null ? Text(lp.employee.factoryName, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),) : Text('ТОО «Kaz Minerals»', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
+                                      child: lp.employee != null ? Text(lp.employee.orgName, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),) : Text('ТОО «Kaz Minerals»', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
                                       margin: EdgeInsets.only(bottom: 5),
                                       width: w * 0.4,
                                     ),
@@ -354,7 +355,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ],
                 ),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () async {
+                    print(await lp.getEmployeeToken());
+                    final _result = await lp.deleteEmployeeData();
+                    if(_result){
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                    }
+                  },
                   child: Center(
                     child: Text(
                       'Выйти из приложения',

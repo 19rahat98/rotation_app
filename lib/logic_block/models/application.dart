@@ -18,8 +18,8 @@ class Application {
   String createdAt;
   String updatedAt;
   bool fromOld;
-  Null oldId;
-  Null deletedAt;
+  int oldId;
+  String deletedAt;
   bool isStored;
   String startStation;
   String endStation;
@@ -127,15 +127,15 @@ class Segments {
   String arrStationName;
   String status;
   Null activeProcess;
-  Null ticketId;
+  int ticketId;
   Null closedReason;
   String createdAt;
   String updatedAt;
-  Null deletedAt;
+  String deletedAt;
   String depStation;
   String arrStation;
   Train train;
-  Null ticket;
+  Ticket ticket;
 
   Segments(
       {this.id,
@@ -154,7 +154,8 @@ class Segments {
         this.depStation,
         this.arrStation,
         this.train,
-        this.ticket});
+        this.ticket,
+      });
 
   Segments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -199,6 +200,10 @@ class Segments {
     data['ticket'] = this.ticket;
     return data;
   }
+}
+
+class Ticket {
+  //TODO create Ticket model
 }
 
 class Train {

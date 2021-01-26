@@ -25,6 +25,7 @@ class Employee {
   int id;
   String firstName;
   String lastName;
+  String orgName;
   String patronymic;
   String firstNameEn;
   String lastNameEn;
@@ -49,7 +50,9 @@ class Employee {
         this.shiftName,
         this.docType,
         this.docNumber,
-        this.homeStation});
+        this.homeStation,
+        this.orgName,
+      });
 
   Employee.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -65,6 +68,7 @@ class Employee {
     docType = json['doc_type'];
     docNumber = json['doc_number'];
     homeStation = json['home_station'];
+    orgName = json['org_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +86,7 @@ class Employee {
     data['doc_type'] = this.docType;
     data['doc_number'] = this.docNumber;
     data['home_station'] = this.homeStation;
+    data['org_name'] = this.orgName;
     return data;
   }
 }

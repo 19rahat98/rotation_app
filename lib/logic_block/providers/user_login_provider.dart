@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:rotation_app/logic_block/api/http_request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:rotation_app/logic_block/models/result_api_model.dart';
@@ -57,6 +58,11 @@ class UserLoginProvider with ChangeNotifier {
   String get userIIN => _userIIN;
   set userIIN(String iin) => _userIIN = userIIN;
 
+  Future saveDataToSP() async{
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setString("userToken", _token);
+    var data = await prefs.setString("employee", jsonEncode(_employee));
+  }
 
   Future<Status> sendSmsCodeForIIN({String smsCode}) async {
     final ResponseApi result = await userRepository.confirmPhoneNumber(
@@ -70,13 +76,11 @@ class UserLoginProvider with ChangeNotifier {
       if (result.code == 200) {
         _token = decodeData.data["token"];
         _employee = Employee.fromJson(decodeData.data["employee"]);
-        final SharedPreferences prefs = await _prefs;
-        await prefs.setString("userToken", _token);
-        await prefs.setString("employee", jsonEncode(_employee));
+        httpManager.baseOptions.headers["Authorization"] =
+            "Bearer " + _token;
         _status = Status.SuccessLogin;
         notifyListeners();
       } else if (result.code == 400) {
-        print(decodeData.slug);
         if (decodeData.slug == "incorrect_data") {
           _status = Status.LoginFail;
           _errorMessage = decodeData.message;
@@ -114,11 +118,8 @@ class UserLoginProvider with ChangeNotifier {
       if (result.code == 200) {
         _status = Status.SecondStepSuccessful;
         _authLogId = decodeData.data["auth_log_id"];
-        print(_authLogId);
         notifyListeners();
       } else if (result.code == 400) {
-        print(decodeData.slug);
-        print('asdadadadasd');
         if (decodeData.slug == "employee_not_found") {
           _status = Status.EmployeeNotFound;
           _errorMessage = decodeData.message;
@@ -160,10 +161,8 @@ class UserLoginProvider with ChangeNotifier {
       if (result.code == 200) {
         _status = Status.EmployeeFind;
         _employee = Employee.fromJson(decodeData.data["employee"]);
-        print(_employee.id);
         notifyListeners();
       } else if (result.code == 400) {
-        print(decodeData.slug);
         if (decodeData.slug == "employee_not_found") {
           _status = Status.EmployeeNotFound;
           _errorMessage = decodeData.message;
@@ -197,8 +196,6 @@ class UserLoginProvider with ChangeNotifier {
   Future<void> retrySendSmsCode() async {
     final ResponseApi result =
         await userRepository.retrySendSmsCode(authLogId: _authLogId);
-    print(result.code);
-    print(result.data);
   }
 
   Future<Status> sendSmsCode({String smsCode}) async {
@@ -212,14 +209,13 @@ class UserLoginProvider with ChangeNotifier {
     try {
       if (result.code == 200) {
         _token = decodeData.data["token"];
+        print(_token);
         _employee = Employee.fromJson(decodeData.data["employee"]);
-        final SharedPreferences prefs = await _prefs;
-        await prefs.setString("userToken", _token);
-        await prefs.setString("employee", jsonEncode(_employee));
+        httpManager.baseOptions.headers["Authorization"] =
+            "Bearer " + _token;
         _status = Status.SuccessLogin;
         notifyListeners();
       } else if (result.code == 400) {
-        print(decodeData.slug);
         if (decodeData.slug == "incorrect_data") {
           _status = Status.LoginFail;
           _errorMessage = decodeData.message;
@@ -255,18 +251,14 @@ class UserLoginProvider with ChangeNotifier {
     try {
       if (result.code == 200) {
         _status = Status.FirstStepSuccessful;
-        print(decodeData.data["auth_log_id"]);
         _authLogId = decodeData.data["auth_log_id"];
         notifyListeners();
       } else if (result.code == 400) {
-        print(decodeData.slug);
         if (decodeData.slug == "employee_dismissed") {
-          print('yield EmployeeDismissed');
           _status = Status.EmployeeDismissed;
           notifyListeners();
         } else if (decodeData.slug == "employee_not_found") {
           _status = Status.EmployeeNotFound;
-          print('yield EmployeeNotFound');
           notifyListeners();
         }
       } else if (result.code == 429) {
@@ -274,7 +266,6 @@ class UserLoginProvider with ChangeNotifier {
         _errorMessage = decodeData.message;
         notifyListeners();
       } else {
-        print('sdsdsd');
         _errorMessage = decodeData.message;
         _status = Status.LoginFail;
         notifyListeners();

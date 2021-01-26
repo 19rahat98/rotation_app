@@ -4,10 +4,14 @@ import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
 
 import 'package:rotation_app/ui/nav_bar.dart';
+import 'package:rotation_app/ui/start_page.dart';
 import 'package:rotation_app/ui/widgets/custom_bottom_sheet.dart';
+
+import '../splash_page.dart';
 
 class SmsPinPage extends StatefulWidget {
   final String phoneNumber;
@@ -44,6 +48,8 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
   }
 
   checkLoginState() {
+    UserLoginProvider auth =
+        Provider.of<UserLoginProvider>(context, listen: false);
     _status.then((value) {
       print(value);
       switch (value) {
@@ -67,9 +73,11 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                 return ShowErrorCodeAlert();
               });
         case Status.SuccessLogin:
-          print('======><=====');
-          Navigator.push(
-                context, MaterialPageRoute(builder: (context) => TabsPage()));
+          auth.saveDataToSP().then((value){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => StartPage()));
+            /*LoginProvider().getEmployeeApplication().whenComplete(() async {});*/
+          });
       }
     });
   }
@@ -157,15 +165,15 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                               eachFieldWidth: 56.0,
                               eachFieldHeight: 72.0,
                               onSubmit: (String pin) {
-                                if(widget.hasIIN){
+                                if (widget.hasIIN) {
                                   print('asdadsa');
-                                  _status = auth.sendSmsCodeForIIN(smsCode: pin);
+                                  _status =
+                                      auth.sendSmsCodeForIIN(smsCode: pin);
                                   checkLoginState();
-                                }else{
+                                } else {
                                   _status = auth.sendSmsCode(smsCode: pin);
                                   checkLoginState();
                                 }
-
                               },
                               textStyle: TextStyle(
                                   fontSize: 45,
