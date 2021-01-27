@@ -13,7 +13,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
               padding: EdgeInsets.only(top: 12, bottom: 12),
               child: Text(
                 "Наши онлайн-консультанты работают круглосуточно. Пишите по любым вопросам.",
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                   fontSize: 15,
                   color: Color(0xff1B3652).withOpacity(0.5),
                 ),
@@ -29,7 +29,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    'assets/svg/whatsapp.svg',
+                    'assets/svg/icon-send-wa.svg',
                     height: 40,
                     width: 40,
                     excludeFromSemantics: true,
@@ -42,7 +42,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
                       children: [
                         Text(
                           'Написать в WhatsApp',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 18,
                               color: Color(0xff2D4461),
                               fontWeight: FontWeight.bold),
@@ -52,7 +52,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
                         ),
                         Text(
                           'оператор онлайн',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 15,
                               color: Color(0xff2D4461).withOpacity(0.5),
                               fontWeight: FontWeight.w400),
@@ -88,7 +88,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
                       children: [
                         Text(
                           'Написать в Telegram',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 18,
                               color: Color(0xff2D4461),
                               fontWeight: FontWeight.bold),
@@ -98,7 +98,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
                         ),
                         Text(
                           'оператор онлайн',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 15,
                               color: Color(0xff2D4461).withOpacity(0.5),
                               fontWeight: FontWeight.w400),
@@ -117,7 +117,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
         cancelButton: CupertinoActionSheetAction(
           child: Text(
             'Отмена',
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 17,
                 color: Color(0xff1262CB),
                 fontWeight: FontWeight.bold),

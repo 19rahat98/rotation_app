@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:rotation_app/ui/login_pages/login_page.dart';
 import 'app.dart';
 
 class TabItem {
   // you can customize what kind of information is needed
   // for each tab
   final String tabName;
-  final IconData icon;
+  final String icon;
+
   final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
+
   int _index = 0;
   Widget _page;
   TabItem({
@@ -41,6 +44,15 @@ class TabItem {
         // key tracks state changes
         key: key,
         onGenerateRoute: (routeSettings) {
+          if(routeSettings.name == '/login'){
+            print(routeSettings.name);
+            return MaterialPageRoute(
+              maintainState: false,
+              fullscreenDialog: true,
+              builder: (_) => LoginPage(),
+            );
+          }
+            print(routeSettings.name);
           return MaterialPageRoute(
             builder: (_) => _page,
           );

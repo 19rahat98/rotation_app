@@ -24,7 +24,7 @@ class MoreArticleWidget extends StatelessWidget {
                 children: [
                   Text(
                     'вчера, в 13:40',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: "Root",
                         fontSize: 12,
                         color: Color(0xff1B344F).withOpacity(0.3),
                         fontWeight: FontWeight.w400),
@@ -50,7 +50,7 @@ class MoreArticleWidget extends StatelessWidget {
               margin: EdgeInsets.only(top: 5),
               child: Text(
                 title,
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                     fontSize: 24,
                     color: Color(0xff15304D),
                     fontWeight: FontWeight.bold),
@@ -62,7 +62,7 @@ class MoreArticleWidget extends StatelessWidget {
               child: Text(
                 articleText,
                 textAlign: TextAlign.justify,
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                   fontSize: 17,
                   color: Color(0xff748595),
                   fontWeight: FontWeight.w400,

@@ -2,7 +2,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
+import 'package:rotation_app/config/app+theme.dart';
 import 'package:rotation_app/logic_block/models/application.dart';
 
 class InactiveTripWidget extends StatelessWidget {
@@ -12,13 +14,30 @@ class InactiveTripWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
+    double w = MediaQuery.of(context).size.width  - 56;
+    initializeDateFormatting();
     return Container(
       width: w,
       margin: EdgeInsets.only(top: 12),
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6), color: Colors.white),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            spreadRadius: 0,
+            blurRadius: 8,
+            offset: Offset(0, 4), // changes position of shadow
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            spreadRadius: 0,
+            blurRadius: 2,
+            offset: Offset(0, 0), // changes position of shadow
+          ),
+        ],
+        borderRadius: BorderRadius.circular(6),
+        color: Colors.white,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -30,33 +49,117 @@ class InactiveTripWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          tripData.direction == "to-work" ? 'На вахту, ' : 'Домой, ',
-                          style: TextStyle(
-                              fontSize: 19,
-                              color: Color(0xff0C2B4C),
-                              fontWeight: FontWeight.bold),
+                    Container(
+                      width: w * .50,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            Text(
+                              tripData.direction == "to-work"
+                                  ? 'На вахту, '
+                                  : 'Домой, ',
+                              style: TextStyle(
+                                  fontFamily: "Root",
+                                  fontSize: 19,
+                                  color: Color(0xff0C2B4C),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              DateFormat.MMMd('ru')
+                                  .format(DateTime.parse(tripData.date))
+                                  .toString()
+                                  .replaceAll('.', ''),
+                              style: TextStyle(
+                                  fontFamily: "Root",
+                                  fontSize: 19,
+                                  color: tripData.overTime > 0 ? AppTheme.dangerousColor : Color(0xff0C2B4C),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(width: 20,),
+                          ],
                         ),
-                        Text(
-                          DateFormat.MMMd('ru')
-                              .format(DateTime.parse(tripData.date)).toString().replaceAll('.', ''),
-                          style: TextStyle(
-                              fontSize: 19,
-                              color: Color(0xff0C2B4C),
-                              fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      width: w * .50,
+                      alignment: Alignment.centerRight,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            tripData.shift == 'day' ?
+                            Container(
+                              margin: EdgeInsets.only(right: 5),
+                              child: SvgPicture.asset(
+                                'assets/svg/Moon.svg',
+                                width: 24,
+                                height: 24,
+                                color: AppTheme.nearlyWhite,
+                              ),
+                            ) :
+                            Container(
+                              width: 32,
+                              height: 32,
+                              margin: EdgeInsets.only(right: 5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: AppTheme.mainDarkColor,),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  "assets/svg/Moon.svg",
+                                  color: Colors.white,
+                                  width: 24,
+                                  height: 24,
+                                ),
+                              ),
+                            ),
+                            tripData.overTime > 0 ? Container(
+                              padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
+                              margin: EdgeInsets.only(right: 7),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Color(0xffFF4242)),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg/Zap.svg',
+                                    width: 24,
+                                    height: 24,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    'РВД +${tripData.overTime}',
+                                    style: TextStyle(fontFamily: "Root",
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ) : SvgPicture.asset(
+                              'assets/svg/Zap.svg',
+                              width: 24,
+                              height: 24,
+                              color: AppTheme.dangerousColor,
+                            ),
+                            tripData.segments.isEmpty ?
+                            SvgPicture.asset(
+                              'assets/svg/Ticket.svg',
+                              width: 24,
+                              height: 24,
+                              color: AppTheme.nearlyWhite
+                            ) : Container(),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 5,
-                ),
                 Text(
-                  'В ' + tripData.endStation,
+                  "В ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}",
                   style: TextStyle(
+                      fontFamily: "Root",
                       fontSize: 14,
                       color: Color(0xff748595),
                       fontWeight: FontWeight.w500),
@@ -70,6 +173,7 @@ class InactiveTripWidget extends StatelessWidget {
             child: Text(
               'Билеты еще не оформлены',
               style: TextStyle(
+                  fontFamily: "Root",
                   fontSize: 14,
                   color: Color(0xff748595),
                   fontWeight: FontWeight.w500),
@@ -106,14 +210,18 @@ class InactiveTripActionSheet extends StatelessWidget {
                             ? 'На вахту, '
                             : 'Домой, ',
                         style: TextStyle(
+                            fontFamily: "Root",
                             fontSize: 22,
                             color: Color(0xff0C2B4C),
                             fontWeight: FontWeight.bold),
                       ),
                       Text(
                         DateFormat.MMMd('ru')
-                            .format(DateTime.parse(tripData.date)).toString().replaceAll('.', ''),
+                            .format(DateTime.parse(tripData.date))
+                            .toString()
+                            .replaceAll('.', ''),
                         style: TextStyle(
+                            fontFamily: "Root",
                             fontSize: 22,
                             color: Color(0xff0C2B4C),
                             fontWeight: FontWeight.bold),
@@ -121,44 +229,31 @@ class InactiveTripActionSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                tripData.shift == 'night' ?
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    /*Text(
-                      '8 ч 45 мин в пути',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xff748595).withOpacity(0.7)),
-                    ),*/
-                    SvgPicture.asset(
-                      "assets/svg/moon.svg",
-                    ),
-                    Text(
-                      'Ночная смена',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xff748595).withOpacity(0.7)),
-                    ),
-                  ],
-                ) : Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    /*Text(
-                      '8 ч 45 мин в пути',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xff748595).withOpacity(0.7)),
-                    ),*/
-                    Icon(Icons.hourglass_empty),
-                    Text(
-                      'Дневная смена',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xff748595).withOpacity(0.7)),
-                    ),
-                  ],
-                ),
+                tripData.shift != 'night'
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                          "В ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}",
+                           style: TextStyle(fontFamily: "Root",
+                              fontSize: 14,
+                               fontWeight: FontWeight.w500,
+                               color: Color(0xff748595).withOpacity(0.7)),
+                          ),
+                          SvgPicture.asset(
+                            "assets/svg/Moon.svg",
+                          ),
+                          Text(
+                            'Ночная смена',
+                            style: TextStyle(
+                                fontFamily: "Root",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: Color(0xff748595).withOpacity(0.7)),
+                          ),
+                        ],
+                      )
+                    : Container()
               ],
             ),
           ),
@@ -174,6 +269,7 @@ class InactiveTripActionSheet extends StatelessWidget {
                   child: Text(
                     'Билеты еще не куплены!',
                     style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 17,
                         color: Color(0xff1B344F),
                         fontWeight: FontWeight.bold),
@@ -184,7 +280,10 @@ class InactiveTripActionSheet extends StatelessWidget {
                   child: Text(
                     'Когда координатор закупит и оформит билеты на данную поездку, отобразится вся необходимая информация.',
                     style: TextStyle(
+                      fontFamily: "Root",
                       fontSize: 15,
+                      letterSpacing: 0.3,
+                      fontWeight: FontWeight.w500,
                       color: Color(0xff1B3652).withOpacity(0.5),
                     ),
                   ),
@@ -201,6 +300,7 @@ class InactiveTripActionSheet extends StatelessWidget {
         child: Text(
           'Закрыть',
           style: TextStyle(
+              fontFamily: "Root",
               fontSize: 17,
               color: Color(0xff1262CB),
               fontWeight: FontWeight.bold),

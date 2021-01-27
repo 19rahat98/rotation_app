@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
-import 'package:rotation_app/ui/home_pages/nav_bar/app.dart';
 import 'package:rotation_app/ui/login_pages/login_page.dart';
 import 'package:rotation_app/ui/nav_bar.dart';
+
+import 'nav_bar/app.dart';
 
 
 class StartPage extends StatefulWidget {

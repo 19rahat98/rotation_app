@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:rotation_app/logic_block/models/application.dart';
 
@@ -11,6 +12,7 @@ class TicketsBottomSheet extends StatelessWidget {
 
   String durationToString() {
     int minutes = 0;
+    initializeDateFormatting();
     if (tripData.segments.isNotEmpty) {
       for (int i = 0; i < tripData.segments.length; i++) {
         minutes += tripData.segments[i].train.inWayMinutes;
@@ -27,6 +29,7 @@ class TicketsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    initializeDateFormatting();
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 25, horizontal: 16),
@@ -50,7 +53,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                       tripData.direction == "to-work"
                                   ? 'На вахту, '
                                   : 'Домой, ',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 22,
                                   color: Color(0xff0C2B4C),
                                   fontWeight: FontWeight.bold),
@@ -60,7 +63,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                   .format(DateTime.parse(tripData.date))
                                   .toString()
                                   .replaceAll('.', ''),
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 22,
                                   color: Color(0xff0C2B4C),
                                   fontWeight: FontWeight.bold),
@@ -72,9 +75,10 @@ class TicketsBottomSheet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            durationToString().toString(),
-                            style: TextStyle(
+                            durationToString().toString() + " в пути",
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xff748595).withOpacity(0.7)),
                           ),
                           tripData.shift == 'night'
@@ -82,31 +86,19 @@ class TicketsBottomSheet extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 SvgPicture.asset(
-                                  "assets/svg/moon.svg",
+                                  "assets/svg/Moon.svg",
                                 ),
                                 Text(
                                   'Ночная смена',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
+                                      fontWeight: FontWeight.w500,
                                       fontSize: 14,
                                       color: Color(0xff748595)
                                           .withOpacity(0.7)),
                                 ),
                               ],
                             )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(Icons.hourglass_empty),
-                                Text(
-                                  'Дневная смена',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color:
-                                        Color(0xff748595).withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          : Container(),
                         ],
                       ),
                     ],
@@ -132,257 +124,278 @@ class TicketsBottomSheet extends StatelessWidget {
               height: 0,
               color: Color(0xffEBEBEB),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Column(
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: tripData.segments.length,
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                  margin: EdgeInsets.only(top: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.train,
-                        color: Color(0xff1B344F),
-                        size: 20,
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 3),
-                        width: 2,
-                        height: 180,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Color(0xff1B344F),
-                        ),
-                      ),
-                      Container(
-                        width: 12,
-                        height: 12,
-                        margin: EdgeInsets.only(top: 2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(
-                            width: 3,
+                      Column(
+                        children: [
+                          tripData.productKey == "rail" ?
+                          SvgPicture.asset(
+                            "assets/svg/Train.svg",
                             color: Color(0xff1B344F),
+                            width: 24,
+                            height: 24,
+                          ) :
+                          SvgPicture.asset(
+                            "assets/svg/Plane.svg",
+                            color: Color(0xff1B344F),
+                            width: 24,
+                            height: 24,
                           ),
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 3),
+                            width: 2,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Color(0xff1B344F),
+                            ),
+                          ),
+                          Container(
+                            width: 12,
+                            height: 12,
+                            margin: EdgeInsets.only(top: 2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(
+                                width: 3,
+                                color: Color(0xff1B344F),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  tripData.segments[index].icon != null && tripData.segments[index].icon.isNotEmpty ?
+                                  Image(image: NetworkImage(tripData.segments[index].icon), width: 33, height: 33,):
+                                  SvgPicture.asset(
+                                    "assets/svg/avia-bekair.svg",
+                                    width: 33,
+                                    height: 33,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 10, bottom: 16),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          DateFormat.MMMEd('ru').format(
+                                            DateTime.parse(tripData
+                                                .segments[index].train.depDateTime),
+                                          ).toString().replaceAll('.', ','),
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 16,
+                                              color: Color(0xff1B344F),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Container(
+                                          margin:
+                                              EdgeInsets.only(top: 4, bottom: 4),
+                                          child: Text(
+                                            DateFormat.Hm()
+                                                .format(DateTime.parse(tripData.segments[index].train.depDateTime))
+                                                .toString()
+                                                .replaceAll('.', ''),
+                                            style: TextStyle(fontFamily: "Root",
+                                                fontSize: 20,
+                                                color: Color(0xff1B344F),
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Text(
+                                          "${tripData.segments[index].train.depStationName[0].toUpperCase()}${tripData.segments[index].train.depStationName.toLowerCase().substring(1)}, ${tripData.segments[index].depStationName[0].toUpperCase()}${tripData.segments[index].depStationName.toLowerCase().substring(1)}",
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff748595)
+                                                  .withOpacity(0.7),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Divider(
+                                thickness: 1,
+                                height: 0,
+                                color: Color(0xffEBEBEB),
+                              ),
+                            ),
+                            Container(
+                              margin:
+                                  EdgeInsets.only(top: 16, left: 10, bottom: 16),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: w * 0.25,
+                                        child: Text(
+                                          'перевозчик',
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff748595)
+                                                  .withOpacity(0.7)),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: w * 0.55,
+                                        child: Text(
+                                          'КТЖ',
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff1B344F)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: w * 0.25,
+                                        child: Text(
+                                          'поезд',
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff748595)
+                                                  .withOpacity(0.7)),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: w * 0.55,
+                                        child: Text(
+                                          '№${tripData.segments[index].train.number} (${tripData.segments[index].train.depStation} - ${tripData.segments[index].train.arrStation})',
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff1B344F)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: w * 0.25,
+                                        child: Text(
+                                          'вагон',
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff748595)
+                                                  .withOpacity(0.7)),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: w * 0.55,
+                                        child: Text(
+                                          'Купе №',
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff1B344F)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Divider(
+                                thickness: 1,
+                                height: 0,
+                                color: Color(0xffEBEBEB),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 10, top: 16),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  tripData.segments[index].icon != null && tripData.segments[index].icon.isNotEmpty ?
+                                  Image(image: NetworkImage(tripData.segments[index].icon), width: 33, height: 33,):
+                                  SvgPicture.asset(
+                                    "assets/svg/avia-bekair.svg",
+                                    width: 33,
+                                    height: 33,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 10, bottom: 16),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          DateFormat.MMMEd('ru').format(
+                                            DateTime.parse(tripData
+                                                .segments[index].train.arrDateTime),
+                                          ).toString().replaceAll('.', ','),
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 16,
+                                              color: Color(0xff1B344F),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Container(
+                                          margin:
+                                              EdgeInsets.only(top: 4, bottom: 4),
+                                          child: Text(
+                                            DateFormat.Hm()
+                                                .format(DateTime.parse(tripData
+                                                .segments[index].train.arrDateTime))
+                                                .toString()
+                                                .replaceAll('.', ''),
+                                            style: TextStyle(fontFamily: "Root",
+                                                fontSize: 20,
+                                                color: Color(0xff1B344F),
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Text(
+                                          "${tripData.segments[index].train.arrStationName[0].toUpperCase()}${tripData.segments[index].train.arrStationName.toLowerCase().substring(1)}, ${tripData.segments[index].arrStationName[0].toUpperCase()}${tripData.segments[index].arrStationName.toLowerCase().substring(1)}",
+                                          style: TextStyle(fontFamily: "Root",
+                                              fontSize: 14,
+                                              color: Color(0xff748595)
+                                                  .withOpacity(0.7),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      )
+                      ),
                     ],
                   ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/avia-bekair.svg",
-                                width: 33,
-                                height: 33,
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 10, bottom: 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      DateFormat.MMMEd('ru')
-                                          .format(DateTime.parse(tripData.segments.first.train.depDateTime))
-                                          .toString()
-                                          .replaceAll('.', ''),
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xff1B344F),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(top: 4, bottom: 4),
-                                      child: Text(
-                                        DateFormat.Hm()
-                                            .format(DateTime.parse(tripData.segments.last.train.depDateTime))
-                                            .toString()
-                                            .replaceAll('.', ''),
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color(0xff1B344F),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Text(
-                                      '${tripData.startStation}',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff748595)
-                                              .withOpacity(0.7),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Divider(
-                            thickness: 1,
-                            height: 0,
-                            color: Color(0xffEBEBEB),
-                          ),
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(top: 16, left: 10, bottom: 16),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: w * 0.25,
-                                    child: Text(
-                                      'перевозчик',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff748595)
-                                              .withOpacity(0.7)),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: w * 0.55,
-                                    child: Text(
-                                      'КТЖ',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff1B344F)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: w * 0.25,
-                                    child: Text(
-                                      'поезд',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff748595)
-                                              .withOpacity(0.7)),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: w * 0.55,
-                                    child: Text(
-                                      '№${tripData.segments.first.train.number} (${tripData.segments.first.train.depStation} - ${tripData.segments.first.train.arrStation})',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff1B344F)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: w * 0.25,
-                                    child: Text(
-                                      'вагон',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff748595)
-                                              .withOpacity(0.7)),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: w * 0.55,
-                                    child: Text(
-                                      'Купе №',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff1B344F)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Divider(
-                            thickness: 1,
-                            height: 0,
-                            color: Color(0xffEBEBEB),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 10, top: 16),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/avia-bekair.svg",
-                                width: 33,
-                                height: 33,
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 10, bottom: 16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      DateFormat.MMMEd('ru')
-                                          .format(DateTime.parse(tripData.segments.last.train.arrDateTime))
-                                          .toString()
-                                          .replaceAll('.', ''),
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xff1B344F),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(top: 4, bottom: 4),
-                                      child: Text(
-                                        DateFormat.Hm()
-                                            .format(DateTime.parse(tripData.segments.last.train.arrDateTime))
-                                            .toString()
-                                            .replaceAll('.', ''),
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color(0xff1B344F),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Text(
-                                      '${tripData.endStation}',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: Color(0xff748595)
-                                              .withOpacity(0.7),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                );
+              }
             ),
             Container(
               width: w,
@@ -400,7 +413,7 @@ class TicketsBottomSheet extends StatelessWidget {
                     margin: EdgeInsets.only(bottom: 14),
                     child: Text(
                       'Стоимость',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                           fontSize: 18,
                           color: Color(0xff1B344F),
                           fontWeight: FontWeight.bold),
@@ -411,14 +424,14 @@ class TicketsBottomSheet extends StatelessWidget {
                     children: [
                       Text(
                         'Билеты',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff1B344F),
                         ),
                       ),
                       Text(
                         '32 670 тг',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff748595),
                         ),
@@ -434,14 +447,14 @@ class TicketsBottomSheet extends StatelessWidget {
                     children: [
                       Text(
                         'Тариф «Комфорт"',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff1B344F),
                         ),
                       ),
                       Text(
                         '+4 800 тг',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff748595),
                         ),
@@ -457,14 +470,14 @@ class TicketsBottomSheet extends StatelessWidget {
                     children: [
                       Text(
                         'Итого',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff1B344F),
                         ),
                       ),
                       Text(
                         '36 670 тг',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                             fontSize: 16,
                             color: Color(0xff2D4461),
                             fontWeight: FontWeight.bold),
@@ -489,7 +502,7 @@ class TicketsBottomSheet extends StatelessWidget {
               child: Center(
                   child: Text(
                 'Скачать билеты',
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                     fontSize: 17,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),

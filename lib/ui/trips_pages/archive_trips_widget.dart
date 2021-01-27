@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'inactive_trip_widget.dart';
 import 'tickets_bottom_sheet.dart';
@@ -24,6 +25,7 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting();
     getActiveTrips();
   }
 

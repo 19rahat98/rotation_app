@@ -1,6 +1,7 @@
-import 'package:flutter/gestures.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
 import 'package:rotation_app/logic_block/models/application.dart';
 
@@ -17,6 +18,7 @@ class TripsPage extends StatefulWidget {
 class _TripsPageState extends State<TripsPage> {
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting();
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
@@ -37,7 +39,7 @@ class _TripsPageState extends State<TripsPage> {
                 automaticallyImplyLeading: false,
                 title: Text(
                   'Мои поездки',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                       fontSize: 17,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),

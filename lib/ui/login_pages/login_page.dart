@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           children: [
                             Text(
                               'Войти в аккаунт',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 24,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             ),
                             Text(
                               'По номеру телефона привязанному к Odyssey ID',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 14, color: Color(0xffCFD5DC)),
                             )
                           ],
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 children: [
                                   Text(
                                     'Телефон',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         fontSize: 13,
                                         color: Color(0xffEBEBEB)
                                             .withOpacity(0.39)),
@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       inputFormatters: [maskFormatter],
                                       autofocus: false,
                                       controller: textFieldCtrl,
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: "Root",
                                           color: Colors.white,
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold),
@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 child: Center(
                                   child: Text(
                                     'Войти',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         fontSize: 16,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           child: RichText(
                             textAlign: TextAlign.center,
                             text: new TextSpan(
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 13,
                                   color: Color(0xffCFD5DC),
                                   fontWeight: FontWeight.w400),

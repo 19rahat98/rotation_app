@@ -14,7 +14,7 @@ Widget emptyPage(icon, message) {
         height: 10,
       ),
       Text(message,
-          style: TextStyle(color: Colors.grey[500], fontSize: 18))
+          style: TextStyle(fontFamily: "Root",color: Colors.grey[500], fontSize: 18))
     ],
   );
 }

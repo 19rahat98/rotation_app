@@ -55,7 +55,7 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
                   width: w * 0.70,
                   child: Text(
                     widget.title,
-                    style: TextStyle(fontSize: 17, color: Color(0xff15304D)),
+                    style: TextStyle(fontFamily: "Root",fontSize: 17, color: Color(0xff15304D)),
                   ),
                 ),
                 Container(
@@ -89,7 +89,7 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
                       width: w * 0.75,
                       child: Text(
                         widget.title,
-                        style: TextStyle(fontSize: 20, color: Color(0xff15304D), fontWeight: FontWeight.bold),
+                        style: TextStyle(fontFamily: "Root",fontSize: 20, color: Color(0xff15304D), fontWeight: FontWeight.bold),
                       ),
                     ),
                     Container(
@@ -105,7 +105,7 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
                   margin: EdgeInsets.only(top: 12, bottom: 4),
                   child:  Text(
                     widget.moreText,
-                    style: TextStyle(fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
+                    style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
                   ),
                 ),
               ],

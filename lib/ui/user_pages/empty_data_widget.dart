@@ -15,7 +15,7 @@ class EmptyDataWidget extends StatelessWidget {
                 padding: EdgeInsets.only(top: 12),
                 child: Text(
                   'Будьте внимательны, при заполнении.  Данные должны соответсвовать документу.',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                     fontSize: 15,
                     color: Color(0xff1B3652).withOpacity(0.5),
                   ),
@@ -29,7 +29,7 @@ class EmptyDataWidget extends StatelessWidget {
           CupertinoActionSheetAction(
             child: Text(
               'Заполнить данные',
-              style: TextStyle(
+              style: TextStyle(fontFamily: "Root",
                   fontSize: 17,
                   color: Color(0xff1262CB),
                   fontWeight: FontWeight.bold),
@@ -41,7 +41,7 @@ class EmptyDataWidget extends StatelessWidget {
         cancelButton: CupertinoActionSheetAction(
           child: Text(
             'Отмена',
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 17,
                 color: Color(0xff1262CB),
                 fontWeight: FontWeight.bold),

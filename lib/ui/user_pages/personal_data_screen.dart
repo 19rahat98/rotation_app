@@ -66,7 +66,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
         ),
         title: Text(
           'Личные данные',
-          style: TextStyle(
+          style: TextStyle(fontFamily: "Root",
               fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -84,7 +84,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'Личные данные',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                     fontSize: 24,
                     color: Color(0xff1B344F),
                     fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                       //margin: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'Основная информация',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 19,
                           color: Color(0xff1B344F),
                           fontWeight: FontWeight.bold,
@@ -129,7 +129,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Имя',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -139,7 +139,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               autofocus: false,
                               controller: _userNameTextController,
                               //initialValue: 'Руслан',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff15304D),
@@ -177,7 +177,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Фамилия',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -193,7 +193,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               ),
                               controller: _userSecondNameTextController,
                               //initialValue: 'Руслан',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff15304D),
@@ -231,7 +231,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Отчество',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -241,7 +241,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               autofocus: false,
                               controller: _userMiddleNameTextController,
                               //initialValue: 'Руслан',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff15304D),
@@ -279,7 +279,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Дата рождения',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -296,7 +296,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                           EdgeInsets.only(top: 4, bottom: 7),
                                       child: Text(
                                         birthDateInString,
-                                        style: TextStyle(
+                                        style: TextStyle(fontFamily: "Root",
                                           fontSize: 17,
                                           fontWeight: FontWeight.w400,
                                           color: Color(0xff15304D),
@@ -340,7 +340,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Пол',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -385,7 +385,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'ИИН',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -396,7 +396,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               controller: _userIdTextController,
                               keyboardType: TextInputType.phone,
                               //initialValue: 'Руслан',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff15304D),
@@ -434,7 +434,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Гражданство',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -447,7 +447,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                 child: TextFormField(
                                   autofocus: false,
                                   controller: _userCountryNameTextController,
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                     fontSize: 17,
                                     fontWeight: FontWeight.w400,
                                     color: Color(0xff15304D),
@@ -510,7 +510,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                       //margin: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'Контактные данные',
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 19,
                           color: Color(0xff1B344F),
                           fontWeight: FontWeight.bold,
@@ -525,7 +525,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Телефон',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -537,7 +537,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               inputFormatters: [maskFormatter],
                               keyboardType: TextInputType.phone,
                               //initialValue: 'Руслан',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff15304D),
@@ -575,7 +575,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                         children: [
                           Text(
                             'Эл. почта',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -585,7 +585,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               autofocus: false,
                               controller: _userEmailTextController,
                               //initialValue: 'Руслан',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff15304D),
@@ -647,7 +647,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                   child: Center(
                     child: Text(
                       'Сохранить',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                           fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),

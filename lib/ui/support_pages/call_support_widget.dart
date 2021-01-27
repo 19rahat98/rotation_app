@@ -18,7 +18,7 @@ class CallSupportWidget extends StatelessWidget {
                     padding: EdgeInsets.only(top: 12),
                     child: Text(
                       'Если у вас возникли сложности с приложением либо с поездкой, вы поможете позвонить нам в удобное для вас время:',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                           fontSize: 15,
                           color: Color(0xff1B3652).withOpacity(0.5),
                       ),
@@ -28,7 +28,7 @@ class CallSupportWidget extends StatelessWidget {
                     padding: EdgeInsets.only(top: 12, bottom: 5),
                     child: Text(
                       '+7 727 355 37 37',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                         fontSize: 15,
                         color: Color(0xff1B3652).withOpacity(0.5),
                       ),
@@ -36,7 +36,7 @@ class CallSupportWidget extends StatelessWidget {
                   ),
                   Text(
                     '+7 727 355 37 37',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: "Root",
                       fontSize: 15,
                       color: Color(0xff1B3652).withOpacity(0.5),
                     ),
@@ -45,7 +45,7 @@ class CallSupportWidget extends StatelessWidget {
                     padding: EdgeInsets.only(top: 12, bottom: 5),
                     child: Text(
                       'Также, мы рекомендуем обратится в круглосуточный онлайн чат.',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                         fontSize: 15,
                         color: Color(0xff1B3652).withOpacity(0.5),
                       ),
@@ -61,7 +61,7 @@ class CallSupportWidget extends StatelessWidget {
           CupertinoActionSheetAction(
             child: Text(
               'Позвонить в поддержку',
-              style: TextStyle(
+              style: TextStyle(fontFamily: "Root",
                   fontSize: 17,
                   color: Color(0xff1262CB),
                   fontWeight: FontWeight.bold),
@@ -74,7 +74,7 @@ class CallSupportWidget extends StatelessWidget {
         cancelButton: CupertinoActionSheetAction(
           child: Text(
             'Отмена',
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 17,
                 color: Color(0xff1262CB),
                 fontWeight: FontWeight.bold),

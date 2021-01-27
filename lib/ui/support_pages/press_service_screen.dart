@@ -36,7 +36,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
         ),
         title: Text(
           'Пресс-служба',
-          style: TextStyle(
+          style: TextStyle(fontFamily: "Root",
               fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -51,7 +51,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
               Container(
                 child: Text(
                   'Пресс-служба',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                       fontSize: 24,
                       color: Color(0xff1B344F),
                       fontWeight: FontWeight.bold),
@@ -84,7 +84,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                       child: TextFormField(
                         autofocus: false,
                         controller: _searchQuestionTextController,
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                           color: Color(0xff748595),
@@ -140,7 +140,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 8),
                                   child: Text(
                                     'Расписание за 10 декабря 2020 года',
-                                    style: TextStyle(fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -148,7 +148,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 8),
                                   child: Text(
                                     'Опубликованно расписание маршрутов в условиях «2-ой волны» COVID-19',
-                                    style: TextStyle(fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
                                   ),
                                 ),
                                 Container(
@@ -156,7 +156,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 12),
                                   child: Text(
                                     'вчера, в 13:40',
-                                    style: TextStyle(fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
                                   ),
                                 ),
 
@@ -198,7 +198,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 8),
                                   child: Text(
                                     'РЖД запускает 300 поездов «Сапсан» в Казахстаан',
-                                    style: TextStyle(fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -206,7 +206,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 8),
                                   child: Text(
                                     'Новые скоростные поезда будут доступны для пассажирских перевозок в Алматы',
-                                    style: TextStyle(fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
                                   ),
                                 ),
                                 Container(
@@ -214,7 +214,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 12),
                                   child: Text(
                                     'вчера, в 13:40',
-                                    style: TextStyle(fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
                                   ),
                                 ),
 
@@ -256,7 +256,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 8),
                                   child: Text(
                                     'ВКО и ЗКО закрыты для любых пассажирских перевозок',
-                                    style: TextStyle(fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -264,7 +264,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 8),
                                   child: Text(
                                     'Постановление КТЖ вступит в силу  с 5 декабря 2020 года',
-                                    style: TextStyle(fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
                                   ),
                                 ),
                                 Container(
@@ -272,7 +272,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   margin: EdgeInsets.only(bottom: 12),
                                   child: Text(
                                     'вчера, в 13:40',
-                                    style: TextStyle(fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
+                                    style: TextStyle(fontFamily: "Root",fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
                                   ),
                                 ),
 
@@ -306,7 +306,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                 margin: EdgeInsets.only(bottom: 8),
                                 child: Text(
                                   'Как защитить себя во время пандемии? 10 лучших советов.',
-                                  style: TextStyle(fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontFamily: "Root",fontSize: 18, color: Color(0xff15304D), fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Container(
@@ -314,7 +314,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                 margin: EdgeInsets.only(bottom: 8),
                                 child: Text(
                                   'Наши специалисты, расскажут как обезопасить себя в это непростое время.',
-                                  style: TextStyle(fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
+                                  style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
                                 ),
                               ),
                               Container(
@@ -322,7 +322,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                 margin: EdgeInsets.only(bottom: 12),
                                 child: Text(
                                   'вчера, в 13:40',
-                                  style: TextStyle(fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
+                                  style: TextStyle(fontFamily: "Root",fontSize: 12, color: Color(0xff15304D).withOpacity(0.3)),
                                 ),
                               ),
 

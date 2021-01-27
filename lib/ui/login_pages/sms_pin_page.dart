@@ -74,7 +74,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
               });
         case Status.SuccessLogin:
           auth.saveDataToSP().then((value){
-            Navigator.push(context,
+            Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => StartPage()));
             /*LoginProvider().getEmployeeApplication().whenComplete(() async {});*/
           });
@@ -121,7 +121,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                         children: [
                           Text(
                             'Введите код',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 24,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -134,7 +134,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                                 ? 'На номер ${widget.phoneNumber} отправлено SMS с кодом авторизации'
                                 : 'На ваш номер отправлено SMS с кодом авторизации',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 14, color: Color(0xffCFD5DC)),
                           ),
                           SizedBox(
@@ -147,7 +147,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                             child: Text(
                               'Изменить номер',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff40BDFF),
                                   height: 1.2),
@@ -201,7 +201,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                                   margin: EdgeInsets.only(top: 40, bottom: 20),
                                   child: Text(
                                     'Переотправить SMS: $secondValue сек',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         fontSize: 14, color: Color(0xffCFD5DC)),
                                   ),
                                 )
@@ -218,7 +218,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                                     height: 60,
                                     child: Text(
                                       'Переотправить SMS',
-                                      style: TextStyle(
+                                      style: TextStyle(fontFamily: "Root",
                                           fontSize: 14,
                                           color: Color(0xffCFD5DC)),
                                     ),
@@ -243,13 +243,13 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                       Container(
                         width: w * 0.9,
                         margin: EdgeInsets.only(top: 16),
-                        //child: Text('Авторизируясь вы автоматически соглашаетесь  с правилами сервиса и пользовательским соглашением сервиса Odyssey Rotation', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Color(0xffCFD5DC)),),
+                        //child: Text('Авторизируясь вы автоматически соглашаетесь  с правилами сервиса и пользовательским соглашением сервиса Odyssey Rotation', textAlign: TextAlign.center, style: TextStyle(fontFamily: "Root",fontSize: 13, color: Color(0xffCFD5DC)),),
                         child: RichText(
                           textAlign: TextAlign.center,
                           text: new TextSpan(
                             // Note: Styles for TextSpans must be explicitly defined.
                             // Child text spans will inherit styles from parent
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 13,
                                 color: Color(0xffCFD5DC),
                                 fontWeight: FontWeight.w400),

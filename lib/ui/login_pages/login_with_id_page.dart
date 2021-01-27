@@ -73,7 +73,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                         children: [
                           Text(
                             'Номер не найден',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 24,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -86,7 +86,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                                 ? 'Номер не найден.  Пожалуйста, введите ваш ИИН'
                                 : 'Номер ${widget.phoneNumber} не найден.  Пожалуйста, введите ваш ИИН',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,
                                 color: Color(0xffCFD5DC),
                                 height: 1.2),
@@ -101,7 +101,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                             child: Text(
                               'Изменить номер',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff40BDFF),
                                   height: 1.2),
@@ -129,7 +129,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                               children: [
                                 Text(
                                   'ИИН',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 13,
                                       color:
                                           Color(0xffEBEBEB).withOpacity(0.39)),
@@ -140,7 +140,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                                     inputFormatters: [maskFormatter],
                                     autofocus: false,
                                     controller: textFieldCtrl,
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         color: Colors.white,
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold),
@@ -194,7 +194,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                               child: Center(
                                 child: Text(
                                   'Войти по ИИН',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 16,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -221,13 +221,13 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                       Container(
                         width: w * 0.9,
                         margin: EdgeInsets.only(top: 16),
-                        //child: Text('Авторизируясь вы автоматически соглашаетесь  с правилами сервиса и пользовательским соглашением сервиса Odyssey Rotation', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Color(0xffCFD5DC)),),
+                        //child: Text('Авторизируясь вы автоматически соглашаетесь  с правилами сервиса и пользовательским соглашением сервиса Odyssey Rotation', textAlign: TextAlign.center, style: TextStyle(fontFamily: "Root",fontSize: 13, color: Color(0xffCFD5DC)),),
                         child: RichText(
                           textAlign: TextAlign.center,
                           text: new TextSpan(
                             // Note: Styles for TextSpans must be explicitly defined.
                             // Child text spans will inherit styles from parent
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 13,
                                 color: Color(0xffCFD5DC),
                                 fontWeight: FontWeight.w400),

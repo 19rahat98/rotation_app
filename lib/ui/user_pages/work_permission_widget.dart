@@ -45,7 +45,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                 Container(
                   child: Text(
                     'Разрешение на работу',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: "Root",
                       fontSize: 24,
                       color: Color(0xff1B344F),
                       fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class _WorkPermissionState extends State<WorkPermission> {
               margin: EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 'Будьте внимательны, при заполнении.  Данные должны соответсвовать документу.',
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                   fontSize: 15,
                   color: Color(0xff1B344F).withOpacity(0.5),
                   fontWeight: FontWeight.w500,
@@ -98,7 +98,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                           ),
                           controller: _workStatusTextController,
                           //initialValue: 'Руслан',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                             fontSize: 17,
                             fontWeight: FontWeight.w400,
                             color: Color(0xff748595),
@@ -146,7 +146,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                           ),
                           controller: _workPermissionNumberController,
                           //initialValue: 'Руслан',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                             fontSize: 17,
                             fontWeight: FontWeight.w400,
                             color: Color(0xff748595),
@@ -181,7 +181,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                 children: [
                   Text(
                     'Дата выдачи',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: "Root",
                       fontSize: 13,
                       color: Color(0xff748595),
                     ),
@@ -198,7 +198,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                               EdgeInsets.only(top: 4, bottom: 7),
                               child: Text(
                                 dateOfIssueString,
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 17,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff748595),
@@ -242,7 +242,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                 children: [
                   Text(
                     'Срок действия',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: "Root",
                       fontSize: 13,
                       color: Color(0xff748595),
                     ),
@@ -259,7 +259,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                               EdgeInsets.only(top: 4, bottom: 7),
                               child: Text(
                                 idValidityDayString,
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 17,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xff748595),
@@ -325,7 +325,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                 child: Center(
                   child: Text(
                     'Сохранить',
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: "Root",
                         fontSize: 16,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),

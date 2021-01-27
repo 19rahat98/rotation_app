@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:rotation_app/ui/home_pages/home_page.dart';
-import 'package:rotation_app/ui/home_pages/nav_bar/bottom_nav.dart';
-import 'package:rotation_app/ui/home_pages/nav_bar/tab_item.dart';
+import 'package:rotation_app/ui/nav_bar/bottom_nav.dart';
+import 'package:rotation_app/ui/nav_bar/tab_item.dart';
 import 'package:rotation_app/ui/support_pages/support_screen.dart';
 import 'package:rotation_app/ui/trips_pages/trips_screen.dart';
 import 'package:rotation_app/ui/user_pages/user_profile_screen.dart';
@@ -20,22 +22,22 @@ class AppState extends State<App> {
   final List<TabItem> tabs = [
     TabItem(
       tabName: "Главная",
-      icon: Icons.calendar_today_outlined,
+      icon: 'assets/svg/Home.svg',
       page: HomePage(),
     ),
     TabItem(
       tabName: "Поездки",
-      icon: Icons.calendar_today_outlined,
+      icon: 'assets/svg/Calendar.svg',
       page: TripsPage(),
     ),
     TabItem(
       tabName: "Помощь",
-      icon: Icons.calendar_today_outlined,
+      icon: 'assets/svg/Help.svg',
       page: SupportScreen(),
     ),
     TabItem(
       tabName: "Профиль",
-      icon: Icons.calendar_today_outlined,
+      icon: 'assets/svg/Profile.svg',
       page: UserProfileScreen(),
     ),
   ];

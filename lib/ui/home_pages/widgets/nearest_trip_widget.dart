@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rotation_app/config/app+theme.dart';
 
 import 'package:rotation_app/logic_block/models/application.dart';
+import 'package:rotation_app/ui/trips_pages/inactive_trip_widget.dart';
 import 'package:rotation_app/ui/trips_pages/tickets_bottom_sheet.dart';
 
 class NearestTripWidget extends StatefulWidget {
@@ -68,7 +70,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
-    return widget.tripsList != null && widget.tripsList.isNotEmpty ? InkWell(
+    return nearestTrip.segments.isNotEmpty && nearestTrip != null ? InkWell(
       onTap: (){
         _onOpenMore(context, nearestTrip);
       },
@@ -107,7 +109,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                             nearestTrip.direction == "to-work"
                                 ? 'На вахту, '
                                 : 'Домой, ',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 19,
                                 color: Color(0xff0C2B4C),
                                 fontWeight: FontWeight.bold),
@@ -115,7 +117,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                           Text(
                             DateFormat.MMMd('ru')
                                 .format(DateTime.parse(nearestTrip.date)).toString().replaceAll('.', ''),
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 19,
                                 color: Color(0xffFF4242),
                                 fontWeight: FontWeight.bold),
@@ -134,7 +136,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                               color: AppTheme.mainDarkColor,),
                             child: Center(
                               child: SvgPicture.asset(
-                                "assets/svg/moon.svg",
+                                "assets/svg/Moon.svg",
                                 color: Colors.white,
                                 width: 24,
                                 height: 24,
@@ -152,7 +154,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                               children: [
                                 Text(
                                   'РВД +5',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 14,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -196,7 +198,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                   ),
                   Text(
                     'В ' + nearestTrip.endStation,
-                    style: TextStyle(
+                    style: TextStyle(fontFamily: "Root",
                         fontSize: 14,
                         color: Color(0xff748595),
                         fontWeight: FontWeight.w500),
@@ -228,7 +230,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                           nearestTrip.startStation +
                               ' — ' +
                               nearestTrip.endStation,
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 14,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w400),
@@ -249,7 +251,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                 DateTime.parse(nearestTrip
                                     .segments.last.train.arrDateTime),
                               ).toString().replaceAll('.', ','),
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,
                                 color: Color(0xff1B344F),
                                 fontWeight: FontWeight.w400,
@@ -276,7 +278,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
               width: 250,
               child: Text(
                 'У вас овертайм +5 дней,  билеты на новую дату куплены',
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                   fontSize: 14,
                   color: Color(0xff748595).withOpacity(0.6),
                 ),
@@ -285,6 +287,77 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
           ],
         ),
       ),
-    ) : Container();
+    ) : InkWell(
+      onTap: (){
+        showCupertinoModalPopup(
+            context: context,
+            builder: (BuildContext context) => InactiveTripActionSheet(tripData: nearestTrip));
+      },
+      child: Container(
+        width: w,
+        margin: EdgeInsets.only(top: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6), color: Colors.white),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            nearestTrip.direction == "to-work" ? 'На вахту, ' : 'Домой, ',
+                            style: TextStyle(fontFamily: "Root",
+                                fontSize: 19,
+                                color: Color(0xff0C2B4C),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            DateFormat.MMMd('ru')
+                                .format(DateTime.parse(nearestTrip.date)).toString().replaceAll('.', ''),
+                            style: TextStyle(fontFamily: "Root",
+                                fontSize: 19,
+                                color: Color(0xff0C2B4C),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    'В ' + nearestTrip.endStation,
+                    style: TextStyle(fontFamily: "Root",
+                        fontSize: 14,
+                        color: Color(0xff748595),
+                        fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+            Divider(),
+            Container(
+              margin: EdgeInsets.only(top: 8, bottom: 8),
+              child: Text(
+                'Билеты еще не оформлены',
+                style: TextStyle(fontFamily: "Root",
+                    fontSize: 14,
+                    color: Color(0xff748595),
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

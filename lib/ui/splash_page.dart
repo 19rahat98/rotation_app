@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
-import 'package:rotation_app/ui/home_pages/nav_bar/app.dart';
 import 'package:rotation_app/ui/login_pages/login_page.dart';
 import 'package:rotation_app/ui/nav_bar.dart';
 import 'package:rotation_app/config/app+theme.dart';
+import 'package:rotation_app/ui/nav_bar/app.dart';
 
 
 class SplashPage extends StatefulWidget {
@@ -55,7 +55,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                         style: AppTheme.splashText,),
                     Text(
                       'тм',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                           color: Color(0xff1262CB),
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
@@ -65,7 +65,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
               ),
               Text(
                 'by Professional Travel Service',
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                     fontSize: 12,
                     color: Color(0xff1B344F).withOpacity(0.3),
                     fontWeight: FontWeight.w500),

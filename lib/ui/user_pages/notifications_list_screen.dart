@@ -26,7 +26,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
         ),
         title: Text(
           'Уведомления',
-          style: TextStyle(
+          style: TextStyle(fontFamily: "Root",
               fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -44,7 +44,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
               Container(
                 child: Text(
                   'Уведомления',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                     fontSize: 24,
                     color: Color(0xff1B344F),
                     fontWeight: FontWeight.bold,
@@ -102,7 +102,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                             children: [
                               Text(
                                 'Билеты куплены',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 18,
                                     color: Color(0xff1262CB),
                                     fontWeight: FontWeight.bold),
@@ -111,7 +111,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                                 margin: EdgeInsets.symmetric(vertical: 6),
                                 child: Text(
                                   'На вахту, в Актогай 5 авг, вторник',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 14,
                                       color: Color(0xff385780).withOpacity(0.7),
                                       fontWeight: FontWeight.w500),
@@ -119,7 +119,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                               ),
                               Text(
                                 'только что',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 11,
                                     color: Color(0xff1B344F).withOpacity(0.5),
                                     fontWeight: FontWeight.w400),
@@ -188,7 +188,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                             children: [
                               Text(
                                 'Назначена вахта',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 18,
                                     color: Color(0xff1262CB),
                                     fontWeight: FontWeight.bold),
@@ -197,7 +197,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                                 margin: EdgeInsets.symmetric(vertical: 6),
                                 child: Text(
                                   'Ваш график смещен, нажмите, чтобы просмотреть подробнее',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 14,
                                       color: Color(0xff385780).withOpacity(0.7),
                                       fontWeight: FontWeight.w500),
@@ -205,7 +205,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                               ),
                               Text(
                                 'вчера, 10:30',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 11,
                                     color: Color(0xff1B344F).withOpacity(0.5),
                                     fontWeight: FontWeight.w400),
@@ -266,7 +266,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                             children: [
                               Text(
                                 'Свежие новости COVID-19',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 18,
                                     color: Color(0xff1262CB),
                                     fontWeight: FontWeight.bold),
@@ -275,7 +275,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                                 margin: EdgeInsets.symmetric(vertical: 6),
                                 child: Text(
                                   'Нажмите, чтобы читать статью ',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 14,
                                       color: Color(0xff385780).withOpacity(0.7),
                                       fontWeight: FontWeight.w500),
@@ -283,7 +283,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                               ),
                               Text(
                                 'вчера, 10:30',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 11,
                                     color: Color(0xff1B344F).withOpacity(0.5),
                                     fontWeight: FontWeight.w400),
@@ -344,7 +344,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                             children: [
                               Text(
                                 'Свежие новости COVID-19',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 18,
                                     color: Color(0xff1262CB),
                                     fontWeight: FontWeight.bold),
@@ -353,7 +353,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                                 margin: EdgeInsets.symmetric(vertical: 6),
                                 child: Text(
                                   'Нажмите, чтобы читать статью ',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 14,
                                       color: Color(0xff385780).withOpacity(0.7),
                                       fontWeight: FontWeight.w500),
@@ -361,7 +361,7 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                               ),
                               Text(
                                 'вчера, 10:30',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 11,
                                     color: Color(0xff1B344F).withOpacity(0.5),
                                     fontWeight: FontWeight.w400),

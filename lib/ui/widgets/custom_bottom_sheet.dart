@@ -16,7 +16,7 @@ class NoAccountBottomSheet extends StatelessWidget {
           margin: EdgeInsets.only(top: 20),
           child: Text(
             'Сотрудник не найден',
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 20,
                 color: Color(0xff1B344F),
                 fontWeight: FontWeight.bold),
@@ -27,7 +27,7 @@ class NoAccountBottomSheet extends StatelessWidget {
           child: Text(
             auth.userIIN == null ? 'Сотрудник не найден. Внимательно проверьте ваши данные и попробуйте снова.' : 'Сотрудник с ИИН: ${auth.userIIN} не найден. Внимательно проверьте ваши данные и попробуйте снова.',
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 15,
                 color: Color(0xff1B3652).withOpacity(0.5),
                 fontWeight: FontWeight.w400),
@@ -36,7 +36,7 @@ class NoAccountBottomSheet extends StatelessWidget {
         actions: <Widget>[
           CupertinoActionSheetAction(
             child: Text('Обратиться в поддержку',
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                     fontSize: 17,
                     color: Color(0xff1262CB),
                     fontWeight: FontWeight.bold)),
@@ -50,7 +50,7 @@ class NoAccountBottomSheet extends StatelessWidget {
         cancelButton: CupertinoActionSheetAction(
           child: Text(
             'Попробовать снова',
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 17,
                 color: Color(0xff1262CB),
                 fontWeight: FontWeight.bold),
@@ -140,7 +140,7 @@ class DeactivateAccountBottomSheet extends StatelessWidget {
               ),
               Text(
                 'Аккаунт деактивирован',
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                     fontSize: 20,
                     color: Color(0xffFF4242),
                     fontWeight: FontWeight.bold),
@@ -154,7 +154,7 @@ class DeactivateAccountBottomSheet extends StatelessWidget {
           child: Text(
             'Уважаемый ${auth.userPhoneNumber}, ваш аккаунт был деактивирован вашим работодателем. Если у вас есть вопросы обратитесь в службу поддержки.',
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 15,
                 color: Color(0xff1B3652).withOpacity(0.5),
                 fontWeight: FontWeight.w400),
@@ -163,7 +163,7 @@ class DeactivateAccountBottomSheet extends StatelessWidget {
         actions: <Widget>[
           CupertinoActionSheetAction(
             child: Text('Обратиться в поддержку',
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                     fontSize: 17,
                     color: Color(0xff1262CB),
                     fontWeight: FontWeight.bold)),
@@ -175,7 +175,7 @@ class DeactivateAccountBottomSheet extends StatelessWidget {
         cancelButton: CupertinoActionSheetAction(
           child: Text(
             'Попробовать снова',
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 17,
                 color: Color(0xff1262CB),
                 fontWeight: FontWeight.bold),
@@ -212,9 +212,9 @@ class SocialMediaBottomSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Позвонить', style: TextStyle(fontSize: 18, color: Color(0xff2D4461), fontWeight: FontWeight.bold),),
+                        Text('Позвонить', style: TextStyle(fontFamily: "Root",fontSize: 18, color: Color(0xff2D4461), fontWeight: FontWeight.bold),),
                         SizedBox(height: 3,),
-                        Text('круглосуточно, без выходных', style: TextStyle(fontSize: 15, color: Color(0xff2D4461).withOpacity(0.5), fontWeight: FontWeight.w400),)
+                        Text('круглосуточно, без выходных', style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff2D4461).withOpacity(0.5), fontWeight: FontWeight.w400),)
                       ],
                     ),
                   ),
@@ -248,9 +248,9 @@ class SocialMediaBottomSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Написать в WhatsApp', style: TextStyle(fontSize: 18, color: Color(0xff2D4461), fontWeight: FontWeight.bold),),
+                        Text('Написать в WhatsApp', style: TextStyle(fontFamily: "Root",fontSize: 18, color: Color(0xff2D4461), fontWeight: FontWeight.bold),),
                         SizedBox(height: 3,),
-                        Text('оператор онлайн', style: TextStyle(fontSize: 15, color: Color(0xff2D4461).withOpacity(0.5), fontWeight: FontWeight.w400),)
+                        Text('оператор онлайн', style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff2D4461).withOpacity(0.5), fontWeight: FontWeight.w400),)
                       ],
                     ),
                   ),
@@ -280,9 +280,9 @@ class SocialMediaBottomSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Написать в Telegram', style: TextStyle(fontSize: 18, color: Color(0xff2D4461), fontWeight: FontWeight.bold),),
+                        Text('Написать в Telegram', style: TextStyle(fontFamily: "Root",fontSize: 18, color: Color(0xff2D4461), fontWeight: FontWeight.bold),),
                         SizedBox(height: 3,),
-                        Text('оператор онлайн', style: TextStyle(fontSize: 15, color: Color(0xff2D4461).withOpacity(0.5), fontWeight: FontWeight.w400),)
+                        Text('оператор онлайн', style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff2D4461).withOpacity(0.5), fontWeight: FontWeight.w400),)
                       ],
                     ),
                   ),
@@ -297,7 +297,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
         cancelButton: CupertinoActionSheetAction(
           child: Text(
             'Попробовать снова',
-            style: TextStyle(
+            style: TextStyle(fontFamily: "Root",
                 fontSize: 17,
                 color: Color(0xff1262CB),
                 fontWeight: FontWeight.bold),

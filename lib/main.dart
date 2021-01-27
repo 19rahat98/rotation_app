@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rotation_app/ui/home_pages/home_page.dart';
+import 'package:rotation_app/ui/login_pages/login_page.dart';
 
 import 'package:rotation_app/ui/splash_page.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
@@ -45,6 +47,10 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         home: SplashPage(),
+        routes: <String, WidgetBuilder> {
+          '/login': (BuildContext context) => new LoginPage(),
+          '/homePage' : (BuildContext context) => new HomePage()
+        },
       ),
     );
   }

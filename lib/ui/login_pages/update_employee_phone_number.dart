@@ -74,7 +74,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                         children: [
                           Text(
                             'Подтвердите данные',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 24,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -85,7 +85,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                           Text(
                             'С указанным ИИН найден сотрудник',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,
                                 color: Color(0xffCFD5DC),
                                 height: 1.2),
@@ -100,7 +100,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                             child: Text(
                               'Изменить ИИН',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff40BDFF),
                                   height: 1.2),
@@ -129,7 +129,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                     children: [
                                       Text(
                                         auth.employee.firstName == null ? 'Сотрудник' : '${auth.employee.firstName} ${auth.employee.lastName} ${auth.employee.patronymic}',
-                                        style: TextStyle(
+                                        style: TextStyle(fontFamily: "Root",
                                           fontSize: 18,
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                       ),
                                       Text(
                                         auth.employee.position == null ? 'Сотрудник' : '${auth.employee.position}',
-                                        style: TextStyle(
+                                        style: TextStyle(fontFamily: "Root",
                                           fontSize: 14,
                                           color: Color(0xffCFD5DC),
                                         ),
@@ -173,7 +173,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                               children: [
                                 Text(
                                   'Телефон',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 13,
                                       color:
                                           Color(0xffEBEBEB).withOpacity(0.39)),
@@ -185,7 +185,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                     inputFormatters: [maskFormatter],
                                     autofocus: false,
                                     controller: textFieldCtrl,
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         color: Colors.white,
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold),
@@ -239,7 +239,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                               child: Center(
                                 child: Text(
                                   'Добавить номер телефона',
-                                  style: TextStyle(
+                                  style: TextStyle(fontFamily: "Root",
                                       fontSize: 16,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -266,13 +266,13 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                       Container(
                         width: w * 0.9,
                         margin: EdgeInsets.only(top: 16),
-                        //child: Text('Авторизируясь вы автоматически соглашаетесь  с правилами сервиса и пользовательским соглашением сервиса Odyssey Rotation', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: Color(0xffCFD5DC)),),
+                        //child: Text('Авторизируясь вы автоматически соглашаетесь  с правилами сервиса и пользовательским соглашением сервиса Odyssey Rotation', textAlign: TextAlign.center, style: TextStyle(fontFamily: "Root",fontSize: 13, color: Color(0xffCFD5DC)),),
                         child: RichText(
                           textAlign: TextAlign.center,
                           text: new TextSpan(
                             // Note: Styles for TextSpans must be explicitly defined.
                             // Child text spans will inherit styles from parent
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 13,
                                 color: Color(0xffCFD5DC),
                                 fontWeight: FontWeight.w400),

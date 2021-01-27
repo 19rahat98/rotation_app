@@ -1,7 +1,9 @@
-import 'package:rotation_app/ui/home_pages/nav_bar/tab_item.dart';
+import 'package:rotation_app/ui/nav_bar/tab_item.dart';
 
 import 'app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 class BottomNavigation extends StatelessWidget {
   BottomNavigation({
@@ -41,19 +43,20 @@ class BottomNavigation extends StatelessWidget {
   }
 
   BottomNavigationBarItem _buildItem(
-      {int index, IconData icon, String tabName}) {
+      {int index, String icon, String tabName}) {
     return BottomNavigationBarItem(
       icon: Container(
         margin: EdgeInsets.only(bottom: 5),
-        child: Icon(
+        child: SvgPicture.asset(
           icon,
-          size: 22,
+          width: 24,
+          height: 24,
           color: _tabColor(index: index),
         ),
       ),
       title: Text(
         tabName,
-        style: TextStyle(
+        style: TextStyle(fontFamily: "Root",
           color: _tabColor(index: index),
           fontSize: 11,
           fontWeight: FontWeight.w500,

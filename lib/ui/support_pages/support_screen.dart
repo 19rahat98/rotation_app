@@ -17,7 +17,7 @@ class SupportScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text(
           'Помощь',
-          style: TextStyle(
+          style: TextStyle(fontFamily: "Root",
               fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -34,7 +34,7 @@ class SupportScreen extends StatelessWidget {
                 margin: EdgeInsets.only(left: 16, top: 24, right: 16),
                 child: Text(
                   'Помощь',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                       fontSize: 24,
                       color: Color(0xff1B344F),
                       fontWeight: FontWeight.bold),
@@ -44,7 +44,7 @@ class SupportScreen extends StatelessWidget {
                 margin: EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 16),
                 child: Text(
                   'Поддержка клиентов работает круглосуточно, без выходных дней, без перерывов.',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                       fontSize: 15,
                       color: Color(0xff1B344F).withOpacity(0.5),
                       fontWeight: FontWeight.w400),
@@ -73,7 +73,7 @@ class SupportScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Позвонить в поддержку',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),
@@ -114,7 +114,7 @@ class SupportScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Написать в поддержку',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),
@@ -156,7 +156,7 @@ class SupportScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Вопросы и ответы',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),
@@ -199,7 +199,7 @@ class SupportScreen extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Пресс-служба',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),

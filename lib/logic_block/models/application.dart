@@ -23,6 +23,8 @@ class Application {
   bool isStored;
   String startStation;
   String endStation;
+  int overTime;
+  String productKey;
   List<Segments> segments;
 
   Application(
@@ -50,7 +52,10 @@ class Application {
         this.isStored,
         this.startStation,
         this.endStation,
-        this.segments});
+        this.segments,
+        this.overTime,
+        this.productKey,
+      });
 
   Application.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -77,6 +82,8 @@ class Application {
     isStored = json['is_stored'];
     startStation = json['start_station'];
     endStation = json['end_station'];
+    overTime = json['overtime'];
+    productKey = json['product_key'];
     if (json['segments'] != null) {
       segments = new List<Segments>();
       json['segments'].forEach((v) {
@@ -111,6 +118,8 @@ class Application {
     data['is_stored'] = this.isStored;
     data['start_station'] = this.startStation;
     data['end_station'] = this.endStation;
+    data['overtime'] = this.overTime;
+    data['product_key'] = this.productKey;
     if (this.segments != null) {
       data['segments'] = this.segments.map((v) => v.toJson()).toList();
     }
@@ -126,7 +135,7 @@ class Segments {
   String arrStationCode;
   String arrStationName;
   String status;
-  Null activeProcess;
+  //Null activeProcess;
   int ticketId;
   Null closedReason;
   String createdAt;
@@ -136,6 +145,7 @@ class Segments {
   String arrStation;
   Train train;
   Ticket ticket;
+  String icon;
 
   Segments(
       {this.id,
@@ -145,7 +155,7 @@ class Segments {
         this.arrStationCode,
         this.arrStationName,
         this.status,
-        this.activeProcess,
+        //this.activeProcess,
         this.ticketId,
         this.closedReason,
         this.createdAt,
@@ -155,6 +165,7 @@ class Segments {
         this.arrStation,
         this.train,
         this.ticket,
+        this.icon,
       });
 
   Segments.fromJson(Map<String, dynamic> json) {
@@ -165,7 +176,7 @@ class Segments {
     arrStationCode = json['arr_station_code'];
     arrStationName = json['arr_station_name'];
     status = json['status'];
-    activeProcess = json['active_process'];
+    //activeProcess = json['active_process'];
     ticketId = json['ticket_id'];
     closedReason = json['closed_reason'];
     createdAt = json['created_at'];
@@ -175,6 +186,7 @@ class Segments {
     arrStation = json['arr_station'];
     train = json['train'] != null ? new Train.fromJson(json['train']) : null;
     ticket = json['ticket'];
+    icon = json['icon'];
   }
 
   Map<String, dynamic> toJson() {
@@ -186,7 +198,7 @@ class Segments {
     data['arr_station_code'] = this.arrStationCode;
     data['arr_station_name'] = this.arrStationName;
     data['status'] = this.status;
-    data['active_process'] = this.activeProcess;
+    //data['active_process'] = this.activeProcess;
     data['ticket_id'] = this.ticketId;
     data['closed_reason'] = this.closedReason;
     data['created_at'] = this.createdAt;
@@ -194,6 +206,7 @@ class Segments {
     data['deleted_at'] = this.deletedAt;
     data['dep_station'] = this.depStation;
     data['arr_station'] = this.arrStation;
+    data['icon'] = this.icon;
     if (this.train != null) {
       data['train'] = this.train.toJson();
     }

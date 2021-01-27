@@ -33,7 +33,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
         ),
         title: Text(
           'Документы',
-          style: TextStyle(
+          style: TextStyle(fontFamily: "Root",
               fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -51,7 +51,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
               Container(
                 child: Text(
                   'Документы',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                     fontSize: 24,
                     color: Color(0xff1B344F),
                     fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                             children: [
                               Text(
                                 'Разрешение на работу',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 19,
                                   color: Color(0xff1B344F),
                                   fontWeight: FontWeight.bold,
@@ -111,7 +111,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.3,
                               child: Text(
                                 '№',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 14,
                                     color: Color(0xff748595).withOpacity(0.5)),
                               ),
@@ -121,7 +121,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.5,
                               child: Text(
                                 'Срок до',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 14,
                                     color: Color(0xff748595).withOpacity(0.5)),
                               ),
@@ -135,7 +135,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.3,
                               child: Text(
                                 '0005011',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
                                   fontWeight: FontWeight.w500,
@@ -147,7 +147,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.5,
                               child: Text(
                                 '10.07.2015 - 15.02.2021',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
                                   fontWeight: FontWeight.w500,
@@ -189,7 +189,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                             children: [
                               Text(
                                 'Удостоверение личности',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 19,
                                   color: Color(0xff1B344F),
                                   fontWeight: FontWeight.bold,
@@ -213,7 +213,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.3,
                               child: Text(
                                 '№',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 14,
                                     color: Color(0xff748595).withOpacity(0.5)),
                               ),
@@ -223,7 +223,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.5,
                               child: Text(
                                 'Срок до',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 14,
                                     color: Color(0xff748595).withOpacity(0.5)),
                               ),
@@ -237,7 +237,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.3,
                               child: Text(
                                 '0005011',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
                                   fontWeight: FontWeight.w500,
@@ -249,7 +249,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               width: w * 0.5,
                               child: Text(
                                 '11.09.2017 - 11.09.2027, МВД РК',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
                                   fontWeight: FontWeight.w500,
@@ -291,7 +291,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                             children: [
                               Text(
                                 'Паспорт',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                   fontSize: 19,
                                   color: Color(0xff1B344F),
                                   fontWeight: FontWeight.bold,
@@ -313,7 +313,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                           width: w * 0.8,
                           child: Text(
                             'Вы еще не указали данные вашего паспорта. Нажмите, чтобы добавить.',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,
                                 color: Color(0xff748595).withOpacity(0.5), fontWeight: FontWeight.w500),
                           ),
@@ -355,7 +355,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                           children: [
                             Text(
                               'Вид на жительство',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 19,
                                 color: Color(0xff1B344F),
                                 fontWeight: FontWeight.bold,
@@ -377,7 +377,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                         width: w * 0.8,
                         child: Text(
                           'Вы еще не указали данные вашего паспорта. Нажмите, чтобы добавить.',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 14,
                               color: Color(0xff748595).withOpacity(0.5), fontWeight: FontWeight.w500),
                         ),

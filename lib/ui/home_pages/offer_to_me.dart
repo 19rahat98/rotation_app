@@ -19,7 +19,7 @@ class OfferToMe extends StatelessWidget {
         )),
         title: Text(
           'Предложения мне',
-          style: TextStyle(fontSize: 17),
+          style: TextStyle(fontFamily: "Root",fontSize: 17),
         ),
         centerTitle: true,
         backgroundColor: Color(0xff008EFF),
@@ -46,7 +46,7 @@ class OfferToMe extends StatelessWidget {
                     ),
                     child: Text(
                       '2 предложения'.toUpperCase(),
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                           color: Color(0xff20273D).withOpacity(0.6),
                           fontSize: 12.0,
                           fontWeight: FontWeight.w600),
@@ -61,11 +61,11 @@ class OfferToMe extends StatelessWidget {
                       children: [
                         Text(
                           'Фрукты, клубника 22 тн / 86 м³',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 21.0, fontWeight: FontWeight.w600),
                         ),
                         Text('Нур-Султан - Алматы, 14 июня',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                               fontSize: 15.0,
                             ))
                       ],
@@ -83,7 +83,7 @@ class OfferToMe extends StatelessWidget {
                         child: Center(
                           child: Text(
                             'A',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12),
@@ -94,7 +94,7 @@ class OfferToMe extends StatelessWidget {
                         margin: EdgeInsets.only(left: 20),
                         child: Text(
                           'Нур-Султан',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff20273D),
                               fontWeight: FontWeight.w600),
@@ -125,7 +125,7 @@ class OfferToMe extends StatelessWidget {
                           children: [
                             Text(
                               'Казахстан, Акмолинская область',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 14.0,
                                   color: Color(0xffA2A9B2),
                                   fontWeight: FontWeight.w400),
@@ -133,7 +133,7 @@ class OfferToMe extends StatelessWidget {
                             //TODO n
                             Text(
                               '14 июня',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xff20273D),
@@ -156,7 +156,7 @@ class OfferToMe extends StatelessWidget {
                         child: Center(
                           child: Text(
                             'B',
-                            style: TextStyle(
+                            style: TextStyle(fontFamily: "Root",
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12),
@@ -167,7 +167,7 @@ class OfferToMe extends StatelessWidget {
                         margin: EdgeInsets.only(left: 20),
                         child: Text(
                           'Алматы',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff20273D),
                               fontWeight: FontWeight.w600),
@@ -198,7 +198,7 @@ class OfferToMe extends StatelessWidget {
                           children: [
                             Text(
                               'Казахстан, Алматинская область',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 14.0,
                                   color: Color(0xffA2A9B2),
                                   fontWeight: FontWeight.w400),
@@ -206,7 +206,7 @@ class OfferToMe extends StatelessWidget {
                             //TODO n
                             Text(
                               '~620 км',
-                              style: TextStyle(
+                              style: TextStyle(fontFamily: "Root",
                                   fontSize: 15.0,
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xff008EFF)),
@@ -220,7 +220,7 @@ class OfferToMe extends StatelessWidget {
                     onPressed: () {},
                     child: Text(
                       'Подробно о грузе',
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(fontFamily: "Root",color: Colors.blue),
                     ),
                     color: Colors.blue,
                     shape: RoundedRectangleBorder(
@@ -237,7 +237,7 @@ class OfferToMe extends StatelessWidget {
               margin: EdgeInsets.only(top: 20.0, left: 20),
               child: Text(
                 'Предложения перевозчиков:'.toUpperCase(),
-                style: TextStyle(
+                style: TextStyle(fontFamily: "Root",
                     fontSize: 13.0,
                     color: Color(0xff20273D).withOpacity(0.6),
                     fontWeight: FontWeight.w700),
@@ -273,13 +273,13 @@ class OfferToMe extends StatelessWidget {
                                 children: [
                                   Text(
                                     'ТОО «RAILGO»',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         fontSize: 15.0,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     'вчера 15:30',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         fontSize: 13.0, color: Color(0xffA2A9B2)),
                                   )
                                 ],
@@ -290,7 +290,7 @@ class OfferToMe extends StatelessWidget {
                             children: [
                               Text(
                                 '200 000 ₸',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 17.0,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xff008EFF)),
@@ -330,13 +330,13 @@ class OfferToMe extends StatelessWidget {
                                 children: [
                                   Text(
                                     'ТОО «Ali Logistics» ',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         fontSize: 15.0,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     'вчера 15:30',
-                                    style: TextStyle(
+                                    style: TextStyle(fontFamily: "Root",
                                         fontSize: 13.0, color: Color(0xffA2A9B2)),
                                   )
                                 ],
@@ -347,7 +347,7 @@ class OfferToMe extends StatelessWidget {
                             children: [
                               Text(
                                 '165 000 ₸',
-                                style: TextStyle(
+                                style: TextStyle(fontFamily: "Root",
                                     fontSize: 17.0,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xff008EFF)),

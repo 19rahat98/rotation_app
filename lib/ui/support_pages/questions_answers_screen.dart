@@ -42,7 +42,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
         automaticallyImplyLeading: false,
         title: Text(
           'Вопросы и ответы',
-          style: TextStyle(
+          style: TextStyle(fontFamily: "Root",
               fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -57,7 +57,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
               Container(
                 child: Text(
                   'Вопросы и ответы',
-                  style: TextStyle(
+                  style: TextStyle(fontFamily: "Root",
                       fontSize: 24,
                       color: Color(0xff1B344F),
                       fontWeight: FontWeight.bold),
@@ -81,16 +81,16 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                       margin:
                           EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       child: SvgPicture.asset(
-                        "assets/svg/search.svg",
-                        width: 16,
-                        height: 16,
+                        "assets/svg/Search.svg",
+                        width: 24,
+                        height: 24,
                       ),
                     ),
                     Expanded(
                       child: TextFormField(
                         autofocus: false,
                         controller: _searchQuestionTextController,
-                        style: TextStyle(
+                        style: TextStyle(fontFamily: "Root",
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                           color: Color(0xff748595),

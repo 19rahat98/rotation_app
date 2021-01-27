@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rotation_app/config/app+theme.dart';
+
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/ui/login_pages/login_page.dart';
-
 import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
 import 'package:rotation_app/ui/user_pages/notifications_list_screen.dart';
 import 'package:rotation_app/ui/user_pages/personal_data_screen.dart';
@@ -16,6 +18,7 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
+
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
@@ -26,7 +29,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         automaticallyImplyLeading: false,
         title: Text(
           'Мой профиль',
-          style: TextStyle(
+          style: TextStyle(fontFamily: "Root",
               fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -40,7 +43,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               Container(
                 width: w,
                 margin: EdgeInsets.symmetric(horizontal: 14),
-                padding: EdgeInsets.only(top: 13, bottom: 15, left: 5),
+                padding: EdgeInsets.only(top: 16, bottom: 15, left: 5),
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -58,94 +61,95 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ],
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    RotatedBox(
-                      quarterTurns: -1,
-                      child: Text(
-                        'Odyssey ID'.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 13,
-                          letterSpacing: 4,
-                          color: Color(0xffC7D0DB),
-                          fontWeight: FontWeight.bold,
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      RotatedBox(
+                        quarterTurns: -1,
+                        child: Text(
+                          'Odyssey ID'.toUpperCase(),
+                          style: TextStyle(fontFamily: "Root",
+                            fontSize: 13,
+                            letterSpacing: 4,
+                            color: Color(0xffC7D0DB),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 3, right: 18),
-                      height: 140,
-                      child: VerticalDivider(
-                        color: Color(0xffC8D1DC),
-                        endIndent: 10,
-                        indent: 10,
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            child: lp.employee != null ? Text(lp.employee.firstName + " " + lp.employee.lastName + " " + lp.employee.patronymic, style: TextStyle(fontSize: 20, color: Color(0xff1B344F), fontWeight: FontWeight.bold),) : Text('Баталгазиев Руслан Владимирович', style: TextStyle(fontSize: 20, color: Color(0xff1B344F), fontWeight: FontWeight.bold),),
-                            margin: EdgeInsets.only(bottom: 10),
-                            width: w * 0.7,
+                      Container(
+                          margin: EdgeInsets.only(left: 10, right: 18),
+                          child: VerticalDivider(
+                            indent: 0.0,
+                            endIndent: 0,
+                            width: 0,
                           ),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 10),
-                            width: w * 0.7,
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text('№ табеля', style: TextStyle(fontSize: 14, color: Color(0xff748595).withOpacity(0.5),),),
-                                      margin: EdgeInsets.only(bottom: 5),
-                                      width: w * 0.3,
-                                    ),
-                                    Container(
-                                      child: lp.employee != null ? Text('№ ' + lp.employee.docNumber, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),) : Text('№00011', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),),
-                                      margin: EdgeInsets.only(bottom: 5),
-                                      width: w * 0.4,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text('Компания', style: TextStyle(fontSize: 14, color: Color(0xff748595).withOpacity(0.5),),),
-                                      margin: EdgeInsets.only(bottom: 5),
-                                      width: w * 0.3,
-                                    ),
-                                    Container(
-                                      child: lp.employee != null ? Text(lp.employee.orgName, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),) : Text('ТОО «Kaz Minerals»', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
-                                      margin: EdgeInsets.only(bottom: 5),
-                                      width: w * 0.4,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Text('Должность', style: TextStyle(fontSize: 14, color: Color(0xff748595).withOpacity(0.5),),),
-                                      width: w * 0.3,
-                                    ),
-                                    Container(
-                                      child: lp.employee != null ? Text(lp.employee.position, style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),) : Text('Старший бригадир', style: TextStyle(fontSize: 14,  color: Color(0xff1B344F),),),
-                                      width: w * 0.4,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              child: lp.employee != null ? Text(lp.employee.firstName + " " + lp.employee.lastName + " " + lp.employee.patronymic, style: TextStyle(fontFamily: "Root",fontSize: 20, color: Color(0xff1B344F), fontWeight: FontWeight.bold),) : Text('Баталгазиев Руслан Владимирович', style: TextStyle(fontFamily: "Root",fontSize: 20, color: Color(0xff1B344F), fontWeight: FontWeight.bold),),
+                              margin: EdgeInsets.only(bottom: 10),
+                              width: w * 0.7,
                             ),
-                          ),
-                        ],
+                            Container(
+                              margin: EdgeInsets.only(bottom: 10),
+                              width: w * 0.7,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text('№ табеля', style: TextStyle(fontFamily: "Root",fontSize: 14, color: Color(0xff748595).withOpacity(0.5),),),
+                                        margin: EdgeInsets.only(bottom: 5),
+                                        width: w * 0.3,
+                                      ),
+                                      Container(
+                                        child: lp.employee != null ? Text('№ ' + lp.employee.docNumber, style: TextStyle(fontFamily: "Root",fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),) : Text('№00011', style: TextStyle(fontFamily: "Root",fontSize: 14,  color: Color(0xff1B344F),fontWeight: FontWeight.bold),),
+                                        margin: EdgeInsets.only(bottom: 5),
+                                        width: w * 0.4,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text('Компания', style: TextStyle(fontFamily: "Root",fontSize: 14, color: Color(0xff748595).withOpacity(0.5),),),
+                                        margin: EdgeInsets.only(bottom: 5),
+                                        width: w * 0.3,
+                                      ),
+                                      Container(
+                                        child: lp.employee != null ? Text(lp.employee.orgName, style: TextStyle(fontFamily: "Root",fontSize: 14,  color: Color(0xff1B344F),),) : Text('ТОО «Kaz Minerals»', style: TextStyle(fontFamily: "Root",fontSize: 14,  color: Color(0xff1B344F),),),
+                                        margin: EdgeInsets.only(bottom: 5),
+                                        width: w * 0.4,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text('Должность', style: TextStyle(fontFamily: "Root",fontSize: 14, color: Color(0xff748595).withOpacity(0.5),),),
+                                        width: w * 0.3,
+                                      ),
+                                      Container(
+                                        child: lp.employee != null ? Text(lp.employee.position, style: TextStyle(fontFamily: "Root",fontSize: 14,  color: Color(0xff1B344F),),) : Text('Старший бригадир', style: TextStyle(fontFamily: "Root",fontSize: 14,  color: Color(0xff1B344F),),),
+                                        width: w * 0.4,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -165,17 +169,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/Profile.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Личные данные',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),
@@ -211,17 +216,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/Docs.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Документы',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),
@@ -257,17 +263,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/Notify.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Уведомления',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),
@@ -304,17 +311,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/Rules.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Пользовательское соглашение',
-                          style: TextStyle(
+                          style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),
                               fontWeight: FontWeight.w500),
@@ -359,13 +367,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     print(await lp.getEmployeeToken());
                     final _result = await lp.deleteEmployeeData();
                     if(_result){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                     }
                   },
                   child: Center(
                     child: Text(
                       'Выйти из приложения',
-                      style: TextStyle(
+                      style: TextStyle(fontFamily: "Root",
                           fontSize: 17,
                           color: Color(0xff748595),
                           fontWeight: FontWeight.bold),
