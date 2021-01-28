@@ -28,8 +28,8 @@ class SocialMediaBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    'assets/svg/icon-send-wa.svg',
+                  Image.asset(
+                    'assets/svg/icon-send-wa.png',
                     height: 40,
                     width: 40,
                     excludeFromSemantics: true,

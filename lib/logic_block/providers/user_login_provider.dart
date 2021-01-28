@@ -59,9 +59,12 @@ class UserLoginProvider with ChangeNotifier {
   set userIIN(String iin) => _userIIN = userIIN;
 
   Future saveDataToSP() async{
+    print(_userPhoneNumber);
     final SharedPreferences prefs = await _prefs;
     await prefs.setString("userToken", _token);
-    var data = await prefs.setString("employee", jsonEncode(_employee));
+    await prefs.setString("employee", jsonEncode(_employee));
+    await prefs.setString("phoneNumber", _userPhoneNumber);
+    return await prefs.setString("phoneNumber", _userPhoneNumber);
   }
 
   Future<Status> sendSmsCodeForIIN({String smsCode}) async {

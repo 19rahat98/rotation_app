@@ -72,7 +72,7 @@ class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
     double w = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
-      child: ListView(
+        child: ListView(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         children: _activeTrip.map((item) {

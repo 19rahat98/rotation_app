@@ -405,7 +405,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
         return Container(
           width: w,
           constraints: new BoxConstraints(
-            maxHeight: h * 0.90,
+            maxHeight: h * 0.85,
           ),
           //height: h * 0.90,
           decoration: BoxDecoration(

@@ -24,6 +24,10 @@ class LoginProvider with ChangeNotifier {
   String get token => _token;
   set token(String tokenCode) => _token = token;
 
+  String _userPhoneNumber;
+  String get userPhoneNumber => _userPhoneNumber;
+  set userPhoneNumber(String tokenCode) => _userPhoneNumber = userPhoneNumber;
+
 /*  bool _isSignedIn;
   bool get isSignedIn => _isSignedIn;
   set isSignedIn(bool isSigned) => _isSignedIn = isSignedIn;*/
@@ -83,9 +87,20 @@ class LoginProvider with ChangeNotifier {
       return null;
   }
 
+  Future<String> getEmployeePhoneNumber() async {
+    final SharedPreferences prefs = await _prefs;
+    final hasUser = prefs.getString("phoneNumber");
+    if (hasUser != null) {
+      _userPhoneNumber = hasUser;
+      notifyListeners();
+      return _userPhoneNumber;
+    } else
+      return null;
+  }
+
   Future<bool> deleteEmployeeData() async {
     final SharedPreferences prefs = await _prefs;
-    print('deleteEmployeeData');
+    await prefs.remove("phoneNumber");
     await prefs.remove("userToken");
     return await prefs.remove("employee");
   }

@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:intl/intl.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:group_button/group_button.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -13,26 +16,26 @@ class PersonalDataScreen extends StatefulWidget {
   _PersonalDataScreenState createState() => _PersonalDataScreenState();
 }
 
-class _PersonalDataScreenState extends State<PersonalDataScreen> {
-  final TextEditingController _userNameTextController =
-      TextEditingController(text: "Руслан");
-  final TextEditingController _userSecondNameTextController =
-      TextEditingController(text: "Баталагазиев");
-  final TextEditingController _userMiddleNameTextController =
-      TextEditingController(text: "Владимирович");
-  final TextEditingController _userIdTextController =
-      TextEditingController(text: "920911300280");
-  final TextEditingController _userCountryNameTextController =
-      TextEditingController(text: "Казахстан");
-  final TextEditingController _userPhoneNumberTextController =
-      TextEditingController(text: "+7 (701) 399 3538");
-  final TextEditingController _userEmailTextController =
+class _PersonalDataScreenState extends State<PersonalDataScreen>{
+  TextEditingController _userNameTextController =
+      TextEditingController();
+  TextEditingController _userSecondNameTextController =
+  TextEditingController();
+  TextEditingController _userMiddleNameTextController =
+  TextEditingController();
+  TextEditingController _userIdTextController =
+  TextEditingController();
+  TextEditingController _userCountryNameTextController =
+  TextEditingController();
+  TextEditingController _userPhoneNumberTextController =
+  TextEditingController();
+  TextEditingController _userEmailTextController =
       TextEditingController();
   var maskFormatter = new MaskTextInputFormatter(
       mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
 
   DateTime birthDate; // instance of DateTime
-  String birthDateInString = '11.09.1992';
+  String birthDateInString = DateFormat.yMd('ru').format(DateTime.now()).toString();
 
   @override
   void initState() {
@@ -50,6 +53,18 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    lp.getEmployeeData();
+    lp.getEmployeePhoneNumber();
+    _userNameTextController.text = lp.employee.firstName;
+    _userSecondNameTextController.text = lp.employee.lastName;
+    _userMiddleNameTextController.text = lp.employee.patronymic;
+    _userIdTextController.text = lp.employee.iin;
+    _userCountryNameTextController.text = "Казахстан";
+    if(lp.userPhoneNumber != null){
+      _userPhoneNumberTextController.text = "+ ${lp.userPhoneNumber[0]}" +  "(" + lp.userPhoneNumber.substring(1,4) + ") " + lp.userPhoneNumber.substring(4,7) + " " + lp.userPhoneNumber.substring(7,lp.userPhoneNumber.length);
+    }
+
     return Scaffold(
       backgroundColor: Color(0xffF3F6FB),
       appBar: AppBar(
@@ -138,10 +153,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                             child: TextFormField(
                               autofocus: false,
                               controller: _userNameTextController,
-                              //initialValue: 'Руслан',
                               style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
                               ),
                               decoration: InputDecoration(
@@ -195,7 +209,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               //initialValue: 'Руслан',
                               style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
                               ),
                               decoration: InputDecoration(
@@ -243,7 +257,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               //initialValue: 'Руслан',
                               style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
                               ),
                               decoration: InputDecoration(
@@ -298,7 +312,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                         birthDateInString,
                                         style: TextStyle(fontFamily: "Root",
                                           fontSize: 17,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w500,
                                           color: Color(0xff15304D),
                                         ),
                                       ),
@@ -314,7 +328,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               onTap: () async {
                                 final datePick = await showDatePicker(
                                     context: context,
-                                    initialDate: new DateTime.utc(1992, 9, 11),
+                                    initialDate: new DateTime.now(),
                                     firstDate: new DateTime(1900),
                                     lastDate: new DateTime(2100));
                                 if (datePick != null && datePick != birthDate) {
@@ -398,7 +412,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               //initialValue: 'Руслан',
                               style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
                               ),
                               decoration: InputDecoration(
@@ -449,7 +463,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                   controller: _userCountryNameTextController,
                                   style: TextStyle(fontFamily: "Root",
                                     fontSize: 17,
-                                    fontWeight: FontWeight.w400,
+                                    fontWeight: FontWeight.w500,
                                     color: Color(0xff15304D),
                                   ),
                                   decoration: InputDecoration(
@@ -539,7 +553,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               //initialValue: 'Руслан',
                               style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
                               ),
                               decoration: InputDecoration(
@@ -587,7 +601,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               //initialValue: 'Руслан',
                               style: TextStyle(fontFamily: "Root",
                                 fontSize: 17,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
                               ),
                               decoration: InputDecoration(
@@ -642,6 +656,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                 ),
                 child: InkWell(
                   onTap: () {
+                    Navigator.pop(context);
                     print('press');
                   },
                   child: Center(

@@ -713,7 +713,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               margin: EdgeInsets.only(top: 8),
                               padding: EdgeInsets.symmetric(horizontal: 18),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(6),
                                   color: Colors.white),
                               child: Row(
                                 mainAxisAlignment:
@@ -802,8 +802,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   fontWeight: FontWeight.bold),
                             ),
                             lp.data != null && lp.data.isNotEmpty
-                                ? NearestTripWidget(tripsList: lp.data)
-                                : Container(),
+                              ? NearestTripWidget(tripsList: lp.data)
+                              : Container(
+                                  width: w,
+                                  height: 50,
+                                  margin: EdgeInsets.only(top: 8),
+                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.04),
+                                        spreadRadius: 0,
+                                        blurRadius: 8,
+                                        offset: Offset(0, 4), // changes position of shadow
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.04),
+                                        spreadRadius: 0,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 0), // changes position of shadow
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                  ),
+                                ),
                           ],
                         ),
                       ),

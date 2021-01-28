@@ -23,6 +23,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
     lp.getEmployeeData();
+    lp.getEmployeePhoneNumber();
     return Scaffold(
       backgroundColor: Color(0xffF3F6FB),
       appBar: AppBar(
@@ -204,10 +205,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
               InkWell(
                 onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserDocumentsScreen()),
-                  );
+                  lp.getEmployeePhoneNumber().then((value) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserDocumentsScreen()),
+                    );
+                  } );
                 },
                 child: Container(
                   padding: EdgeInsets.only(left: 16, right: 24),

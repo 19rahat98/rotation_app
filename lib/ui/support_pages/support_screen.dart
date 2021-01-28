@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rotation_app/config/app+theme.dart';
+
 
 import 'package:rotation_app/ui/support_pages/call_support_widget.dart';
 import 'package:rotation_app/ui/support_pages/press_service_screen.dart';
@@ -63,10 +66,11 @@ class SupportScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/Phone.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,
@@ -104,10 +108,11 @@ class SupportScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/Chat.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,
@@ -146,10 +151,11 @@ class SupportScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/Faq.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,
@@ -189,10 +195,11 @@ class SupportScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        Icons.person_outline,
-                        size: 22,
-                        color: Color(0xff748595),
+                      SvgPicture.asset(
+                        "assets/svg/News.svg",
+                        width: 24,
+                        height: 24,
+                        color: AppTheme.mainColor,
                       ),
                       Container(
                         width: w - 100,

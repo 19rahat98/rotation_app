@@ -72,7 +72,7 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.only(left: 16, right: 16),
         child: ListView(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
@@ -82,7 +82,7 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
                 onTap: () {
                   _onOpenMore(context, item);
                 },
-                child: ActiveWidget(tripData: item),
+                child: ActiveWidget(tripData: item ),
               );
             }else{
               return InkWell(
