@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
-import 'package:rotation_app/logic_block/models/application.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/ui/trips_pages/active_trips_widget.dart';

@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:rotation_app/config/app+theme.dart';
-import 'package:rotation_app/logic_block/models/application.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
 
 class InactiveTripWidget extends StatelessWidget {
   final Application tripData;
@@ -73,7 +73,7 @@ class InactiveTripWidget extends StatelessWidget {
                               style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 19,
-                                  color: tripData.overTime > 0 ? AppTheme.dangerousColor : Color(0xff0C2B4C),
+                                  color: tripData.overTime > 0 && tripData.overTime != null ? AppTheme.dangerousColor : Color(0xff0C2B4C),
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(width: 20,),
@@ -114,7 +114,7 @@ class InactiveTripWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            tripData.overTime > 0 ? Container(
+                            tripData.overTime > 0 && tripData.overTime != null ? Container(
                               padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                               margin: EdgeInsets.only(right: 7),
                               decoration: BoxDecoration(
@@ -137,11 +137,14 @@ class InactiveTripWidget extends StatelessWidget {
                                   )
                                 ],
                               ),
-                            ) : SvgPicture.asset(
-                              'assets/svg/Zap.svg',
-                              width: 24,
-                              height: 24,
-                              color: AppTheme.dangerousColor,
+                            ) : Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: SvgPicture.asset(
+                                'assets/svg/Zap.svg',
+                                width: 24,
+                                height: 24,
+                                color: AppTheme.nearlyWhite,
+                              ),
                             ),
                             tripData.segments.isEmpty ?
                             SvgPicture.asset(
@@ -229,7 +232,7 @@ class InactiveTripActionSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                tripData.shift != 'night'
+                tripData.shift == 'night'
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [

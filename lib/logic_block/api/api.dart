@@ -14,8 +14,57 @@ class Api {
   static const String CONFIRMATION_PHONE_NUMBER = "/employees/confirm-phone-update";
   static const String RETRY_SEND_SMS_CODE = "/employees/retry-send-code";
   static const String GET_APPLICATION = "/employees/get-applications";
+  static const String GET_QUESTIONS = "/faqs";
+  static const String GET_ARTICLES = "/articles";
+  static const String GET_MORE_ABOUT_ARTICLE = "/articles/";
+  static const String GET_CONVERSATION_EUR = "https://v6.exchangerate-api.com/v6/da783f775edf8a75a7afc001/latest/EUR";
+  static const String GET_CONVERSATION_USD = "https://v6.exchangerate-api.com/v6/da783f775edf8a75a7afc001/latest/USD";
+  static const String UPDATE_USER_DATA = "/employees/update-data";
+  static const String GET_USER_INFO = "/employees/info";
 
+  static Future<dynamic> userInfo() async {
+    final result = await httpManager.get(url: GET_USER_INFO);
+    return ResponseApi.fromJson(result);
+  }
 
+  static Future<dynamic> updateUserData(params) async {
+    final result = await httpManager.post(url: UPDATE_USER_DATA, data: params);
+    return ResponseApi.fromJson(result);
+  }
+
+  static Future<dynamic> getConversationEUR() async{
+    final result = await httpManager.get(
+      url: GET_CONVERSATION_EUR,
+    );
+    return ResponseApi.fromJson(result);
+  }
+
+  static Future<dynamic> getConversationUSD() async{
+    final result = await httpManager.get(
+      url: GET_CONVERSATION_USD,
+    );
+    return ResponseApi.fromJson(result);
+  }
+
+  static Future<dynamic> aboutMoreArticle({int id}) async{
+    final result = await httpManager.get(
+        url: GET_MORE_ABOUT_ARTICLE + id.toString(),
+    );
+    return ResponseApi.fromJson(result);
+  }
+
+  static Future<dynamic> getArticlesList() async{
+    final result = await httpManager.get(url: GET_ARTICLES);
+    return ResponseApi.fromJson(result);
+  }
+
+  ///GET questions list
+  static Future<dynamic> getQuestions() async{
+    final result = await httpManager.get(url: GET_QUESTIONS);
+    return ResponseApi.fromJson(result);
+  }
+
+  /// GET all data about trips and user
   static Future<dynamic> getApplication(params) async {
     final result = await httpManager.get(url: GET_APPLICATION, params: params);
     return ResponseApi.fromJson(result);
@@ -24,7 +73,6 @@ class Api {
   ///Login with phone number
   static Future<dynamic> loginByPhoneNumber(params) async {
     final result = await httpManager.post(url: SEND_CODE_LOGIN, data: params);
-    print(result);
     return ResponseApi.fromJson(result);
   }
 

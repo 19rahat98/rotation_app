@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class WorkPermission extends StatefulWidget {
@@ -80,6 +81,7 @@ class _WorkPermissionState extends State<WorkPermission> {
             ),
             Container(
               width: w,
+              margin: EdgeInsets.only(top: 16),
               child: Column(
                 children: [
                   Row(
@@ -100,7 +102,7 @@ class _WorkPermissionState extends State<WorkPermission> {
                           //initialValue: 'Руслан',
                           style: TextStyle(fontFamily: "Root",
                             fontSize: 17,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xff748595),
                           ),
                           decoration: CommonStyle.textFieldStyle(
@@ -112,10 +114,11 @@ class _WorkPermissionState extends State<WorkPermission> {
                           },
                         ),
                       ),
-                      Icon(
-                        Icons.calendar_today,
+                      SvgPicture.asset(
+                        'assets/svg/Calendar.svg',
+                        width: 24,
+                        height: 24,
                         color: Color(0xff748595),
-                        size: 20,
                       ),
                     ],
                   ),
@@ -127,6 +130,7 @@ class _WorkPermissionState extends State<WorkPermission> {
             ),
             Container(
               width: w,
+              margin: EdgeInsets.only(top: 16),
               child: Column(
                 children: [
                   Row(
@@ -148,11 +152,11 @@ class _WorkPermissionState extends State<WorkPermission> {
                           //initialValue: 'Руслан',
                           style: TextStyle(fontFamily: "Root",
                             fontSize: 17,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xff748595),
                           ),
                           decoration: CommonStyle.textFieldStyle(
-                              labelTextStr: "№ разрешения", hintTextStr: "№ разрешения"),
+                              labelTextStr: "№ разрешения", hintTextStr: "№ разрешения",),
                           validator: (value) {
                             if (value.length == 0) return ("Comments can't be empty!");
 
@@ -160,10 +164,11 @@ class _WorkPermissionState extends State<WorkPermission> {
                           },
                         ),
                       ),
-                      Icon(
-                        Icons.calendar_today,
+                      SvgPicture.asset(
+                        'assets/svg/Calendar.svg',
+                        width: 24,
+                        height: 24,
                         color: Color(0xff748595),
-                        size: 20,
                       ),
                     ],
                   ),
@@ -182,52 +187,38 @@ class _WorkPermissionState extends State<WorkPermission> {
                   Text(
                     'Дата выдачи',
                     style: TextStyle(fontFamily: "Root",
+                      fontWeight: FontWeight.w500,
                       fontSize: 13,
                       color: Color(0xff748595),
                     ),
                   ),
-                  GestureDetector(
-                      child: new Container(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding:
-                              EdgeInsets.only(top: 4, bottom: 7),
-                              child: Text(
-                                dateOfIssueString,
-                                style: TextStyle(fontFamily: "Root",
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
+                  new Container(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding:
+                          EdgeInsets.only(top: 4, bottom: 7),
+                          child: Text(
+                            dateOfIssueString,
+                            style: TextStyle(fontFamily: "Root",
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff748595),
+                            ),
+                          ),
+                        ),
+                        SvgPicture.asset(
+                                  'assets/svg/Calendar.svg',
+                                  width: 24,
+                                  height: 24,
                                   color: Color(0xff748595),
                                 ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.calendar_today,
-                              color: Color(0xff748595),
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () async {
-                        final datePick = await showDatePicker(
-                            context: context,
-                            initialDate: new DateTime.utc(1992, 9, 11),
-                            firstDate: new DateTime(1900),
-                            lastDate: new DateTime(2100));
-                        if (datePick != null && datePick != birthDate) {
-                          setState(() {
-                            dateOfIssue = datePick;
-                            dateOfIssueString =
-                            "${dateOfIssue.month}.${dateOfIssue.day}.${dateOfIssue.year}";
-                            print(dateOfIssueString);
-                          });
-                        }
-                      }),
+                      ],
+                    ),
+                  ),
                   Divider(
                     height: 0,
                   ),
@@ -243,52 +234,38 @@ class _WorkPermissionState extends State<WorkPermission> {
                   Text(
                     'Срок действия',
                     style: TextStyle(fontFamily: "Root",
+                      fontWeight: FontWeight.w500,
                       fontSize: 13,
                       color: Color(0xff748595),
                     ),
                   ),
-                  GestureDetector(
-                      child: new Container(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding:
-                              EdgeInsets.only(top: 4, bottom: 7),
-                              child: Text(
-                                idValidityDayString,
-                                style: TextStyle(fontFamily: "Root",
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
+                  new Container(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding:
+                          EdgeInsets.only(top: 4, bottom: 7),
+                          child: Text(
+                            idValidityDayString,
+                            style: TextStyle(fontFamily: "Root",
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff748595),
+                            ),
+                          ),
+                        ),
+                        SvgPicture.asset(
+                                  'assets/svg/Calendar.svg',
+                                  width: 24,
+                                  height: 24,
                                   color: Color(0xff748595),
                                 ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.calendar_today,
-                              color: Color(0xff748595),
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () async {
-                        final datePick = await showDatePicker(
-                            context: context,
-                            initialDate: new DateTime.utc(1992, 9, 11),
-                            firstDate: new DateTime(1900),
-                            lastDate: new DateTime(2100));
-                        if (datePick != null && datePick != birthDate) {
-                          setState(() {
-                            idValidityDay = datePick;
-                            idValidityDayString =
-                            "${idValidityDay.month}.${idValidityDay.day}.${idValidityDay.year}";
-                            print(idValidityDayString);
-                          });
-                        }
-                      }),
+                      ],
+                    ),
+                  ),
                   Divider(
                     height: 0,
                   ),
@@ -347,7 +324,7 @@ class CommonStyle {
 
       labelStyle: TextStyle(
         fontSize: 17,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         color: Color(0xff748595),
       ),
       isDense: true,

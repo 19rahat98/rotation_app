@@ -43,16 +43,17 @@ class TabItem {
       child: Navigator(
         // key tracks state changes
         key: key,
+        onPopPage: (route, result) {
+          if (!route.didPop(result)) {
+            return false;
+          }
+          _page = null;
+          return true;
+        },
         onGenerateRoute: (routeSettings) {
           if(routeSettings.name == '/login'){
             print(routeSettings.name);
-            return MaterialPageRoute(
-              maintainState: false,
-              fullscreenDialog: true,
-              builder: (_) => LoginPage(),
-            );
           }
-            print(routeSettings.name);
           return MaterialPageRoute(
             builder: (_) => _page,
           );

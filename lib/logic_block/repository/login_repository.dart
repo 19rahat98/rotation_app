@@ -5,6 +5,29 @@ import 'package:rotation_app/logic_block/models/user_model.dart';
 
 class UserRepository {
 
+  Future<dynamic> getUserInfo() async{
+    return await Api.userInfo();
+  }
+  ///update usr data
+  Future<dynamic> updateUserData(
+      {String firstName,
+      String lastName,
+      String patronymic,
+      DateTime birthDate,
+      String iin,
+      String gender,
+      String countryCode}) async {
+    Map<String, dynamic> params = {
+      "first_name": firstName,
+      "last_name": lastName,
+      "patronymic": patronymic,
+      "birth_date": birthDate,
+      "gender": gender,
+      "iin": iin,
+      "country_code": countryCode,
+    };
+    return await Api.updateUserData(params);
+  }
 
   ///Get all employee data
   Future<dynamic> getApplication() async {
@@ -63,37 +86,4 @@ class UserRepository {
     return await Api.retrySendSmsCode(params);
   }
 
-
-/*  ///Save Storage
-  Future<dynamic> saveEmployeeData({String employee}) async{
-    print('saveEmployeeDatas');
-    return await UtilPreferences.setString(Preferences.employee, employee);
-  }
-
-  Future<dynamic> saveEmployeeToken({String userToken}) async{
-    print('saveEmployeeData');
-    return await UtilPreferences.setString(
-      Preferences.userToken,
-      userToken,
-    );
-  }
-
-  ///Get from Storage
-  dynamic getEmployeeToken() {
-    print('getEmployeeToken');
-    return UtilPreferences.getString(Preferences.userToken);
-  }
-
-  ///Get from Storage
-  dynamic getEmployeeData() {
-    print('getEmployeeData');
-    return UtilPreferences.getString(Preferences.employee);
-  }
-
-  ///Delete Storage
-  Future<dynamic> deleteEmployeeData() async {
-    print('deleteEmployeeData');
-    await UtilPreferences.remove(Preferences.employee);
-    return await UtilPreferences.remove(Preferences.userToken);
-  }*/
 }

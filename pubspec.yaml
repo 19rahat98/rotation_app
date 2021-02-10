@@ -42,11 +42,12 @@ dev_dependencies:
   flutter_calendar_carousel: ^1.5.2
 
   # Used for logic block
-  dio: ^3.0.10
+  dio: 3.0.10
   http: ^0.12.2
   rxdart: ^0.24.1
   provider: ^4.3.3
   equatable: ^1.2.5
+  flutter_html: ^0.8.2
   url_launcher: ^5.7.10
   shared_preferences: ^0.5.12+4
 

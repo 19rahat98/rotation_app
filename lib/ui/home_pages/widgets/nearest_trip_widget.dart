@@ -4,9 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rotation_app/config/app+theme.dart';
+import 'package:flutter_html/flutter_html.dart';
 
-import 'package:rotation_app/logic_block/models/application.dart';
+import 'package:rotation_app/config/app+theme.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
 import 'package:rotation_app/ui/trips_pages/active_widget.dart';
 import 'package:rotation_app/ui/trips_pages/inactive_trip_widget.dart';
 import 'package:rotation_app/ui/trips_pages/tickets_bottom_sheet.dart';
@@ -29,13 +30,13 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
     showModalBottomSheet<void>(
       backgroundColor: Colors.transparent,
       context: context,
-      useRootNavigator: false,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
           width: w,
           constraints: new BoxConstraints(
-            maxHeight: h * 0.85,
+            maxHeight: h * 0.9,
           ),
           //height: h * 0.90,
           decoration: BoxDecoration(
@@ -59,9 +60,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
 
   Application getAllTrips() {
     for (var x in widget.tripsList) {
-      print(new DateFormat.yMMMd('ru').format(DateTime.parse(x.date)));
-      if (DateTime.now().isAfter(DateTime.parse(x.date))) {
-        print(x.date);
+      if (DateTime.now().isBefore(DateTime.parse(x.date))) {
         return x;
       }
     }
@@ -131,7 +130,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                 style: TextStyle(
                                     fontFamily: "Root",
                                     fontSize: 19,
-                                    color: nearestTrip.overTime > 0 ? AppTheme.dangerousColor : Color(0xff0C2B4C),
+                                    color: nearestTrip.overTime > 0 && nearestTrip.overTime != null ? AppTheme.dangerousColor : Color(0xff0C2B4C),
                                     fontWeight: FontWeight.bold),
                               ),
                               SizedBox(width: 20,),
@@ -172,7 +171,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                   ),
                                 ),
                               ),
-                              nearestTrip.overTime > 0 ? Container(
+                              nearestTrip.overTime > 0 && nearestTrip.overTime != null ? Container(
                                 padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                                 margin: EdgeInsets.only(right: 7),
                                 decoration: BoxDecoration(
@@ -195,11 +194,14 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                     )
                                   ],
                                 ),
-                              ) : SvgPicture.asset(
-                                'assets/svg/Zap.svg',
-                                width: 24,
-                                height: 24,
-                                color: AppTheme.dangerousColor,
+                              ) : Container(
+                                margin: EdgeInsets.only(right: 10),
+                                child: SvgPicture.asset(
+                                  'assets/svg/Zap.svg',
+                                  width: 24,
+                                  height: 24,
+                                  color: AppTheme.nearlyWhite,
+                                ),
                               ),
                               nearestTrip.segments.isEmpty ?
                               SvgPicture.asset(
@@ -343,7 +345,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                 );
               },
             ),
-            if(nearestTrip.overTime != 0)
+            if(nearestTrip.overTime != 0 && nearestTrip.overTime != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -360,7 +362,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                     ),
                   ),
                 ],
-              )
+              ),
           ],
         ),
       ),) : InkWell(
@@ -425,7 +427,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                 style: TextStyle(
                                     fontFamily: "Root",
                                     fontSize: 19,
-                                    color: nearestTrip.overTime > 0 ? AppTheme.dangerousColor : Color(0xff0C2B4C),
+                                    color: nearestTrip.overTime > 0 && nearestTrip.overTime != null ? AppTheme.dangerousColor : Color(0xff0C2B4C),
                                     fontWeight: FontWeight.bold),
                               ),
                               SizedBox(width: 20,),
@@ -466,7 +468,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                   ),
                                 ),
                               ),
-                              nearestTrip.overTime > 0 ? Container(
+                              nearestTrip.overTime > 0 && nearestTrip.overTime != null ? Container(
                                 padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                                 margin: EdgeInsets.only(right: 7),
                                 decoration: BoxDecoration(
@@ -489,11 +491,14 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                     )
                                   ],
                                 ),
-                              ) : SvgPicture.asset(
-                                'assets/svg/Zap.svg',
-                                width: 24,
-                                height: 24,
-                                color: AppTheme.dangerousColor,
+                              ) : Container(
+                                margin: EdgeInsets.only(right: 10),
+                                child: SvgPicture.asset(
+                                  'assets/svg/Zap.svg',
+                                  width: 24,
+                                  height: 24,
+                                  color: AppTheme.nearlyWhite,
+                                ),
                               ),
                               nearestTrip.segments.isEmpty ?
                               SvgPicture.asset(

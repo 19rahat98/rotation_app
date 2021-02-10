@@ -30,11 +30,11 @@ class BottomNavigation extends StatelessWidget {
       items: tabs
           .map(
             (e) => _buildItem(
-              index: e.getIndex(),
-              icon: e.icon,
-              tabName: e.tabName,
-            ),
-          )
+          index: e.getIndex(),
+          icon: e.icon,
+          tabName: e.tabName,
+        ),
+      )
           .toList(),
       onTap: (index) => onSelectTab(
         index,

@@ -3,20 +3,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'package:rotation_app/logic_block/models/application.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
 
-class TicketsBottomSheet extends StatelessWidget {
+class TicketsBottomSheet extends StatefulWidget {
   final Application tripData;
 
   const TicketsBottomSheet({Key key, this.tripData}) : super(key: key);
 
+  @override
+  _TicketsBottomSheetState createState() => _TicketsBottomSheetState();
+}
+
+class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
+
+  int _ticketPrice = 0;
+  int _totalPrice = 0;
+  int _tariffPrice = 0;
+
+  void _calculateTicketPrice(){
+    int totalPrice = 0;
+    if (widget.tripData.segments.isNotEmpty) {
+      for (int i = 0; i < widget.tripData.segments.length; i++) {
+        if(widget.tripData.segments[i].ticket != null){
+          _ticketPrice += widget.tripData.segments[i].ticket.minPrice;
+          _totalPrice +=  widget.tripData.segments[i].ticket.sum;
+        }
+      }
+      if(totalPrice > _ticketPrice){
+        _tariffPrice = totalPrice - _ticketPrice;
+      }
+    }
+  }
+
   String durationToString() {
     int minutes = 0;
     initializeDateFormatting();
-    if (tripData.segments.isNotEmpty) {
-      for (int i = 0; i < tripData.segments.length; i++) {
-        minutes += tripData.segments[i].train.inWayMinutes;
-        print(minutes);
+    if (widget.tripData.segments.isNotEmpty) {
+      for (int i = 0; i < widget.tripData.segments.length; i++) {
+        minutes += widget.tripData.segments[i].train.inWayMinutes;
       }
       var d = Duration(minutes: minutes);
       List<String> parts = d.toString().split(':');
@@ -29,12 +53,19 @@ class TicketsBottomSheet extends StatelessWidget {
     Duration hour;
     initializeDateFormatting();
 
-    if(tripData.segments.length - 1 >= index){
-      hour = DateTime.parse(tripData.segments[1].train.depDateTime).difference(DateTime.parse(tripData.segments[0].train.arrDateTime));
+    if(widget.tripData.segments.length - 1 > index){
+      hour = DateTime.parse(widget.tripData.segments[1].train.depDateTime).difference(DateTime.parse(widget.tripData.segments[0].train.arrDateTime));
       return hour;
     }
     else
       return Duration(hours: 0, minutes: 0);
+  }
+
+  @override
+  void initState() {
+    _calculateTicketPrice();
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -61,8 +92,8 @@ class TicketsBottomSheet extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(
-                              tripData.direction != null &&
-                                      tripData.direction == "to-work"
+                              widget.tripData.direction != null &&
+                                      widget.tripData.direction == "to-work"
                                   ? 'На вахту, '
                                   : 'Домой, ',
                               style: TextStyle(
@@ -73,7 +104,7 @@ class TicketsBottomSheet extends StatelessWidget {
                             ),
                             Text(
                               DateFormat.MMMd('ru')
-                                  .format(DateTime.parse(tripData.date))
+                                  .format(DateTime.parse(widget.tripData.date))
                                   .toString()
                                   .replaceAll('.', ''),
                               style: TextStyle(
@@ -96,7 +127,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff748595).withOpacity(0.7)),
                           ),
-                          tripData.shift == 'night'
+                          widget.tripData.shift == 'night'
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -142,7 +173,7 @@ class TicketsBottomSheet extends StatelessWidget {
             ),
             ListView.builder(
                 shrinkWrap: true,
-                itemCount: tripData.segments.length,
+                itemCount: widget.tripData.segments.length,
                 scrollDirection: Axis.vertical,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
@@ -156,7 +187,7 @@ class TicketsBottomSheet extends StatelessWidget {
                           children: [
                             Column(
                               children: [
-                                tripData.productKey == "rail"
+                                widget.tripData.productKey == "rail"
                                     ? SvgPicture.asset(
                                         "assets/svg/Train.svg",
                                         color: Color(0xff1B344F),
@@ -203,11 +234,11 @@ class TicketsBottomSheet extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        tripData.segments[index].icon != null &&
-                                                tripData.segments[index].icon
+                                        widget.tripData.segments[index].icon != null &&
+                                                widget.tripData.segments[index].icon
                                                     .isNotEmpty
                                             ? Image(
-                                                image: NetworkImage(tripData
+                                                image: NetworkImage(widget.tripData
                                                     .segments[index].icon),
                                                 width: 33,
                                                 height: 33,
@@ -227,7 +258,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                               Text(
                                                 DateFormat.MMMEd('ru')
                                                     .format(
-                                                      DateTime.parse(tripData
+                                                      DateTime.parse(widget.tripData
                                                           .segments[index]
                                                           .train
                                                           .depDateTime),
@@ -247,7 +278,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                                 child: Text(
                                                   DateFormat.Hm()
                                                       .format(DateTime.parse(
-                                                          tripData
+                                                          widget.tripData
                                                               .segments[index]
                                                               .train
                                                               .depDateTime))
@@ -262,7 +293,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                "${tripData.segments[index].train.depStationName[0].toUpperCase()}${tripData.segments[index].train.depStationName.toLowerCase().substring(1)}, ${tripData.segments[index].depStationName[0].toUpperCase()}${tripData.segments[index].depStationName.toLowerCase().substring(1)}",
+                                                "${widget.tripData.segments[index].train.depStationName[0].toUpperCase()}${widget.tripData.segments[index].train.depStationName.toLowerCase().substring(1)}, ${widget.tripData.segments[index].depStationName[0].toUpperCase()}${widget.tripData.segments[index].depStationName.toLowerCase().substring(1)}",
                                                 style: TextStyle(
                                                     fontFamily: "Root",
                                                     fontSize: 14,
@@ -334,7 +365,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                             Container(
                                               width: w * 0.55,
                                               child: Text(
-                                                '№${tripData.segments[index].train.number} (${tripData.segments[index].train.depStation} - ${tripData.segments[index].train.arrStation})',
+                                                '№${widget.tripData.segments[index].train.number} (${widget.tripData.segments[index].train.depStation} - ${widget.tripData.segments[index].train.arrStation})',
                                                 style: TextStyle(
                                                     fontFamily: "Root",
                                                     fontSize: 14,
@@ -388,11 +419,11 @@ class TicketsBottomSheet extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        tripData.segments[index].icon != null &&
-                                                tripData.segments[index].icon
+                                        widget.tripData.segments[index].icon != null &&
+                                                widget.tripData.segments[index].icon
                                                     .isNotEmpty
                                             ? Image(
-                                                image: NetworkImage(tripData
+                                                image: NetworkImage(widget.tripData
                                                     .segments[index].icon),
                                                 width: 33,
                                                 height: 33,
@@ -412,7 +443,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                               Text(
                                                 DateFormat.MMMEd('ru')
                                                     .format(
-                                                      DateTime.parse(tripData
+                                                      DateTime.parse(widget.tripData
                                                           .segments[index]
                                                           .train
                                                           .arrDateTime),
@@ -432,7 +463,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                                 child: Text(
                                                   DateFormat.Hm()
                                                       .format(DateTime.parse(
-                                                          tripData
+                                                          widget.tripData
                                                               .segments[index]
                                                               .train
                                                               .arrDateTime))
@@ -447,7 +478,7 @@ class TicketsBottomSheet extends StatelessWidget {
                                                 ),
                                               ),
                                               Text(
-                                                "${tripData.segments[index].train.arrStationName[0].toUpperCase()}${tripData.segments[index].train.arrStationName.toLowerCase().substring(1)}, ${tripData.segments[index].arrStationName[0].toUpperCase()}${tripData.segments[index].arrStationName.toLowerCase().substring(1)}",
+                                                "${widget.tripData.segments[index].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[index].train.arrStationName.toLowerCase().substring(1)}, ${widget.tripData.segments[index].arrStationName[0].toUpperCase()}${widget.tripData.segments[index].arrStationName.toLowerCase().substring(1)}",
                                                 style: TextStyle(
                                                     fontFamily: "Root",
                                                     fontSize: 14,
@@ -468,7 +499,7 @@ class TicketsBottomSheet extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (index < 0 && index - 1 > 0 || index == 0)
+                      if (widget.tripData.segments.length > 1 && widget.tripData.segments.length - index > 1)
                         Container(
                           width: w,
                           padding: EdgeInsets.only(top: 12, bottom: 12, left: 32),
@@ -481,7 +512,7 @@ class TicketsBottomSheet extends StatelessWidget {
                             color: Color(0xFFFCFCF5),
                           ),
                           child: Text(
-                            'Пересадка, ${tripData.segments[index].arrStationName[0].toUpperCase()}${tripData.segments[index].arrStationName.toLowerCase().substring(1)}: ${waitingTime(index).inHours} ч ${waitingTime(index).inMinutes.remainder(60)} мин',
+                            'Пересадка, ${widget.tripData.segments[index].arrStationName[0].toUpperCase()}${widget.tripData.segments[index].arrStationName.toLowerCase().substring(1)}: ${waitingTime(index).inHours} ч ${waitingTime(index).inMinutes.remainder(60)} мин',
                             style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 14,
@@ -528,7 +559,8 @@ class TicketsBottomSheet extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '0 тг',
+                        //'${widget.tripData.segments[index].train} тг',
+                        '${_ticketPrice.toString()} тг',
                         style: TextStyle(
                           fontFamily: "Root",
                           fontSize: 16,
@@ -553,7 +585,7 @@ class TicketsBottomSheet extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '+0 тг',
+                        '+ ${_tariffPrice.toString()} тг',
                         style: TextStyle(
                           fontFamily: "Root",
                           fontSize: 16,
@@ -578,7 +610,7 @@ class TicketsBottomSheet extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '0 тг',
+                        '${_totalPrice.toString()} тг',
                         style: TextStyle(
                             fontFamily: "Root",
                             fontSize: 16,

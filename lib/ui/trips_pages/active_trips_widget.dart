@@ -7,7 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'inactive_trip_widget.dart';
 import 'tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/trips_pages/active_widget.dart';
-import 'package:rotation_app/logic_block/models/application.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
 
 class ActiveTripsWidget extends StatefulWidget {
   final List<Application> tripsList;
@@ -44,13 +44,13 @@ class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
     showModalBottomSheet<void>(
       backgroundColor: Colors.transparent,
       context: context,
-      useRootNavigator: false,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
           width: w,
           constraints: new BoxConstraints(
-            maxHeight: h * 0.85,
+            maxHeight: h * 0.9,
           ),
           //height: h * 0.90,
           decoration: BoxDecoration(

@@ -1,24 +1,19 @@
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 
 import 'package:rotation_app/config/app+theme.dart';
-import 'package:rotation_app/logic_block/models/application.dart';
-import 'package:rotation_app/logic_block/models/user_model.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
-import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
 import 'package:rotation_app/ui/home_pages/widgets/nearest_trip_widget.dart';
 import 'package:rotation_app/ui/support_pages/call_support_widget.dart';
 import 'package:rotation_app/ui/support_pages/questions_answers_screen.dart';
 import 'package:rotation_app/ui/support_pages/social_media_widget.dart';
-import 'package:rotation_app/ui/trips_pages/tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/widgets/emptyPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -216,10 +211,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         DateTime day,
       ) {
         if (DateTime.now().isBefore(day)) {
-          return Container(
-            padding: EdgeInsets.only(top: 2, left: 6),
+          return Center(
             child: Text(
               day.day.toString(),
+              textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: "Root",
                   fontSize: 13,
@@ -227,7 +222,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   color: Color(0xff1B344F)),
             ),
           );
-        } else {
+        }
+        else {
           return null;
         }
       },
@@ -288,7 +284,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 Container(
                                   width: w * 0.7,
                                   child: Text(
-                                    lp.employee != null
+                                    lp.employee.orgName != null
                                         ? lp.employee.orgName
                                         : 'ТОО',
                                     style: TextStyle(
@@ -351,7 +347,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    _weekDay,
+                                    _weekDay.toUpperCase(),
                                     style: TextStyle(
                                         fontFamily: "Root",
                                         fontSize: 13,
@@ -369,7 +365,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             fontWeight: FontWeight.bold),
                                       )),
                                   Text(
-                                    _monthName,
+                                    _monthName.toUpperCase(),
                                     style: TextStyle(
                                         fontFamily: "Root",
                                         fontSize: 13,
@@ -410,75 +406,83 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ),
                             Container(
                               width: w,
-                              constraints: BoxConstraints(maxHeight: 120, minHeight: 100.0),
+                              height: 110,
                               padding: EdgeInsets.only(top: 8),
                               child: ListView(
-                                //shrinkWrap: true,
+                                shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 children: [
                                   SizedBox(width: 16),
-                                  Container(
-                                    width: 200,
-                                    padding: EdgeInsets.only(
-                                        left: 12, right: 12, top: 10),
-                                    margin: EdgeInsets.only(right: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      border:
-                                          Border.all(color: Color(0xffD0DAE7)),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Билеты куплены',
-                                                style: TextStyle(
-                                                    fontFamily: "Root",
-                                                    fontSize: 16,
-                                                    color: Color(0xff385780),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              //TODO change to svg
-                                              Icon(
-                                                Icons.check_circle_outline,
-                                                color: Color(0xff385780),
-                                                size: 20,
-                                              )
-                                            ],
+                                  InkWell(
+                                    onTap: (){
+                                      lp.getUserInfo();
+                                    },
+                                    child: Container(
+                                      width: 200,
+                                      padding: EdgeInsets.only(
+                                          left: 12, right: 12, top: 10, bottom: 5),
+                                      margin: EdgeInsets.only(right: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border:
+                                            Border.all(color: Color(0xffD0DAE7)),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Билеты куплены',
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                      fontFamily: "Root",
+                                                      fontSize: 17,
+                                                      color: Color(0xff385780),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                SvgPicture.asset(
+                                                  'assets/svg/icon-notify-success.svg',
+                                                  width: 17,
+                                                  height: 17,
+                                                  color: AppTheme.mainColor,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          width: 150,
-                                          child: Text(
-                                            'Домой, в Алматы на 8 авг, вторник',
-                                            style: TextStyle(
-                                                fontFamily: "Root",
-                                                fontSize: 14,
-                                                color: Color(0xff385780),
-                                                fontWeight: FontWeight.w400),
+                                          Container(
+                                            margin: EdgeInsets.only(top: 5),
+                                            width: 150,
+                                            child: Text(
+                                              'Домой, в Алматы на 8 авг, вторник',
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff385780),
+                                                  fontWeight: FontWeight.w500),
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          width: 150,
-                                          child: Text(
-                                            'только что',
-                                            style: TextStyle(
-                                                fontFamily: "Root",
-                                                fontSize: 11,
-                                                color: Color(0xff385780),
-                                                fontWeight: FontWeight.w300),
+                                          Container(
+                                            margin: EdgeInsets.only(top: 5),
+                                            width: 150,
+                                            child: Text(
+                                              'только что',
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 11,
+                                                  color: Color(0xff385780),
+                                                  fontWeight: FontWeight.w300),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   Container(
@@ -510,152 +514,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 'РВД +3 дня',
                                                 style: TextStyle(
                                                     fontFamily: "Root",
-                                                    fontSize: 16,
+                                                    fontSize: 17,
                                                     color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              //TODO change to svg
-                                              Icon(
-                                                Icons.check_circle_outline,
-                                                color: Color(0xff385780),
-                                                size: 20,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          width: 150,
-                                          child: Text(
-                                            'Текущая вахта, до 8 авг, вт',
-                                            style: TextStyle(
-                                                fontFamily: "Root",
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          width: 150,
-                                          child: Text(
-                                            '3 часа назад',
-                                            style: TextStyle(
-                                                fontFamily: "Root",
-                                                fontSize: 11,
-                                                color: Colors.white
-                                                    .withOpacity(0.5),
-                                                fontWeight: FontWeight.w300),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 200,
-                                    padding: EdgeInsets.only(
-                                        left: 12, right: 12, top: 10, bottom: 5),
-                                    margin: EdgeInsets.only(right: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      border:
-                                          Border.all(color: Color(0xffD0DAE7)),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Билеты куплены',
-                                                style: TextStyle(
-                                                    fontFamily: "Root",
-                                                    fontSize: 16,
-                                                    color: Color(0xff385780),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              //TODO change to svg
                                               SvgPicture.asset(
-                                                'assets/svg/icon-notify-success.svg',
+                                                'assets/svg/Zap.svg',
                                                 width: 17,
-                                                height: 17,
+                                                height: 19,
+                                                color: Colors.white,
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          width: 150,
-                                          child: Text(
-                                            'Домой, в Алматы на 8 авг, вторник',
-                                            style: TextStyle(
-                                                fontFamily: "Root",
-                                                fontSize: 14,
-                                                color: Color(0xff385780),
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(bottom: 5),
-                                          width: 150,
-                                          child: Text(
-                                            'только что',
-                                            style: TextStyle(
-                                                fontFamily: "Root",
-                                                fontSize: 11,
-                                                color: Color(0xff385780),
-                                                fontWeight: FontWeight.w300),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 200,
-                                    padding: EdgeInsets.only(
-                                        left: 12, right: 12, top: 10),
-                                    margin: EdgeInsets.only(right: 10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: Color(0xffD0DAE7)),
-                                        gradient: LinearGradient(
-                                            begin: Alignment.topRight,
-                                            end: Alignment.bottomLeft,
-                                            colors: [
-                                              Color(0xffC81D5E),
-                                              Color(0xffFF4963),
-                                            ])),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'РВД +3 дня',
-                                                style: TextStyle(
-                                                    fontFamily: "Root",
-                                                    fontSize: 16,
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              //TODO change to svg
-                                              Icon(
-                                                Icons.check_circle_outline,
-                                                color: Color(0xff385780),
-                                                size: 20,
-                                              )
                                             ],
                                           ),
                                         ),
@@ -664,11 +533,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           width: 150,
                                           child: Text(
                                             'Текущая вахта, до 8 авг, вт',
+                                            maxLines: 2,
                                             style: TextStyle(
                                                 fontFamily: "Root",
                                                 fontSize: 14,
                                                 color: Colors.white,
-                                                fontWeight: FontWeight.w400),
+                                                fontWeight: FontWeight.w500),
                                           ),
                                         ),
                                         Container(
@@ -681,6 +551,71 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 fontSize: 11,
                                                 color: Colors.white
                                                     .withOpacity(0.5),
+                                                fontWeight: FontWeight.w300),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 200,
+                                    padding: EdgeInsets.only(
+                                        left: 12, right: 12, top: 10),
+                                    margin: EdgeInsets.only(right: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border:
+                                      Border.all(color: Color(0xffD0DAE7)),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Важная новость',
+                                                style: TextStyle(
+                                                    fontFamily: "Root",
+                                                    fontSize: 16,
+                                                    color: Color(0xff385780),
+                                                    fontWeight:
+                                                    FontWeight.bold),
+                                              ),
+                                              SvgPicture.asset(
+                                                'assets/svg/News.svg',
+                                                width: 19,
+                                                height: 19,
+                                                color: AppTheme.mainColor,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: 5),
+                                          width: 150,
+                                          child: Text(
+                                            'Домой, в Алматы на 8 авг, вторник',
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                fontFamily: "Root",
+                                                fontSize: 14,
+                                                color: Color(0xff385780),
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(top: 5),
+                                          width: 150,
+                                          child: Text(
+                                            'только что',
+                                            style: TextStyle(
+                                                fontFamily: "Root",
+                                                fontSize: 11,
+                                                color: Color(0xff385780),
                                                 fontWeight: FontWeight.w300),
                                           ),
                                         ),

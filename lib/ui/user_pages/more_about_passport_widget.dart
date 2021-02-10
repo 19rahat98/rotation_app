@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class MoreAboutPassport extends StatefulWidget {
@@ -7,26 +8,32 @@ class MoreAboutPassport extends StatefulWidget {
 }
 
 class _MoreAboutPassportState extends State<MoreAboutPassport> {
-
   final TextEditingController _userNameTextController = TextEditingController();
   final TextEditingController _userSecondNameTextController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _userMiddleNameTextController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _userIdTextController = TextEditingController();
-  final TextEditingController _userDocumentNumberController = TextEditingController();
-
+  final TextEditingController _userDocumentNumberController =
+      TextEditingController();
+  final TextEditingController _userBirthdayDateController =
+  TextEditingController();
   final TextEditingController _userCountryNameTextController =
   TextEditingController(text: "МВД РК");
+  final TextEditingController _dateOfIssueController =
+  TextEditingController();
+  final TextEditingController _idValidityDayController =
+  TextEditingController(text: "12.12.2021");
+
+
+  var idValidityDayMask = new MaskTextInputFormatter(
+      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
+  var dateOfIssueMask = new MaskTextInputFormatter(
+      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
+  var dateTextFormatter = new MaskTextInputFormatter(
+      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
   var maskFormatter = new MaskTextInputFormatter(
       mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
-
-  DateTime birthDate; // instance of DateTime
-  String birthDateInString = '11.09.1992';
-  DateTime dateOfIssue;
-  String dateOfIssueString = '11.09.2016';
-  DateTime idValidityDay;
-  String idValidityDayString = '11.09.2020';
 
   @override
   void initState() {
@@ -53,7 +60,8 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                 Container(
                   child: Text(
                     'Паспорт',
-                    style: TextStyle(fontFamily: "Root",
+                    style: TextStyle(
+                      fontFamily: "Root",
                       fontSize: 24,
                       color: Color(0xff1B344F),
                       fontWeight: FontWeight.bold,
@@ -79,7 +87,8 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
               margin: EdgeInsets.symmetric(vertical: 12),
               child: Text(
                 'Будьте внимательны, при заполнении.  Данные должны соответсвовать документу.',
-                style: TextStyle(fontFamily: "Root",
+                style: TextStyle(
+                  fontFamily: "Root",
                   fontSize: 15,
                   color: Color(0xff1B344F).withOpacity(0.5),
                   fontWeight: FontWeight.w500,
@@ -101,15 +110,17 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                       ),
                       controller: _userNameTextController,
                       //initialValue: 'Руслан',
-                      style: TextStyle(fontFamily: "Root",
+                      style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 17,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         color: Color(0xff15304D),
                       ),
                       decoration: CommonStyle.textFieldStyle(
                           labelTextStr: "Имя", hintTextStr: "Имя (на латинце)"),
                       validator: (value) {
-                        if (value.length == 0) return ("Comments can't be empty!");
+                        if (value.length == 0)
+                          return ("Comments can't be empty!");
 
                         return value = null;
                       },
@@ -137,15 +148,18 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                       ),
                       controller: _userSecondNameTextController,
                       //initialValue: 'Руслан',
-                      style: TextStyle(fontFamily: "Root",
+                      style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 17,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         color: Color(0xff15304D),
                       ),
                       decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "Фамилия", hintTextStr: "Фамилия (на латинце)"),
+                          labelTextStr: "Фамилия",
+                          hintTextStr: "Фамилия (на латинце)"),
                       validator: (value) {
-                        if (value.length == 0) return ("Comments can't be empty!");
+                        if (value.length == 0)
+                          return ("Comments can't be empty!");
 
                         return value = null;
                       },
@@ -173,15 +187,17 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                       ),
                       controller: _userMiddleNameTextController,
                       //initialValue: 'Руслан',
-                      style: TextStyle(fontFamily: "Root",
+                      style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 17,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         color: Color(0xff15304D),
                       ),
                       decoration: CommonStyle.textFieldStyle(
                           labelTextStr: "Отчество", hintTextStr: "Отчество"),
                       validator: (value) {
-                        if (value.length == 0) return ("Comments can't be empty!");
+                        if (value.length == 0)
+                          return ("Comments can't be empty!");
 
                         return value = null;
                       },
@@ -199,55 +215,49 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Дата рождения',
-                    style: TextStyle(fontFamily: "Root",
-                      fontSize: 13,
-                      color: Color(0xff748595),
+                  new Container(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: w * 0.75,
+                          child: TextFormField(
+                            autofocus: false,
+                            toolbarOptions: ToolbarOptions(
+                              copy: true,
+                              cut: true,
+                              paste: true,
+                              selectAll: true,
+                            ),
+                            controller: _userBirthdayDateController,
+                            inputFormatters: [dateTextFormatter],
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontFamily: "Root",
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+
+                              color: Color(0xff15304D),
+                            ),
+                            decoration: CommonStyle.textFieldStyle(
+                                labelTextStr: "Дата рождения", hintTextStr: "Дата рождения"),
+                            validator: (value) {
+                              if (value.length == 0) return ("Comments can't be empty!");
+
+                              return value = null;
+                            },
+                          ),
+                        ),
+                        SvgPicture.asset(
+                          'assets/svg/Calendar.svg',
+                          width: 24,
+                          height: 24,
+                          color: Color(0xff1262CB),
+                        ),
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                      child: new Container(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding:
-                              EdgeInsets.only(top: 4, bottom: 7),
-                              child: Text(
-                                birthDateInString,
-                                style: TextStyle(fontFamily: "Root",
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff15304D),
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.calendar_today,
-                              color: Color(0xff1262CB),
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () async {
-                        final datePick = await showDatePicker(
-                            context: context,
-                            initialDate: new DateTime.utc(1992, 9, 11),
-                            firstDate: new DateTime(1900),
-                            lastDate: new DateTime(2100));
-                        if (datePick != null && datePick != birthDate) {
-                          setState(() {
-                            birthDate = datePick;
-                            birthDateInString =
-                            "${birthDate.month}.${birthDate.day}.${birthDate.year}";
-                            print(birthDateInString);
-                          });
-                        }
-                      }),
                   Divider(
                     height: 0,
                   ),
@@ -271,15 +281,19 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                       ),
                       controller: _userIdTextController,
                       //initialValue: 'Руслан',
-                      style: TextStyle(fontFamily: "Root",
+                      style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 17,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         color: Color(0xff15304D),
                       ),
                       decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "ИИН", hintTextStr: "Индивидуальный идентификационный номер"),
+                          labelTextStr: "ИИН",
+                          hintTextStr:
+                              "Индивидуальный идентификационный номер"),
                       validator: (value) {
-                        if (value.length == 0) return ("Comments can't be empty!");
+                        if (value.length == 0)
+                          return ("Comments can't be empty!");
 
                         return value = null;
                       },
@@ -308,15 +322,19 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                       ),
                       controller: _userDocumentNumberController,
                       //initialValue: 'Руслан',
-                      style: TextStyle(fontFamily: "Root",
+                      style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 17,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         color: Color(0xff15304D),
                       ),
                       decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "№ документа", hintTextStr: "Kод индивидуального идентификационного номера"),
+                          labelTextStr: "№ документа",
+                          hintTextStr:
+                              "Kод индивидуального идентификационного номера"),
                       validator: (value) {
-                        if (value.length == 0) return ("Comments can't be empty!");
+                        if (value.length == 0)
+                          return ("Comments can't be empty!");
 
                         return value = null;
                       },
@@ -334,55 +352,49 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Дата выдачи',
-                    style: TextStyle(fontFamily: "Root",
-                      fontSize: 13,
-                      color: Color(0xff748595),
+                  new Container(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: w * 0.75,
+                          child: TextFormField(
+                            autofocus: false,
+                            toolbarOptions: ToolbarOptions(
+                              copy: true,
+                              cut: true,
+                              paste: true,
+                              selectAll: true,
+                            ),
+                            controller: _dateOfIssueController,
+                            inputFormatters: [dateOfIssueMask],
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontFamily: "Root",
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+
+                              color: Color(0xff15304D),
+                            ),
+                            decoration: CommonStyle.textFieldStyle(
+                                labelTextStr: "Дата выдачи", hintTextStr: "Дата выдачи"),
+                            validator: (value) {
+                              if (value.length == 0) return ("Comments can't be empty!");
+
+                              return value = null;
+                            },
+                          ),
+                        ),
+                        SvgPicture.asset(
+                          'assets/svg/Calendar.svg',
+                          width: 24,
+                          height: 24,
+                          color: Color(0xff1262CB),
+                        ),
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                      child: new Container(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding:
-                              EdgeInsets.only(top: 4, bottom: 7),
-                              child: Text(
-                                dateOfIssueString,
-                                style: TextStyle(fontFamily: "Root",
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff15304D),
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.calendar_today,
-                              color: Color(0xff1262CB),
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () async {
-                        final datePick = await showDatePicker(
-                            context: context,
-                            initialDate: new DateTime.utc(1992, 9, 11),
-                            firstDate: new DateTime(1900),
-                            lastDate: new DateTime(2100));
-                        if (datePick != null && datePick != birthDate) {
-                          setState(() {
-                            dateOfIssue = datePick;
-                            dateOfIssueString =
-                            "${dateOfIssue.month}.${dateOfIssue.day}.${dateOfIssue.year}";
-                            print(dateOfIssueString);
-                          });
-                        }
-                      }),
                   Divider(
                     height: 0,
                   ),
@@ -395,55 +407,49 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Срок действия',
-                    style: TextStyle(fontFamily: "Root",
-                      fontSize: 13,
-                      color: Color(0xff748595),
+                  new Container(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: w * 0.75,
+                          child: TextFormField(
+                            autofocus: false,
+                            toolbarOptions: ToolbarOptions(
+                              copy: true,
+                              cut: true,
+                              paste: true,
+                              selectAll: true,
+                            ),
+                            controller: _idValidityDayController,
+                            inputFormatters: [idValidityDayMask],
+                            keyboardType: TextInputType.phone,
+                            style: TextStyle(fontFamily: "Root",
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+
+                              color: Color(0xff15304D),
+                            ),
+                            decoration: CommonStyle.textFieldStyle(
+                                labelTextStr: "Дата выдачи", hintTextStr: "Дата выдачи"),
+                            validator: (value) {
+                              if (value.length == 0) return ("Comments can't be empty!");
+
+                              return value = null;
+                            },
+                          ),
+                        ),
+                        SvgPicture.asset(
+                          'assets/svg/Calendar.svg',
+                          width: 24,
+                          height: 24,
+                          color: Color(0xff1262CB),
+                        ),
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                      child: new Container(
-                        padding: EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding:
-                              EdgeInsets.only(top: 4, bottom: 7),
-                              child: Text(
-                                idValidityDayString,
-                                style: TextStyle(fontFamily: "Root",
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff15304D),
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.calendar_today,
-                              color: Color(0xff1262CB),
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () async {
-                        final datePick = await showDatePicker(
-                            context: context,
-                            initialDate: new DateTime.utc(1992, 9, 11),
-                            firstDate: new DateTime(1900),
-                            lastDate: new DateTime(2100));
-                        if (datePick != null && datePick != birthDate) {
-                          setState(() {
-                            idValidityDay = datePick;
-                            idValidityDayString =
-                            "${idValidityDay.month}.${idValidityDay.day}.${idValidityDay.year}";
-                            print(idValidityDayString);
-                          });
-                        }
-                      }),
                   Divider(
                     height: 0,
                   ),
@@ -466,15 +472,18 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                       ),
                       controller: _userCountryNameTextController,
                       //initialValue: 'Руслан',
-                      style: TextStyle(fontFamily: "Root",
+                      style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 17,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         color: Color(0xff15304D),
                       ),
                       decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "Орган выдачи", hintTextStr: "Орган выдачи документа"),
+                          labelTextStr: "Орган выдачи",
+                          hintTextStr: "Орган выдачи документа"),
                       validator: (value) {
-                        if (value.length == 0) return ("Comments can't be empty!");
+                        if (value.length == 0)
+                          return ("Comments can't be empty!");
 
                         return value = null;
                       },
@@ -516,7 +525,8 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                 child: Center(
                   child: Text(
                     'Сохранить',
-                    style: TextStyle(fontFamily: "Root",
+                    style: TextStyle(
+                        fontFamily: "Root",
                         fontSize: 16,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
@@ -524,7 +534,6 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -536,10 +545,9 @@ class CommonStyle {
   static InputDecoration textFieldStyle(
       {String labelTextStr = "", String hintTextStr = ""}) {
     return InputDecoration(
-
       labelStyle: TextStyle(
         fontSize: 17,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
         color: Color(0xff748595),
       ),
       isDense: true,

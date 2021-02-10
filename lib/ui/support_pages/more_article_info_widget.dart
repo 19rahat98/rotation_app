@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class MoreArticleWidget extends StatelessWidget {
   final String title;
@@ -59,6 +60,20 @@ class MoreArticleWidget extends StatelessWidget {
             Container(
               width: w * 0.9,
               margin: EdgeInsets.only(top: 30),
+              child: Html(
+                data: articleText,
+                /*textAlign: TextAlign.justify,
+                style: TextStyle(fontFamily: "Root",
+                  fontSize: 17,
+                  color: Color(0xff748595),
+                  fontWeight: FontWeight.w400,
+                  height: 1.3,
+                ),*/
+              ),
+            ),
+           /*Container(
+              width: w * 0.9,
+              margin: EdgeInsets.only(top: 30),
               child: Text(
                 articleText,
                 textAlign: TextAlign.justify,
@@ -69,7 +84,7 @@ class MoreArticleWidget extends StatelessWidget {
                   height: 1.3,
                 ),
               ),
-            ),
+            ),*/
           ],
         ),
       ),

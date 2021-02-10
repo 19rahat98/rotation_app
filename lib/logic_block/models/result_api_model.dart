@@ -7,6 +7,7 @@ class ResultApiModel {
   final dynamic attr;
   final String code;
   final String type;
+  final dynamic allData;
 
   ResultApiModel({
     this.success,
@@ -17,6 +18,7 @@ class ResultApiModel {
     this.code,
     this.type,
     this.slug,
+    this.allData,
   });
 
   factory ResultApiModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class ResultApiModel {
         attr: json['attr'],
         code: json['code'].toString() ?? 'Unknown',
         slug: json['slug'].toString() ?? 'Unknown',
+        allData: json[''],
       );
     } catch (error) {
       return ResultApiModel(
@@ -52,7 +55,7 @@ class ResponseApi{
     try {
       return ResponseApi(
         code: json['code'],
-        data: json['data'],
+        data: json['data'] ?? [''],
       );
     } catch (error) {
       return ResponseApi(

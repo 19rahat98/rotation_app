@@ -4,9 +4,10 @@ import 'package:url_launcher/url_launcher.dart';
 class MoreInfoWidget extends StatefulWidget {
   final String moreText;
   final String title;
-  final Stream<bool> stream;
+  final Stream<int> stream;
+  final int questionId;
 
-  const MoreInfoWidget({Key key, this.stream, this.moreText, this.title})
+  const MoreInfoWidget({Key key, this.stream, this.moreText, this.title, this.questionId})
       : super(key: key);
 
   @override
@@ -14,12 +15,11 @@ class MoreInfoWidget extends StatefulWidget {
 }
 
 class _MoreInfoWidgetState extends State<MoreInfoWidget> {
-  bool _currentValue = false;
+  int _currentValue;
 
-  void _updateBool(bool newValue) {
+  void _updateValue(int newValue) {
     if (this.mounted) {
       setState(() {
-        print(newValue);
         _currentValue = newValue;
       });
     }
@@ -29,14 +29,14 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
   void initState() {
     super.initState();
     widget.stream.listen((value) {
-      _updateBool(value);
+      _updateValue(value);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
-    return !_currentValue
+    return _currentValue != widget.questionId
         ? Container(
             width: w,
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -49,17 +49,18 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
               ),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   width: w * 0.70,
                   child: Text(
                     widget.title,
-                    style: TextStyle(fontFamily: "Root",fontSize: 17, color: Color(0xff15304D)),
+                    style: TextStyle(fontFamily: "Root",fontSize: 17, color: Color(0xff15304D), fontWeight: FontWeight.w500),
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  //margin: EdgeInsets.symmetric(vertical: 6, horizontal: 6),
                   child: Icon(
                     Icons.add,
                     color: Color(0xff1262CB),
@@ -84,6 +85,7 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
                       width: w * 0.75,
@@ -93,7 +95,6 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 3, horizontal: 3),
                       child: Icon(
                         Icons.close,
                         color: Color(0xff1262CB),
@@ -105,7 +106,7 @@ class _MoreInfoWidgetState extends State<MoreInfoWidget> {
                   margin: EdgeInsets.only(top: 12, bottom: 4),
                   child:  Text(
                     widget.moreText,
-                    style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff15304D).withOpacity(0.5)),
+                    style: TextStyle(fontFamily: "Root",fontSize: 15, color: Color(0xff15304D).withOpacity(0.5), fontWeight: FontWeight.w500),
                   ),
                 ),
               ],

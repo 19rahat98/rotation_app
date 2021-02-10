@@ -33,7 +33,6 @@ class HTTPManager {
     UtilLogger.log("POST URL", baseOptions.baseUrl + url);
     UtilLogger.log("DATA", data);
     Dio dio = new Dio(baseOptions);
-
     try {
       final response = await dio.post(
         url,
@@ -68,11 +67,7 @@ class HTTPManager {
   }*/
 
   ///Get method
-  Future<dynamic> get({
-    String url,
-    Map<String, dynamic> params,
-    Options options,
-  }) async {
+  Future<dynamic> get({String url, Map<String, dynamic> params, Options options,}) async {
     UtilLogger.log("POST URL", baseOptions.baseUrl + url);
     UtilLogger.log("DATA", params);
     Dio dio = new Dio(baseOptions);

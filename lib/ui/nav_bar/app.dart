@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:rotation_app/ui/home_pages/home_page.dart';
+import 'package:rotation_app/ui/login_pages/login_page.dart';
 import 'package:rotation_app/ui/nav_bar/bottom_nav.dart';
 import 'package:rotation_app/ui/nav_bar/tab_item.dart';
 import 'package:rotation_app/ui/support_pages/support_screen.dart';

@@ -16,26 +16,65 @@ class PersonalDataScreen extends StatefulWidget {
   _PersonalDataScreenState createState() => _PersonalDataScreenState();
 }
 
-class _PersonalDataScreenState extends State<PersonalDataScreen>{
-  TextEditingController _userNameTextController =
-      TextEditingController();
-  TextEditingController _userSecondNameTextController =
-  TextEditingController();
-  TextEditingController _userMiddleNameTextController =
-  TextEditingController();
-  TextEditingController _userIdTextController =
-  TextEditingController();
+class _PersonalDataScreenState extends State<PersonalDataScreen> {
+  TextEditingController _userNameTextController = TextEditingController();
+  TextEditingController _userSecondNameTextController = TextEditingController();
+  TextEditingController _userMiddleNameTextController = TextEditingController();
+  TextEditingController _userIdTextController = TextEditingController();
   TextEditingController _userCountryNameTextController =
-  TextEditingController();
-  TextEditingController _userPhoneNumberTextController =
-  TextEditingController();
-  TextEditingController _userEmailTextController =
       TextEditingController();
+  TextEditingController _userPhoneNumberTextController =
+      TextEditingController();
+  TextEditingController _userEmailTextController = TextEditingController();
+  TextEditingController _userBirthdayDateController = TextEditingController();
   var maskFormatter = new MaskTextInputFormatter(
       mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
+  var dateTextFormatter = new MaskTextInputFormatter(
+      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
 
   DateTime birthDate; // instance of DateTime
-  String birthDateInString = DateFormat.yMd('ru').format(DateTime.now()).toString();
+  String _gender = "male";
+  String _frequencyValue = "KAZ";
+
+  static const Map<String, String> frequencyOptions = {
+    "Казахстан": "KAZ",
+    "Россия": "RUS",
+    "Узбекистан": "UZB",
+  };
+
+  Future<void> _showMessage(String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'error',
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  message,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'close',
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -46,6 +85,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
     _userPhoneNumberTextController.addListener(() {});
     _userEmailTextController.addListener(() {});
     _userNameTextController.addListener(() {});
+    _userBirthdayDateController.addListener(() {});
     super.initState();
   }
 
@@ -61,8 +101,14 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
     _userMiddleNameTextController.text = lp.employee.patronymic;
     _userIdTextController.text = lp.employee.iin;
     _userCountryNameTextController.text = "Казахстан";
-    if(lp.userPhoneNumber != null){
-      _userPhoneNumberTextController.text = "+ ${lp.userPhoneNumber[0]}" +  "(" + lp.userPhoneNumber.substring(1,4) + ") " + lp.userPhoneNumber.substring(4,7) + " " + lp.userPhoneNumber.substring(7,lp.userPhoneNumber.length);
+    if (lp.userPhoneNumber != null) {
+      _userPhoneNumberTextController.text = "+ ${lp.userPhoneNumber[0]}" +
+          "(" +
+          lp.userPhoneNumber.substring(1, 4) +
+          ") " +
+          lp.userPhoneNumber.substring(4, 7) +
+          " " +
+          lp.userPhoneNumber.substring(7, lp.userPhoneNumber.length);
     }
 
     return Scaffold(
@@ -81,8 +127,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
         ),
         title: Text(
           'Личные данные',
-          style: TextStyle(fontFamily: "Root",
-              fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontFamily: "Root",
+              fontSize: 17,
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Color(0xff2D4461),
@@ -99,7 +148,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                 margin: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'Личные данные',
-                  style: TextStyle(fontFamily: "Root",
+                  style: TextStyle(
+                    fontFamily: "Root",
                     fontSize: 24,
                     color: Color(0xff1B344F),
                     fontWeight: FontWeight.bold,
@@ -129,7 +179,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                       //margin: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'Основная информация',
-                        style: TextStyle(fontFamily: "Root",
+                        style: TextStyle(
+                          fontFamily: "Root",
                           fontSize: 19,
                           color: Color(0xff1B344F),
                           fontWeight: FontWeight.bold,
@@ -144,7 +195,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Имя',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -153,7 +205,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                             child: TextFormField(
                               autofocus: false,
                               controller: _userNameTextController,
-                              style: TextStyle(fontFamily: "Root",
+                              style: TextStyle(
+                                fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
@@ -191,7 +244,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Фамилия',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -207,7 +261,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                               ),
                               controller: _userSecondNameTextController,
                               //initialValue: 'Руслан',
-                              style: TextStyle(fontFamily: "Root",
+                              style: TextStyle(
+                                fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
@@ -245,7 +300,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Отчество',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -254,8 +310,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                             child: TextFormField(
                               autofocus: false,
                               controller: _userMiddleNameTextController,
-                              //initialValue: 'Руслан',
-                              style: TextStyle(fontFamily: "Root",
+                              style: TextStyle(
+                                fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
@@ -265,11 +321,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                                 contentPadding:
                                     EdgeInsets.only(top: 4, bottom: 7),
                                 border: InputBorder.none,
-                                /*hintText: "Найти…",
-                                hintStyle: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xff748595)),*/
                               ),
                               validator: (value) {
                                 if (value.length == 0)
@@ -293,53 +344,52 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Дата рождения',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
                           ),
-                          GestureDetector(
-                              child: new Container(
-                                padding: EdgeInsets.only(bottom: 5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding:
+                          Container(
+                            padding: EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: TextFormField(
+                                    autofocus: false,
+                                    controller: _userBirthdayDateController,
+                                    inputFormatters: [dateTextFormatter],
+                                    keyboardType: TextInputType.phone,
+                                    style: TextStyle(
+                                      fontFamily: "Root",
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff15304D),
+                                    ),
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding:
                                           EdgeInsets.only(top: 4, bottom: 7),
-                                      child: Text(
-                                        birthDateInString,
-                                        style: TextStyle(fontFamily: "Root",
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff15304D),
-                                        ),
-                                      ),
+                                      border: InputBorder.none,
                                     ),
-                                    Icon(
-                                      Icons.calendar_today,
-                                      color: Color(0xff1262CB),
-                                      size: 20,
-                                    ),
-                                  ],
+                                    validator: (value) {
+                                      if (value.length == 0)
+                                        return ("Comments can't be empty!");
+                                      return value = null;
+                                    },
+                                  ),
+                                  width: w * 0.75,
                                 ),
-                              ),
-                              onTap: () async {
-                                final datePick = await showDatePicker(
-                                    context: context,
-                                    initialDate: new DateTime.now(),
-                                    firstDate: new DateTime(1900),
-                                    lastDate: new DateTime(2100));
-                                if (datePick != null && datePick != birthDate) {
-                                  setState(() {
-                                    birthDate = datePick;
-                                    birthDateInString =
-                                        "${birthDate.month}.${birthDate.day}.${birthDate.year}";
-                                    print(birthDateInString);
-                                  });
-                                }
-                              }),
+                                SvgPicture.asset(
+                                  'assets/svg/Calendar.svg',
+                                  width: 24,
+                                  height: 24,
+                                  color: Color(0xff1262CB),
+                                ),
+                              ],
+                            ),
+                          ),
                           Divider(
                             height: 0,
                           ),
@@ -354,7 +404,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Пол',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -377,8 +428,18 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                               unselectedShadow: null,
                               unselectedColor: Colors.transparent,
                               borderRadius: BorderRadius.circular(5.0),
-                              onSelected: (index, isSelected) =>
-                                  print('$index button is selected'),
+                              onSelected: (index, isSelected) {
+                                setState(() {
+                                  if (index == 0) {
+                                    _gender = 'male';
+                                    print(_gender);
+                                  } else if (index == 1) {
+                                    _gender = 'female';
+                                    print(_gender);
+                                  } else
+                                    _gender = 'male';
+                                });
+                              },
                               buttons: [
                                 "Мужской",
                                 "Женский",
@@ -399,7 +460,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'ИИН',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -410,7 +472,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                               controller: _userIdTextController,
                               keyboardType: TextInputType.phone,
                               //initialValue: 'Руслан',
-                              style: TextStyle(fontFamily: "Root",
+                              style: TextStyle(
+                                fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
@@ -448,12 +511,46 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Гражданство',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
                           ),
-                          Row(
+                          Padding(
+                            padding: EdgeInsets.only(top: 5, bottom: 5),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: Color(0xff1262CB),
+                                ),
+                                iconSize: 24,
+                                dropdownColor: Colors.white,
+                                isDense: true,
+                                elevation: 1,
+                                items: frequencyOptions
+                                    .map((description, value) {
+                                      return MapEntry(
+                                          description,
+                                          DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(description),
+                                          ));
+                                    })
+                                    .values
+                                    .toList(),
+                                value: _frequencyValue,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _frequencyValue = newValue;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          /*Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
@@ -471,11 +568,11 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                                     contentPadding:
                                         EdgeInsets.only(top: 4, bottom: 7),
                                     border: InputBorder.none,
-                                    /*hintText: "Найти…",
+                                    */ /*hintText: "Найти…",
                                     hintStyle: TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.w500,
-                                        color: Color(0xff748595)),*/
+                                        color: Color(0xff748595)),*/ /*
                                   ),
                                   validator: (value) {
                                     if (value.length == 0)
@@ -486,12 +583,12 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                                 ),
                               ),
                               Icon(
-                                Icons.calendar_today,
+                                Icons.keyboard_arrow_down_rounded,
                                 color: Color(0xff1262CB),
-                                size: 20,
+                                size: 24,
                               ),
                             ],
-                          ),
+                          ),*/
                           Divider(
                             height: 0,
                           ),
@@ -524,7 +621,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                       //margin: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'Контактные данные',
-                        style: TextStyle(fontFamily: "Root",
+                        style: TextStyle(
+                          fontFamily: "Root",
                           fontSize: 19,
                           color: Color(0xff1B344F),
                           fontWeight: FontWeight.bold,
@@ -539,7 +637,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Телефон',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -551,7 +650,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                               inputFormatters: [maskFormatter],
                               keyboardType: TextInputType.phone,
                               //initialValue: 'Руслан',
-                              style: TextStyle(fontFamily: "Root",
+                              style: TextStyle(
+                                fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
@@ -589,7 +689,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                         children: [
                           Text(
                             'Эл. почта',
-                            style: TextStyle(fontFamily: "Root",
+                            style: TextStyle(
+                              fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
                             ),
@@ -599,7 +700,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                               autofocus: false,
                               controller: _userEmailTextController,
                               //initialValue: 'Руслан',
-                              style: TextStyle(fontFamily: "Root",
+                              style: TextStyle(
+                                fontFamily: "Root",
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xff15304D),
@@ -656,13 +758,35 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
                 ),
                 child: InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    if(_userBirthdayDateController.text.isNotEmpty){
+                      birthDate = DateFormat().add_yMd().parse(
+                          _userBirthdayDateController.text.replaceAll('.', '/'));
+                    }
+                    lp.updateUserData(
+                      firstName: _userNameTextController.text,
+                      lastName: _userSecondNameTextController.text,
+                      patronymic: _userMiddleNameTextController.text,
+                      countryCode: _frequencyValue,
+                      birthDate: birthDate,
+                      iin: _userIdTextController.text,
+                      gender: _gender,
+                    ).then((value) {
+                      if (value) {
+                        Navigator.pop(context);
+                      } else {
+                        _showMessage(
+                          'Ошибка на сервере',
+                        );
+                      }
+                    });
+                    print(birthDate);
                     print('press');
                   },
                   child: Center(
                     child: Text(
                       'Сохранить',
-                      style: TextStyle(fontFamily: "Root",
+                      style: TextStyle(
+                          fontFamily: "Root",
                           fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
@@ -683,7 +807,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
     showModalBottomSheet<void>(
       backgroundColor: Colors.transparent,
       context: context,
-      useRootNavigator: false,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
@@ -708,5 +832,3 @@ class _PersonalDataScreenState extends State<PersonalDataScreen>{
     );
   }
 }
-
-

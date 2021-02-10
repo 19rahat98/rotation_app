@@ -1,18 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rotation_app/logic_block/providers/conversation_rates_provider.dart';
+import 'package:rotation_app/ui/nav_bar/bottom_nav.dart';
+
 
 import 'more_about_passport_widget.dart';
+import 'package:rotation_app/ui/nav_bar/app.dart';
 import 'package:rotation_app/ui/user_pages/empty_data_widget.dart';
 import 'package:rotation_app/ui/user_pages/more_about_document_widget.dart';
 import 'package:rotation_app/ui/user_pages/work_permission_widget.dart';
 
 
 class UserDocumentsScreen extends StatefulWidget {
+  final int currentIndex;
+
+  const UserDocumentsScreen({Key key, this.currentIndex}) : super(key: key);
   @override
   _UserDocumentsScreenState createState() => _UserDocumentsScreenState();
 }
 
 class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -399,13 +409,13 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
     showModalBottomSheet<void>(
       backgroundColor: Colors.transparent,
       context: context,
-      useRootNavigator: false,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
           width: w,
           constraints: new BoxConstraints(
-            maxHeight: h * 0.85,
+            maxHeight: h * 0.9,
           ),
           //height: h * 0.90,
           decoration: BoxDecoration(

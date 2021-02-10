@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
+import 'package:rotation_app/ui/nav_bar/app.dart';
 
-import 'package:rotation_app/ui/nav_bar.dart';
 import 'package:rotation_app/ui/start_page.dart';
 import 'package:rotation_app/ui/widgets/custom_bottom_sheet.dart';
 
@@ -24,6 +24,7 @@ class SmsPinPage extends StatefulWidget {
 }
 
 class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
+  final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
   var textFieldCtrl = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
   StreamSubscription periodicSub;
@@ -38,7 +39,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
   }
 
   void timer() {
-    new Stream.periodic(const Duration(milliseconds: 100), (v) => v)
+    new Stream.periodic(const Duration(milliseconds: 1000), (v) => v)
         .take(60)
         .listen((count) {
       setState(() {
@@ -74,9 +75,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
               });
         case Status.SuccessLogin:
           auth.saveDataToSP().then((value){
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => StartPage()));
-            /*LoginProvider().getEmployeeApplication().whenComplete(() async {});*/
+            Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (BuildContext context) => StartPage()));
           });
       }
     });
@@ -166,7 +165,6 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                               eachFieldHeight: 72.0,
                               onSubmit: (String pin) {
                                 if (widget.hasIIN) {
-                                  print('asdadsa');
                                   _status =
                                       auth.sendSmsCodeForIIN(smsCode: pin);
                                   checkLoginState();
