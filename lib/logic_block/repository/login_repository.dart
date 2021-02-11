@@ -5,9 +5,27 @@ import 'package:rotation_app/logic_block/models/user_model.dart';
 
 class UserRepository {
 
+  Future<dynamic> updateUserDocument(
+      {String type,
+        String number,
+        DateTime issueDate,
+        DateTime expireDate,
+        String issueBy,
+      }) async {
+    Map<String, dynamic> params = {
+      "type": type,
+      "number": number,
+      "issue_date": issueDate,
+      "expire_date": expireDate,
+      "issue_by": issueBy,
+    };
+    return await Api.updateUserDocument(params);
+  }
+
   Future<dynamic> getUserInfo() async{
     return await Api.userInfo();
   }
+
   ///update usr data
   Future<dynamic> updateUserData(
       {String firstName,

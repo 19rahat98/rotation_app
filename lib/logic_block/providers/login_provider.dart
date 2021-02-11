@@ -148,4 +148,25 @@ class LoginProvider with ChangeNotifier {
     } else
       return false;
   }
+
+  Future<bool> updateUserDocument(
+      {String type,
+        String number,
+        DateTime issueDate,
+        DateTime expireDate,
+        String issueBy,
+      }) async {
+    final ResponseApi result = await userRepository.updateUserDocument(
+      type: type,
+      number: number,
+      issueBy: issueBy,
+      expireDate: expireDate,
+      issueDate: issueDate,
+    );
+    if (result.code == 200) {
+      return true;
+    } else
+      return false;
+  }
+
 }

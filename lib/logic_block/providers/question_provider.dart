@@ -20,12 +20,6 @@ class QuestionProvider with ChangeNotifier {
 
   final QuestionRepository questionRepository = QuestionRepository();
 
-  setValueToFilterData(){
-    _filteredData = [];
-    print(_filteredData);
-    notifyListeners();
-  }
-
   Future<List<Questions>> getQuestions() async{
     final ResponseApi result = await questionRepository.questionsFromDB();
     final List decodeData = result.data;

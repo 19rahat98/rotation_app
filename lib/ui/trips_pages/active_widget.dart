@@ -8,8 +8,7 @@ import 'package:rotation_app/logic_block/models/application_model.dart';
 
 class ActiveWidget extends StatelessWidget {
   final Application tripData;
-
-  const ActiveWidget({Key key, this.tripData}) : super(key: key);
+  ActiveWidget({Key key, this.tripData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +113,7 @@ class ActiveWidget extends StatelessWidget {
                               ),
                             ),
                             tripData.overTime > 0 && tripData.overTime != null ? Container(
+                              height: 32,
                               padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                               margin: EdgeInsets.only(right: 7),
                               decoration: BoxDecoration(
@@ -203,7 +203,7 @@ class ActiveWidget extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "В ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}",
+                  tripData.businessTripDays != null && tripData.endStation != null ? "на ${tripData.businessTripDays} дней, " + "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}" : "",
                   style: TextStyle(fontFamily: "Root",
                       fontSize: 14,
                       color: Color(0xff748595),
@@ -245,7 +245,7 @@ class ActiveWidget extends StatelessWidget {
                                 fontFamily: "Root",
                                 fontSize: 14,
                                 color: Color(0xff1B344F),
-                                fontWeight: FontWeight.w400),
+                                fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],
@@ -266,7 +266,7 @@ class ActiveWidget extends StatelessWidget {
                                 style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff1B344F),
-                                  fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               new TextSpan(

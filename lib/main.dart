@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:rotation_app/logic_block/providers/conversation_rates_provider.dart';
 import 'package:rotation_app/logic_block/providers/question_provider.dart';
-import 'package:rotation_app/ui/home_pages/home_page.dart';
-import 'package:rotation_app/ui/login_pages/login_page.dart';
 
 import 'package:rotation_app/ui/splash_page.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
 
 import 'logic_block/providers/articles_provider.dart';
+import 'logic_block/providers/notification_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => QuestionProvider()),
         ChangeNotifierProvider(create: (_) => ArticlesProvider()),
         ChangeNotifierProvider(create: (_) => ConversationRatesProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: MaterialApp(
         title: 'Odyssey Rotation',

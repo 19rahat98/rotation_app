@@ -25,6 +25,7 @@ class Application {
   String endStation;
   int overTime;
   String productKey;
+  int businessTripDays;
   List<Segments> segments;
 
   Application(
@@ -55,6 +56,7 @@ class Application {
         this.segments,
         this.overTime,
         this.productKey,
+        this.businessTripDays,
       });
 
   Application.fromJson(Map<String, dynamic> json) {
@@ -84,6 +86,7 @@ class Application {
     endStation = json['end_station'];
     overTime = json['overtime'];
     productKey = json['product_key'];
+    businessTripDays = json['business_trip_days'];
     if (json['segments'] != null) {
       segments = new List<Segments>();
       json['segments'].forEach((v) {

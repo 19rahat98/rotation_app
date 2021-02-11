@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'package:rotation_app/logic_block/models/questions_model.dart';
 import 'package:rotation_app/logic_block/models/rate_model.dart';
 import 'package:rotation_app/logic_block/models/result_api_model.dart';
 import 'package:rotation_app/logic_block/repository/conversation_rates_repository.dart';
-import 'package:rotation_app/logic_block/repository/question_repository.dart';
 
 class ConversationRatesProvider with ChangeNotifier {
 
@@ -17,21 +14,23 @@ class ConversationRatesProvider with ChangeNotifier {
   double get usd => _usd;
   set usd(newVal) => _usd = newVal;
 
-  final ConversationRatesRepository questionRepository = ConversationRatesRepository();
+  final ConversationRatesRepository _questionRepository = ConversationRatesRepository();
 
-  Future<double> getEUR() async{
-    final ResponseApi result = await questionRepository.getEUR();
-    final ResponseApi usdResult = await questionRepository.getUSD();
-    final decodeData = result.data['conversion_rates'];
-    final usdData = usdResult.data['conversion_rates'];
-    if(result.code == 200){
-      _eur = ConversionRates.fromJson(decodeData).kzt;
+  Future<bool> getExchangeRate() async{
+    final _eurResult = await _questionRepository.getEUR();
+    final _usdResult = await _questionRepository.getUSD();
+    final euroData = _eurResult['conversion_rates'];
+    final usdData = _usdResult['conversion_rates'];
+    if(euroData != null && usdData != null){
+      _eur = ConversionRates.fromJson(euroData).kzt;
       _usd = ConversionRates.fromJson(usdData).kzt;
+      print(_eur);
+      print(_usd);
       notifyListeners();
-      return _eur;
+      return true;
     }
     notifyListeners();
-    return null;
+    return false;
   }
 
 }

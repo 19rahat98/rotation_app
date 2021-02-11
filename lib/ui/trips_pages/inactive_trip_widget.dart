@@ -232,31 +232,35 @@ class InactiveTripActionSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                tripData.shift == 'night'
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                          "В ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}",
-                           style: TextStyle(fontFamily: "Root",
-                              fontSize: 14,
-                               fontWeight: FontWeight.w500,
-                               color: Color(0xff748595).withOpacity(0.7)),
-                          ),
-                          SvgPicture.asset(
-                            "assets/svg/Moon.svg",
-                          ),
-                          Text(
-                            'Ночная смена',
-                            style: TextStyle(
-                                fontFamily: "Root",
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                color: Color(0xff748595).withOpacity(0.7)),
-                          ),
-                        ],
-                      )
-                    : Container()
+                Row(
+                  children: [
+                    Text(
+                      tripData.businessTripDays != null && tripData.endStation != null ? "на ${tripData.businessTripDays} дней, " + "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}" : "",
+                      style: TextStyle(fontFamily: "Root",
+                          fontSize: 14,
+                          color: Color(0xff748595).withOpacity(0.7),
+                          fontWeight: FontWeight.w500),
+                    ),
+                    tripData.shift != 'night'
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/svg/Moon.svg",
+                              ),
+                              Text(
+                                'Ночная смена',
+                                style: TextStyle(
+                                    fontFamily: "Root",
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Color(0xff748595).withOpacity(0.7)),
+                              ),
+                            ],
+                          )
+                        : Container(),
+                  ],
+                )
               ],
             ),
           ),

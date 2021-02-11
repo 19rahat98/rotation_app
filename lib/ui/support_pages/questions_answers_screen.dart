@@ -19,6 +19,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
   var formKey = GlobalKey<FormState>();
   StreamController<int> _controller = new BehaviorSubject();
   int _chosenId;
+  String _query;
 
   @override
   void initState() {
@@ -217,6 +218,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                                   },
                                   onChanged: (String value) {
                                     setState(() {
+                                      _query = value;
                                       qp.afterSearch(value);
                                     });
                                   },
@@ -229,7 +231,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                       SizedBox(
                         height: 4,
                       ),
-                      qp.filteredData.isEmpty ? beforeSearchUI() : afterSearchUI()
+                      _query == null ? beforeSearchUI() : afterSearchUI()
                     ],
                   ),
                 ),

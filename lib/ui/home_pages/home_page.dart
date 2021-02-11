@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 
 import 'package:rotation_app/config/app+theme.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/logic_block/providers/conversation_rates_provider.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/notification_provider.dart';
 import 'package:rotation_app/ui/home_pages/widgets/nearest_trip_widget.dart';
 import 'package:rotation_app/ui/support_pages/call_support_widget.dart';
 import 'package:rotation_app/ui/support_pages/questions_answers_screen.dart';
@@ -26,7 +29,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String _weekDay = '';
   String _monthName = '';
   CalendarCarousel _calendarCarouselNoHeader;
-
 
   void weekDays() async {
     switch (_targetDateTime.weekday) {
@@ -162,13 +164,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
-
   @override
   void initState() {
+    super.initState();
     weekDays();
     monthDays();
-    initializeDateFormatting();
-    super.initState();
   }
 
   @override
@@ -176,6 +176,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    NotificationProvider np =
+        Provider.of<NotificationProvider>(context, listen: false);
+    ConversationRatesProvider crp =
+        Provider.of<ConversationRatesProvider>(context, listen: false);
     lp.getEmployeeData();
     _calendarCarouselNoHeader = CalendarCarousel<Event>(
       todayTextStyle: TextStyle(
@@ -222,8 +226,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   color: Color(0xff1B344F)),
             ),
           );
-        }
-        else {
+        } else {
           return null;
         }
       },
@@ -232,9 +235,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return FutureBuilder<List<Application>>(
         future: lp.getEmployeeApplication(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.none)
+          if (snapshot.connectionState == ConnectionState.none) {
+            print('snapshot.connectionState == ConnectionState.none');
             return Center(child: CircularProgressIndicator());
-          else if (snapshot.hasError)
+          } else if (snapshot.hasError)
             return Center(
                 child: emptyPage(Icons.error_outline, 'Something is wrong'));
           else if (snapshot.data != null) {
@@ -414,18 +418,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 children: [
                                   SizedBox(width: 16),
                                   InkWell(
-                                    onTap: (){
-                                      lp.getUserInfo();
+                                    onTap: () async {
+                                      /* np.sendFmcTokenToServer();
+                                      final taskId = await FlutterDownloader.enqueue(
+                                        url: 'https://tmp.ptravels.kz/download-print/32470/issue',
+                                        savedDir: '/test',
+                                        showNotification: true, // show download progress in status bar (for Android)
+                                        openFileFromNotification: true, // click on notification to open downloaded file (for Android)
+                                      );
+                                      print(taskId);*/
                                     },
                                     child: Container(
                                       width: 200,
                                       padding: EdgeInsets.only(
-                                          left: 12, right: 12, top: 10, bottom: 5),
+                                          left: 12,
+                                          right: 12,
+                                          top: 10,
+                                          bottom: 5),
                                       margin: EdgeInsets.only(right: 10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
-                                        border:
-                                            Border.all(color: Color(0xffD0DAE7)),
+                                        border: Border.all(
+                                            color: Color(0xffD0DAE7)),
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
@@ -434,7 +448,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           Container(
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text(
                                                   'Билеты куплены',
@@ -565,16 +580,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       border:
-                                      Border.all(color: Color(0xffD0DAE7)),
+                                          Border.all(color: Color(0xffD0DAE7)),
                                     ),
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
                                                 'Важная новость',
@@ -583,7 +598,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     fontSize: 16,
                                                     color: Color(0xff385780),
                                                     fontWeight:
-                                                    FontWeight.bold),
+                                                        FontWeight.bold),
                                               ),
                                               SvgPicture.asset(
                                                 'assets/svg/News.svg',
@@ -628,100 +643,147 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                      Container(
-                        width: w,
-                        margin: EdgeInsets.only(top: 16, left: 16, right: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Курс валют',
-                              style: TextStyle(
-                                  fontFamily: "Root",
-                                  fontSize: 17,
-                                  color: Color(0xff748595),
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Container(
-                              height: 50.0,
-                              width: w,
-                              margin: EdgeInsets.only(top: 8),
-                              padding: EdgeInsets.symmetric(horizontal: 18),
-                              decoration: BoxDecoration(
+                      FutureBuilder<bool>(
+                          future: crp.getExchangeRate(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.none) {
+                              print(
+                                  'snapshot.connectionState == ConnectionState.none');
+                              return Container(
+                                width: w,
+                                height: 50.0,
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
-                                  color: Colors.white),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/svg/US.svg",
-                                        width: 31,
-                                        height: 22,
+                                  color: Colors.white,
+                                ),
+                                margin: EdgeInsets.only(
+                                    top: 16, left: 16, right: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else if (snapshot.hasError)
+                              return Center(
+                                  child: emptyPage(Icons.error_outline,
+                                      'Something is wrong'));
+                            else if (snapshot.data != null) {
+                              return Container(
+                                width: w,
+                                margin: EdgeInsets.only(
+                                    top: 16, left: 16, right: 16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Курс валют',
+                                      style: TextStyle(
+                                          fontFamily: "Root",
+                                          fontSize: 17,
+                                          color: Color(0xff748595),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Container(
+                                      height: 50.0,
+                                      width: w,
+                                      margin: EdgeInsets.only(top: 8),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 18),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          color: Colors.white),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/svg/US.svg",
+                                                width: 31,
+                                                height: 22,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                'USD',
+                                                style: TextStyle(
+                                                    fontFamily: "Root",
+                                                    fontSize: 16,
+                                                    color: Color(0xff748595),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                crp.usd != null
+                                                    ? crp.usd.toStringAsFixed(1)
+                                                    : '407.4',
+                                                style: TextStyle(
+                                                    fontFamily: "Root",
+                                                    fontSize: 16,
+                                                    color: Color(0xff1B344F),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/svg/EU.svg",
+                                                width: 31,
+                                                height: 22,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                'EUR',
+                                                style: TextStyle(
+                                                    fontFamily: "Root",
+                                                    fontSize: 16,
+                                                    color: Color(0xff748595),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                crp.usd != null
+                                                    ? crp.eur.toStringAsFixed(1)
+                                                    : '487.4',
+                                                style: TextStyle(
+                                                    fontFamily: "Root",
+                                                    fontSize: 16,
+                                                    color: Color(0xff1B344F),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        'USD',
-                                        style: TextStyle(
-                                            fontFamily: "Root",
-                                            fontSize: 16,
-                                            color: Color(0xff748595),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        '407.4',
-                                        style: TextStyle(
-                                            fontFamily: "Root",
-                                            fontSize: 16,
-                                            color: Color(0xff1B344F),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/svg/EU.svg",
-                                        width: 31,
-                                        height: 22,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        'EUR',
-                                        style: TextStyle(
-                                            fontFamily: "Root",
-                                            fontSize: 16,
-                                            color: Color(0xff748595),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        '487.4',
-                                        style: TextStyle(
-                                            fontFamily: "Root",
-                                            fontSize: 16,
-                                            color: Color(0xff1B344F),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else
+                              return Container(
+                                width: w,
+                                height: 50.0,
+                                margin: EdgeInsets.only(
+                                    top: 16, left: 16, right: 16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                          }),
                       Container(
                         width: w,
                         margin: EdgeInsets.only(top: 16, left: 16, right: 16),
@@ -737,31 +799,45 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   fontWeight: FontWeight.bold),
                             ),
                             lp.data != null && lp.data.isNotEmpty
-                              ? NearestTripWidget(tripsList: lp.data)
-                              : Container(
-                                  width: w,
-                                  height: 50,
-                                  margin: EdgeInsets.only(top: 8),
-                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.04),
-                                        spreadRadius: 0,
-                                        blurRadius: 8,
-                                        offset: Offset(0, 4), // changes position of shadow
+                                ? NearestTripWidget(tripsList: lp.data)
+                                : Container(
+                                    width: w,
+                                    height: 50,
+                                    alignment: Alignment.centerLeft,
+                                    margin: EdgeInsets.only(top: 8),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 12),
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.04),
+                                          spreadRadius: 0,
+                                          blurRadius: 8,
+                                          offset: Offset(0,
+                                              4), // changes position of shadow
+                                        ),
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.04),
+                                          spreadRadius: 0,
+                                          blurRadius: 2,
+                                          offset: Offset(0,
+                                              0), // changes position of shadow
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: Colors.white,
+                                    ),
+                                    child: Text(
+                                      'У вас нет активных поездок.',
+                                      style: TextStyle(
+                                        fontFamily: "Root",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color:
+                                            Color(0xff748595).withOpacity(0.6),
                                       ),
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.04),
-                                        spreadRadius: 0,
-                                        blurRadius: 2,
-                                        offset: Offset(0, 0), // changes position of shadow
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: Colors.white,
+                                    ),
                                   ),
-                                ),
                           ],
                         ),
                       ),
@@ -794,7 +870,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     onTap: () {
                                       showCupertinoModalPopup(
                                           context: context,
-                                          builder: (BuildContext context) => CallSupportWidget());
+                                          builder: (BuildContext context) =>
+                                              CallSupportWidget());
                                     },
                                     child: Container(
                                       height: 130,
@@ -811,7 +888,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image(
-                                            image: AssetImage('assets/svg/icon-help-phone.png'),
+                                            image: AssetImage(
+                                                'assets/svg/icon-help-phone.png'),
                                             width: 30,
                                             height: 30,
                                           ),
@@ -852,14 +930,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       onTap: () {
                                         showCupertinoModalPopup(
                                             context: context,
-                                            builder: (BuildContext context) => SocialMediaBottomSheet());
+                                            builder: (BuildContext context) =>
+                                                SocialMediaBottomSheet());
                                       },
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Image(
-                                            image: AssetImage('assets/svg/icon-help-message.png'),
+                                            image: AssetImage(
+                                                'assets/svg/icon-help-message.png'),
                                             width: 30,
                                             height: 30,
                                           ),
@@ -897,10 +977,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             color: Color(0xffD0DAE7)),
                                         color: Colors.white),
                                     child: InkWell(
-                                      onTap: (){
+                                      onTap: () {
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => QuestionsAnswers()),
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  QuestionsAnswers()),
                                         );
                                       },
                                       child: Column(
@@ -908,7 +990,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                             MainAxisAlignment.center,
                                         children: [
                                           Image(
-                                            image: AssetImage('assets/svg/icon-help-faq.png'),
+                                            image: AssetImage(
+                                                'assets/svg/icon-help-faq.png'),
                                             width: 24,
                                             height: 30,
                                           ),

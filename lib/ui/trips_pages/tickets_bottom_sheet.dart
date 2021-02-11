@@ -328,6 +328,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               child: Text(
                                                 'перевозчик',
                                                 style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
                                                     color: Color(0xff748595)
@@ -339,6 +340,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               child: Text(
                                                 'КТЖ',
                                                 style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
                                                     color: Color(0xff1B344F)),
@@ -356,6 +358,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               child: Text(
                                                 'поезд',
                                                 style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
                                                     color: Color(0xff748595)
@@ -367,6 +370,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               child: Text(
                                                 '№${widget.tripData.segments[index].train.number} (${widget.tripData.segments[index].train.depStation} - ${widget.tripData.segments[index].train.arrStation})',
                                                 style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
                                                     color: Color(0xff1B344F)),
@@ -384,6 +388,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               child: Text(
                                                 'вагон',
                                                 style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
                                                     color: Color(0xff748595)
@@ -395,6 +400,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               child: Text(
                                                 'Купе №',
                                                 style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
                                                     color: Color(0xff1B344F)),
@@ -553,6 +559,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                       Text(
                         'Билеты',
                         style: TextStyle(
+                          fontWeight: FontWeight.w500,
                           fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff1B344F),
@@ -562,6 +569,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                         //'${widget.tripData.segments[index].train} тг',
                         '${_ticketPrice.toString()} тг',
                         style: TextStyle(
+                          fontWeight: FontWeight.w500,
                           fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff748595),
@@ -573,7 +581,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                     thickness: 1,
                     color: Color(0xffEBEBEB),
                   ),
-                  Row(
+                  /*Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -597,13 +605,14 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                   Divider(
                     thickness: 1,
                     color: Color(0xffEBEBEB),
-                  ),
+                  ),*/
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Итого',
                         style: TextStyle(
+                          fontWeight: FontWeight.w500,
                           fontFamily: "Root",
                           fontSize: 16,
                           color: Color(0xff1B344F),

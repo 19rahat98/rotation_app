@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/notification_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
 import 'package:rotation_app/ui/nav_bar/app.dart';
 
@@ -49,8 +50,9 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
   }
 
   checkLoginState() {
-    UserLoginProvider auth =
-        Provider.of<UserLoginProvider>(context, listen: false);
+    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
+    NotificationProvider np = Provider.of<NotificationProvider>(context, listen: false);
+    np.sendFmcTokenToServer();
     _status.then((value) {
       print(value);
       switch (value) {

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
-import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:group_button/group_button.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/ui/trips_pages/tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
 

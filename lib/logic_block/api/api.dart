@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:rotation_app/logic_block/api/http_request.dart';
 import 'package:rotation_app/logic_block/models/result_api_model.dart';
 
@@ -21,6 +22,18 @@ class Api {
   static const String GET_CONVERSATION_USD = "https://v6.exchangerate-api.com/v6/da783f775edf8a75a7afc001/latest/USD";
   static const String UPDATE_USER_DATA = "/employees/update-data";
   static const String GET_USER_INFO = "/employees/info";
+  static const String UPDATE_USER_DOCUMENT = "/employees/update-document";
+  static const String SEND_FMC_TOKEN = "/employees/fix";
+
+  static Future<dynamic> sendFmcTokenToServer(params) async{
+    final result = await httpManager.post(url: SEND_FMC_TOKEN, data: params);
+    return ResponseApi.fromJson(result);
+  }
+
+  static Future<dynamic> updateUserDocument(params) async{
+    final result = await httpManager.post(url: UPDATE_USER_DOCUMENT, data: params);
+    return ResponseApi.fromJson(result);
+  }
 
   static Future<dynamic> userInfo() async {
     final result = await httpManager.get(url: GET_USER_INFO);
@@ -33,17 +46,17 @@ class Api {
   }
 
   static Future<dynamic> getConversationEUR() async{
-    final result = await httpManager.get(
-      url: GET_CONVERSATION_EUR,
+    final result = await http.get(
+      GET_CONVERSATION_EUR,
     );
-    return ResponseApi.fromJson(result);
+    return Map<String, dynamic>.from(jsonDecode(result.body));
   }
 
   static Future<dynamic> getConversationUSD() async{
-    final result = await httpManager.get(
-      url: GET_CONVERSATION_USD,
+    final result = await http.get(
+      GET_CONVERSATION_USD,
     );
-    return ResponseApi.fromJson(result);
+    return Map<String, dynamic>.from(jsonDecode(result.body));
   }
 
   static Future<dynamic> aboutMoreArticle({int id}) async{

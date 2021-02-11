@@ -17,6 +17,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
   final TextEditingController _searchQuestionTextController =
       TextEditingController();
   var formKey = GlobalKey<FormState>();
+  String _query;
 
   @override
   void initState() {
@@ -333,6 +334,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                                   },
                                   onChanged: (String value) {
                                     setState(() {
+                                      _query = value;
                                       ap.afterSearch(value);
                                     });
                                   },
@@ -342,7 +344,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                           ],
                         ),
                       ),
-                      ap.filteredData.isEmpty
+                      _query == null
                           ? beforeSearchUI()
                           : afterSearchUI(),
                     ],

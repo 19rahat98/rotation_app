@@ -64,13 +64,13 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
         return x;
       }
     }
-    return widget.tripsList.last;
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width - 56;
-    return nearestTrip.segments.isNotEmpty && nearestTrip != null ? InkWell(
+    return nearestTrip != null ? nearestTrip.segments.isNotEmpty  ? InkWell(
       onTap: (){
         _onOpenMore(context, nearestTrip);
       },
@@ -172,6 +172,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                 ),
                               ),
                               nearestTrip.overTime > 0 && nearestTrip.overTime != null ? Container(
+                                height: 32,
                                 padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                                 margin: EdgeInsets.only(right: 7),
                                 decoration: BoxDecoration(
@@ -261,7 +262,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                     ],
                   ),
                   Text(
-                    "В ${nearestTrip.endStation[0].toUpperCase()}${nearestTrip.endStation.toLowerCase().substring(1)}",
+                    nearestTrip.businessTripDays != null && nearestTrip.endStation != null ? "на ${nearestTrip.businessTripDays} дней, " + "в ${nearestTrip.endStation[0].toUpperCase()}${nearestTrip.endStation.toLowerCase().substring(1)}" : "",
                     style: TextStyle(fontFamily: "Root",
                         fontSize: 14,
                         color: Color(0xff748595),
@@ -303,7 +304,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                   fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff1B344F),
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
                         ],
@@ -469,6 +470,7 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
                                 ),
                               ),
                               nearestTrip.overTime > 0 && nearestTrip.overTime != null ? Container(
+                                height: 32,
                                 padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                                 margin: EdgeInsets.only(right: 7),
                                 decoration: BoxDecoration(
@@ -537,6 +539,43 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
               ),
             ),
           ],
+        ),
+      ),
+    ) : Container(
+      width: w,
+      height: 50,
+      alignment: Alignment.centerLeft,
+      margin: EdgeInsets.only(top: 8),
+      padding: EdgeInsets.symmetric(
+          horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            spreadRadius: 0,
+            blurRadius: 8,
+            offset: Offset(0,
+                4), // changes position of shadow
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            spreadRadius: 0,
+            blurRadius: 2,
+            offset: Offset(0,
+                0), // changes position of shadow
+          ),
+        ],
+        borderRadius: BorderRadius.circular(6),
+        color: Colors.white,
+      ),
+      child: Text(
+        'У вас нет активных поездок.',
+        style: TextStyle(
+          fontFamily: "Root",
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color:
+          Color(0xff748595).withOpacity(0.6),
         ),
       ),
     );

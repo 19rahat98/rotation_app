@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/notification_provider.dart';
 import 'package:rotation_app/ui/login_pages/login_page.dart';
 import 'package:rotation_app/config/app+theme.dart';
 import 'package:rotation_app/ui/nav_bar/app.dart';
@@ -18,6 +19,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   nextPage(){
     final LoginProvider lp = Provider.of<LoginProvider>(context,listen: false);
+    NotificationProvider np = Provider.of<NotificationProvider>(context, listen: false);
+    np.sendFmcTokenToServer();
     lp.getUserInfo();
     lp.checkSignIn().then((value){
       var page = value == true ? App() : LoginPage();

@@ -52,8 +52,7 @@ class ArticlesProvider with ChangeNotifier {
 
   afterSearch(value) {
     _filteredData = _articlesList
-        .where((u) => (u.title.toLowerCase().contains(value.toLowerCase()) ||
-        u.shortContent.contains(value.toLowerCase())))
+        .where((u) => (u.title.toLowerCase().contains(value.toLowerCase())))
         .toList();
     notifyListeners();
   }

@@ -69,7 +69,7 @@ class _TripsPageState extends State<TripsPage> {
                               indicatorSize: MD2IndicatorSize.full,
                             ),
                             tabs: [
-                              Tab(text: 'Активные поездки'),
+                              Tab(text: 'Активные поездки',),
                               Tab(
                                 text: 'Архив поездок',
                               ),
