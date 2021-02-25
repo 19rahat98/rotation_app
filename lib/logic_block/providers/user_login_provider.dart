@@ -59,9 +59,10 @@ class UserLoginProvider with ChangeNotifier {
   set userIIN(String iin) => _userIIN = userIIN;
 
   Future saveDataToSP() async{
-    print(_userPhoneNumber);
     final SharedPreferences prefs = await _prefs;
     await prefs.setString("userToken", _token);
+    httpManager.baseOptions.headers["Authorization"] =
+        "Bearer " + _token;
     await prefs.setString("employee", jsonEncode(_employee));
     await prefs.setString("phoneNumber", _userPhoneNumber);
     return await prefs.setString("phoneNumber", _userPhoneNumber);
@@ -212,7 +213,6 @@ class UserLoginProvider with ChangeNotifier {
     try {
       if (result.code == 200) {
         _token = decodeData.data["token"];
-        print(_token);
         _employee = Employee.fromJson(decodeData.data["employee"]);
         httpManager.baseOptions.headers["Authorization"] =
             "Bearer " + _token;

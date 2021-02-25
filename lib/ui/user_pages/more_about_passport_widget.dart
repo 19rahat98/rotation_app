@@ -1,6 +1,13 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+
+import 'more_about_document_widget.dart';
 
 class MoreAboutPassport extends StatefulWidget {
   @override
@@ -19,12 +26,13 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
   final TextEditingController _userBirthdayDateController =
   TextEditingController();
   final TextEditingController _userCountryNameTextController =
-  TextEditingController(text: "МВД РК");
+  TextEditingController();
   final TextEditingController _dateOfIssueController =
   TextEditingController();
   final TextEditingController _idValidityDayController =
-  TextEditingController(text: "12.12.2021");
+  TextEditingController();
 
+  bool _isValidate = false;
 
   var idValidityDayMask = new MaskTextInputFormatter(
       mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
@@ -32,8 +40,42 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
       mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
   var dateTextFormatter = new MaskTextInputFormatter(
       mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
+
+  DateTime dateOfIssue, idValidityDay; // instance of DateTime
+
+  Future<void> _showMessage(String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'error',
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  message,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'close',
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -48,6 +90,12 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    lp.getEmployeeData();
+    _userNameTextController.text = lp.employee.firstNameEn;
+    _userSecondNameTextController.text = lp.employee.lastNameEn;
+    _userIdTextController.text = lp.employee.iin;
+    _userDocumentNumberController.text = lp.employee.docNumber;
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -97,81 +145,63 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
             ),
             Container(
               width: w,
-              child: Column(
-                children: [
-                  Container(
-                    child: TextFormField(
-                      autofocus: false,
-                      toolbarOptions: ToolbarOptions(
-                        copy: true,
-                        cut: true,
-                        paste: true,
-                        selectAll: true,
-                      ),
-                      controller: _userNameTextController,
-                      //initialValue: 'Руслан',
-                      style: TextStyle(
-                        fontFamily: "Root",
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff15304D),
-                      ),
-                      decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "Имя", hintTextStr: "Имя (на латинце)"),
-                      validator: (value) {
-                        if (value.length == 0)
-                          return ("Comments can't be empty!");
+              child: TextFormField(
+                autofocus: false,
+                toolbarOptions: ToolbarOptions(
+                  copy: true,
+                  cut: true,
+                  paste: true,
+                  selectAll: true,
+                ),
+                controller: _userNameTextController,
+                //initialValue: 'Руслан',
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
+                ),
+                decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "Имя", hintTextStr: "Имя (на латинце)"),
+                validator: (value) {
+                  if (value.length == 0)
+                    return ("Comments can't be empty!");
 
-                        return value = null;
-                      },
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                ],
+                  return value = null;
+                },
               ),
             ),
             Container(
               width: w,
               margin: EdgeInsets.only(top: 12),
-              child: Column(
-                children: [
-                  Container(
-                    child: TextFormField(
-                      autofocus: false,
-                      toolbarOptions: ToolbarOptions(
-                        copy: true,
-                        cut: true,
-                        paste: true,
-                        selectAll: true,
-                      ),
-                      controller: _userSecondNameTextController,
-                      //initialValue: 'Руслан',
-                      style: TextStyle(
-                        fontFamily: "Root",
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff15304D),
-                      ),
-                      decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "Фамилия",
-                          hintTextStr: "Фамилия (на латинце)"),
-                      validator: (value) {
-                        if (value.length == 0)
-                          return ("Comments can't be empty!");
+              child:  TextFormField(
+                autofocus: false,
+                toolbarOptions: ToolbarOptions(
+                  copy: true,
+                  cut: true,
+                  paste: true,
+                  selectAll: true,
+                ),
+                controller: _userSecondNameTextController,
+                //initialValue: 'Руслан',
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
+                ),
+                decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "Фамилия",
+                    hintTextStr: "Фамилия (на латинце)"),
+                validator: (value) {
+                  if (value.length == 0)
+                    return ("Comments can't be empty!");
 
-                        return value = null;
-                      },
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                ],
+                  return value = null;
+                },
               ),
             ),
-            Container(
+            /*Container(
               width: w,
               margin: EdgeInsets.only(top: 12),
               child: Column(
@@ -208,60 +238,45 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                   ),
                 ],
               ),
-            ),
+            ),*/
             Container(
               width: w,
-              margin: EdgeInsets.only(top: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  new Container(
-                    padding: EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: w * 0.75,
-                          child: TextFormField(
-                            autofocus: false,
-                            toolbarOptions: ToolbarOptions(
-                              copy: true,
-                              cut: true,
-                              paste: true,
-                              selectAll: true,
-                            ),
-                            controller: _userBirthdayDateController,
-                            inputFormatters: [dateTextFormatter],
-                            keyboardType: TextInputType.phone,
-                            style: TextStyle(fontFamily: "Root",
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-
-                              color: Color(0xff15304D),
-                            ),
-                            decoration: CommonStyle.textFieldStyle(
-                                labelTextStr: "Дата рождения", hintTextStr: "Дата рождения"),
-                            validator: (value) {
-                              if (value.length == 0) return ("Comments can't be empty!");
-
-                              return value = null;
-                            },
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          'assets/svg/Calendar.svg',
-                          width: 24,
-                          height: 24,
-                          color: Color(0xff1262CB),
-                        ),
-                      ],
-                    ),
+              margin: EdgeInsets.only(top: 12),
+              child: Form(
+                autovalidate: true,
+                child: TextFormField(
+                  autofocus: false,
+                  toolbarOptions: ToolbarOptions(
+                    copy: true,
+                    cut: true,
+                    paste: true,
+                    selectAll: true,
                   ),
-                  Divider(
-                    height: 0,
+                  controller: _userBirthdayDateController,
+                  inputFormatters: [dateTextFormatter],
+                  keyboardType: TextInputType.datetime,
+                  style: TextStyle(
+                    fontFamily: "Root",
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff15304D),
                   ),
-                ],
+                  decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "Дата рождения",
+                    hintTextStr: "Дата рождения",
+                    istDate: true,
+                  ),
+                  validator: (value) {
+                    if (value.length > 9) {
+                      if (!DateValidator('dd/MM/yyyy', errorText: "")
+                          .isValid(value.replaceAll('.', '/'))) {
+                        _isValidate = true;
+                        return ("Введите корректное значение!");
+                      }
+                    }
+                    return value = null;
+                  },
+                ),
               ),
             ),
             Container(
@@ -349,111 +364,82 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
             Container(
               width: w,
               margin: EdgeInsets.only(top: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  new Container(
-                    padding: EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: w * 0.75,
-                          child: TextFormField(
-                            autofocus: false,
-                            toolbarOptions: ToolbarOptions(
-                              copy: true,
-                              cut: true,
-                              paste: true,
-                              selectAll: true,
-                            ),
-                            controller: _dateOfIssueController,
-                            inputFormatters: [dateOfIssueMask],
-                            keyboardType: TextInputType.phone,
-                            style: TextStyle(fontFamily: "Root",
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-
-                              color: Color(0xff15304D),
-                            ),
-                            decoration: CommonStyle.textFieldStyle(
-                                labelTextStr: "Дата выдачи", hintTextStr: "Дата выдачи"),
-                            validator: (value) {
-                              if (value.length == 0) return ("Comments can't be empty!");
-
-                              return value = null;
-                            },
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          'assets/svg/Calendar.svg',
-                          width: 24,
-                          height: 24,
-                          color: Color(0xff1262CB),
-                        ),
-                      ],
-                    ),
+              child: Form(
+                autovalidate: true,
+                child: TextFormField(
+                  autofocus: false,
+                  toolbarOptions: ToolbarOptions(
+                    copy: true,
+                    cut: true,
+                    paste: true,
+                    selectAll: true,
                   ),
-                  Divider(
-                    height: 0,
+                  controller: _dateOfIssueController,
+                  inputFormatters: [dateOfIssueMask],
+                  keyboardType: TextInputType.phone,
+                  style: TextStyle(
+                    fontFamily: "Root",
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff15304D),
                   ),
-                ],
+                  decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "Дата выдачи",
+                    hintTextStr: "Дата выдачи",
+                    istDate: true,
+                  ),
+                  validator: (value) {
+                    if (value.length > 9) {
+                      if (!DateValidator('dd/MM/yyyy', errorText: "")
+                          .isValid(value.replaceAll('.', '/'))) {
+                        _isValidate = true;
+
+                        return ("Введите корректное значение!");
+                      }
+                    }
+                    return value = null;
+                  },
+                ),
               ),
             ),
             Container(
               width: w,
               margin: EdgeInsets.only(top: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  new Container(
-                    padding: EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: w * 0.75,
-                          child: TextFormField(
-                            autofocus: false,
-                            toolbarOptions: ToolbarOptions(
-                              copy: true,
-                              cut: true,
-                              paste: true,
-                              selectAll: true,
-                            ),
-                            controller: _idValidityDayController,
-                            inputFormatters: [idValidityDayMask],
-                            keyboardType: TextInputType.phone,
-                            style: TextStyle(fontFamily: "Root",
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-
-                              color: Color(0xff15304D),
-                            ),
-                            decoration: CommonStyle.textFieldStyle(
-                                labelTextStr: "Дата выдачи", hintTextStr: "Дата выдачи"),
-                            validator: (value) {
-                              if (value.length == 0) return ("Comments can't be empty!");
-
-                              return value = null;
-                            },
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          'assets/svg/Calendar.svg',
-                          width: 24,
-                          height: 24,
-                          color: Color(0xff1262CB),
-                        ),
-                      ],
-                    ),
+              child: Form(
+                autovalidate: true,
+                child: TextFormField(
+                  autofocus: false,
+                  toolbarOptions: ToolbarOptions(
+                    copy: true,
+                    cut: true,
+                    paste: true,
+                    selectAll: true,
                   ),
-                  Divider(
-                    height: 0,
+                  controller: _idValidityDayController,
+                  inputFormatters: [idValidityDayMask],
+                  keyboardType: TextInputType.phone,
+                  style: TextStyle(
+                    fontFamily: "Root",
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff15304D),
                   ),
-                ],
+                  decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "Срок действия",
+                    hintTextStr: "Срок действия документа",
+                    istDate: true,
+                  ),
+                  validator: (value) {
+                    if (value.length > 9) {
+                      if (!DateValidator('dd/MM/yyyy', errorText: "")
+                          .isValid(value.replaceAll('.', '/'))) {
+                        _isValidate = true;
+                        return ("Введите корректное значение!");
+                      }
+                    }
+                    return value = null;
+                  },
+                ),
               ),
             ),
             Container(
@@ -519,7 +505,29 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
               ),
               child: InkWell(
                 onTap: () {
-                  Navigator.pop(context);
+                  if(idValidityDayMask.getMaskedText().isNotEmpty){
+                    idValidityDay = DateFormat().add_yMd().parse(
+                        idValidityDayMask.getMaskedText().replaceAll('.', '/'));
+                  }
+                  if(dateOfIssueMask.getMaskedText().isNotEmpty){
+                    dateOfIssue = DateFormat().add_yMd().parse(
+                        dateOfIssueMask.getMaskedText().replaceAll('.', '/'));
+                  }
+                  lp.updateUserDocument(
+                    type: "passport",
+                    number: _userIdTextController.text,
+                    issueDate: dateOfIssue,
+                    expireDate: idValidityDay,
+                    issueBy: _userCountryNameTextController.text,
+                  ).then((value) {
+                    if (value) {
+                      Navigator.pop(context);
+                    } else {
+                      _showMessage(
+                        'Ошибка на сервере',
+                      );
+                    }
+                  });
                   print('press');
                 },
                 child: Center(
@@ -541,20 +549,4 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
   }
 }
 
-class CommonStyle {
-  static InputDecoration textFieldStyle(
-      {String labelTextStr = "", String hintTextStr = ""}) {
-    return InputDecoration(
-      labelStyle: TextStyle(
-        fontSize: 17,
-        fontWeight: FontWeight.w500,
-        color: Color(0xff748595),
-      ),
-      isDense: true,
-      contentPadding: EdgeInsets.only(top: 4, bottom: 8),
-      border: InputBorder.none,
-      labelText: labelTextStr,
-      hintText: hintTextStr,
-    );
-  }
-}
+

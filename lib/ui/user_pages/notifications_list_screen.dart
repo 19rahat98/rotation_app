@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 
 class NotificationsListScreen extends StatefulWidget {
+  final String itemId;
+  final String matchteam;
+  final String score;
+
+  const NotificationsListScreen({Key key, this.itemId, this.matchteam, this.score}) : super(key: key);
   @override
   _NotificationsListScreenState createState() =>
       _NotificationsListScreenState();
 }
 
 class _NotificationsListScreenState extends State<NotificationsListScreen> {
+
+  @override
+  void initState() {
+    print(widget.itemId);
+    print(widget.matchteam);
+    print(widget.score);
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -41,6 +56,9 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(widget.score != null ? widget.score : 'score'),
+              Text(widget.matchteam != null ? widget.matchteam : 'matchteam'),
+              Text(widget.itemId != null ? widget.itemId : 'itemId'),
               Container(
                 child: Text(
                   'Уведомления',

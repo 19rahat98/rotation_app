@@ -3,19 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
-import 'package:rotation_app/logic_block/models/application_model.dart';
 
-import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/ui/widgets/emptyPage.dart';
 import 'package:rotation_app/ui/trips_pages/active_trips_widget.dart';
 import 'package:rotation_app/ui/trips_pages/archive_trips_widget.dart';
-import 'package:rotation_app/ui/widgets/emptyPage.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
 
-class TripsPage extends StatefulWidget {
-  @override
-  _TripsPageState createState() => _TripsPageState();
-}
+class TripsPage extends StatelessWidget {
 
-class _TripsPageState extends State<TripsPage> {
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting();
@@ -30,7 +26,7 @@ class _TripsPageState extends State<TripsPage> {
         else if (snapshot.hasError)
           return Center(
               child: emptyPage(Icons.error_outline, 'Something is wrong'));
-        else if (snapshot.data != null) {
+        else {
           return DefaultTabController(
             length: 2,
             child: Scaffold(
@@ -39,7 +35,8 @@ class _TripsPageState extends State<TripsPage> {
                 automaticallyImplyLeading: false,
                 title: Text(
                   'Мои поездки',
-                  style: TextStyle(fontFamily: "Root",
+                  style: TextStyle(
+                      fontFamily: "Root",
                       fontSize: 17,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
@@ -69,7 +66,9 @@ class _TripsPageState extends State<TripsPage> {
                               indicatorSize: MD2IndicatorSize.full,
                             ),
                             tabs: [
-                              Tab(text: 'Активные поездки',),
+                              Tab(
+                                text: 'Активные поездки',
+                              ),
                               Tab(
                                 text: 'Архив поездок',
                               ),
@@ -90,8 +89,16 @@ class _TripsPageState extends State<TripsPage> {
                       child: Container(
                         child: TabBarView(
                           children: [
-                            lp.data != null && lp.data.isNotEmpty ? ActiveTripsWidget(tripsList: lp.data,) : Container(),
-                            lp.data != null && lp.data.isNotEmpty ? ArchiveTrips(tripsList: lp.data,) : Container(),
+                            lp.data != null && lp.data.isNotEmpty
+                                ? ActiveTripsWidget(
+                                  tripsList: lp.data,
+                                )
+                                : Container(),
+                            lp.data != null && lp.data.isNotEmpty
+                                ? ArchiveTrips(
+                                  tripsList: lp.data,
+                                )
+                                : Container(),
                           ],
                         ),
                       ),
@@ -101,10 +108,9 @@ class _TripsPageState extends State<TripsPage> {
               ),
             ),
           );
-        } else {
-          return Center(child: CircularProgressIndicator());
         }
       },
     );
   }
 }
+

@@ -38,6 +38,7 @@ dev_dependencies:
   flutter_svg: ^0.19.1
   group_button: ^1.1.0
   md2_tab_indicator: ^1.0.2
+  form_field_validator: ^1.0.1
   mask_text_input_formatter: ^1.2.1
   flutter_calendar_carousel: ^1.5.2
 
@@ -49,9 +50,11 @@ dev_dependencies:
   equatable: ^1.2.5
   flutter_html: ^0.8.2
   url_launcher: ^5.7.10
+  path_provider: ^1.6.27
   firebase_core: ^0.5.0+1
   flutter_downloader: ^1.5.2
   firebase_messaging: ^7.0.3
+  permission_handler: ^5.1.0+2
   shared_preferences: ^0.5.12+4
 
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rotation_app/logic_block/providers/conversation_rates_provider.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/notification_provider.dart';
@@ -20,6 +21,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   nextPage(){
     final LoginProvider lp = Provider.of<LoginProvider>(context,listen: false);
     NotificationProvider np = Provider.of<NotificationProvider>(context, listen: false);
+    ConversationRatesProvider crp = Provider.of<ConversationRatesProvider>(context, listen: false);
+    crp.getExchangeRate();
     np.sendFmcTokenToServer();
     lp.getUserInfo();
     lp.checkSignIn().then((value){

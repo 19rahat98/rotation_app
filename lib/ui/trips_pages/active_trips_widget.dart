@@ -35,7 +35,6 @@ class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
         _activeTrip.add(x);
       }
     }
-    print(_activeTrip);
   }
 
   void _onOpenMore(BuildContext context, Application tripData) {

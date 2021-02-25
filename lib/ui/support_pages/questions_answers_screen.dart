@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:rotation_app/ui/widgets/emptyPage.dart';
 import 'package:rotation_app/ui/support_pages/more_info_widget.dart';
@@ -168,6 +169,7 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 12),
+                        padding: EdgeInsets.only(left: 8),
                         height: 48,
                         width: w,
                         decoration: BoxDecoration(
@@ -178,54 +180,65 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
                             color: Color(0xffD9DBDF),
                           ),
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                             margin: EdgeInsets.only(right: 8, left: 6),
-                              child: Image.asset(
-                                "assets/images/search.png",
-                                width: 22,
-                                height: 22,
-                              ),
+                        child: Form(
+                          key: formKey,
+                          child: TextFormField(
+                            autofocus: false,
+                            controller: _searchQuestionTextController,
+                            style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xff748595),
                             ),
-                            Expanded(
-                              child: Form(
-                                key: formKey,
-                                child: TextFormField(
-                                  autofocus: false,
-                                  controller: _searchQuestionTextController,
-                                  style: TextStyle(
-                                    fontFamily: "Root",
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xff748595),
+                            decoration: InputDecoration(
+                              suffixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
+                              suffixIcon: _query != null && _query.isNotEmpty
+                                  ? InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    _query = null;
+                                    _searchQuestionTextController.clear();
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: SvgPicture.asset(
+                                    'assets/svg/Close.svg',
+                                    color: Color(0xff1262CB),
                                   ),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                    hintText: "Что вас интересует?",
-                                    hintStyle: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff748595)),
-                                  ),
-                                  validator: (value) {
-                                    if (value.length == 0)
-                                      return ("Comments can't be empty!");
-
-                                    return value = null;
-                                  },
-                                  onChanged: (String value) {
-                                    setState(() {
-                                      _query = value;
-                                      qp.afterSearch(value);
-                                    });
-                                  },
+                                ),
+                              ) : null,
+                              prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
+                              prefixIcon: Container(
+                                margin: EdgeInsets.only(right: 8),
+                                child: Image.asset(
+                                  "assets/images/search.png",
+                                  width: 22,
+                                  height: 22,
                                 ),
                               ),
+                              contentPadding: EdgeInsets.zero,
+                              border: InputBorder.none,
+                              hintText: "Что вас интересует?",
+                              hintStyle: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xff748595)),
                             ),
-                          ],
+                            validator: (value) {
+                              if (value.length == 0)
+                                return ("Comments can't be empty!");
+
+                              return value = null;
+                            },
+                            onChanged: (String value) {
+                              setState(() {
+                                _query = value;
+                                qp.afterSearch(value);
+                              });
+                            },
+                          ),
                         ),
                       ),
                       SizedBox(

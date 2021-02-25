@@ -1,17 +1,22 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
-import 'package:rotation_app/logic_block/providers/conversation_rates_provider.dart';
-import 'package:rotation_app/logic_block/providers/question_provider.dart';
 
+import 'package:rotation_app/ui/test.dart';
 import 'package:rotation_app/ui/splash_page.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/providers/question_provider.dart';
+import 'package:rotation_app/logic_block/providers/articles_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
+import 'package:rotation_app/logic_block/providers/notification_provider.dart';
+import 'package:rotation_app/logic_block/providers/conversation_rates_provider.dart';
 
-import 'logic_block/providers/articles_provider.dart';
-import 'logic_block/providers/notification_provider.dart';
-
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(debug: true);
   runApp(MyApp());
 }
 
@@ -20,6 +25,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final platform = Theme.of(context).platform;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserLoginProvider()),
@@ -59,3 +65,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rotation_app/logic_block/api/http_request.dart';
 import 'package:rotation_app/logic_block/models/result_api_model.dart';
 import 'package:rotation_app/logic_block/repository/firebase_messaging_push_notification_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,6 @@ class NotificationProvider with ChangeNotifier{
     };
     final ResponseApi result = await fmcNotificationProvider.sendToken(_params);
     if(result.code == 200){
-      print('sendFmcTokenToServer');
       return true;
     }
     return false;

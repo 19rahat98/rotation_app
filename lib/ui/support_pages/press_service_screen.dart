@@ -25,6 +25,22 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
     super.initState();
   }
 
+  Future<void> _onRefresh() async {
+    setState(() {
+      print('asd');
+      Provider.of<ArticlesProvider>(context, listen: false).getArticles();
+    });
+  }
+
+/*  _updateData() {
+    if (mounted) {
+      new Stream.periodic(const Duration(seconds: 1), (v) => v).listen((count) {
+        _onRefresh();
+      });
+    }
+    if (!mounted) return;
+  }*/
+
   Widget afterSearchUI() {
     final ArticlesProvider ap =
         Provider.of<ArticlesProvider>(context, listen: false);
@@ -143,12 +159,12 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
             child: InkWell(
               onTap: () {
                 ap.aboutMoreArticle(articleId: item.id).then((value) {
-                  _onOpenMore(context, content: value.content, title: value.title);
-                  print('+++++++');
-                  print(value.title);
-                  print(value.content);
+                  if(value != null){
+                    print(value.title);
+                    _onOpenMore(context,
+                        content: value.content, title: value.title, publishDate: value.publishedOn);
+                  }
                 });
-                print(ap.article.title);
               },
               child: Column(
                 children: [
@@ -197,7 +213,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                               width: w - 70,
                               margin: EdgeInsets.only(bottom: 12),
                               child: Text(
-                                'вчера, в 13:40',
+                                item.publishedOn,
                                 style: TextStyle(
                                     fontFamily: "Root",
                                     fontSize: 12,
@@ -232,10 +248,10 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     ArticlesProvider ap = Provider.of<ArticlesProvider>(context, listen: false);
-    ap.getArticles();
     return FutureBuilder<List<Articles>>(
         future: ap.getArticles(),
         builder: (context, snapshot) {
+          print(snapshot.data);
           if (snapshot.connectionState == ConnectionState.none)
             return Center(child: CircularProgressIndicator());
           else if (snapshot.hasError)
@@ -267,87 +283,102 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                 centerTitle: true,
                 backgroundColor: Color(0xff2D4461),
               ),
-              body: SingleChildScrollView(
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Text(
-                          'Пресс-служба',
-                          style: TextStyle(
-                              fontFamily: "Root",
-                              fontSize: 24,
-                              color: Color(0xff1B344F),
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 12),
-                        height: 48,
-                        width: w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(3),
-                          border: Border.all(
-                            width: 1,
-                            color: Color(0xffD9DBDF),
+              body: RefreshIndicator(
+                onRefresh: _onRefresh,
+                displacement: 40.0,
+                child: SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(
+                            'Пресс-служба',
+                            style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 24,
+                                color: Color(0xff1B344F),
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 8, left: 6),
-                              child: Image.asset(
-                                "assets/images/search.png",
-                                width: 22,
-                                height: 22,
-                              ),
+                        Container(
+                          margin: EdgeInsets.only(top: 12),
+                          padding: EdgeInsets.only(left: 8),
+                          height: 48,
+                          width: w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(3),
+                            border: Border.all(
+                              width: 1,
+                              color: Color(0xffD9DBDF),
                             ),
-                            Expanded(
-                              child: Form(
-                                key: formKey,
-                                child: TextFormField(
-                                  autofocus: false,
-                                  controller: _searchQuestionTextController,
-                                  style: TextStyle(
-                                    fontFamily: "Root",
+                          ),
+                          child: Form(
+                            key: formKey,
+                            child: TextFormField(
+                              autofocus: false,
+                              controller: _searchQuestionTextController,
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff748595),
+                              ),
+                              decoration: InputDecoration(
+                                suffixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
+                                suffixIcon: _query != null && _query.isNotEmpty
+                                    ? InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          _query = null;
+                                          _searchQuestionTextController.clear();
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 10),
+                                        child: SvgPicture.asset(
+                                  'assets/svg/Close.svg',
+                                  color: Color(0xff1262CB),
+                                ),
+                                      ),
+                                    ) : null,
+                                prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
+                                prefixIcon: Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  child: Image.asset(
+                                    "assets/images/search.png",
+                                    width: 22,
+                                    height: 22,
+                                  ),
+                                ),
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                hintText: "Что вас интересует?",
+                                hintStyle: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w500,
-                                    color: Color(0xff748595),
-                                  ),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.zero,
-                                    border: InputBorder.none,
-                                    hintText: "Что вас интересует?",
-                                    hintStyle: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff748595)),
-                                  ),
-                                  validator: (value) {
-                                    if (value.length == 0)
-                                      return ("Comments can't be empty!");
-
-                                    return value = null;
-                                  },
-                                  onChanged: (String value) {
-                                    setState(() {
-                                      _query = value;
-                                      ap.afterSearch(value);
-                                    });
-                                  },
-                                ),
+                                    color: Color(0xff748595)),
                               ),
+                              validator: (value) {
+                                if (value.length == 0)
+                                  return ("Comments can't be empty!");
+
+                                return value = null;
+                              },
+                              onChanged: (String value) {
+                                setState(() {
+                                  _query = value;
+                                  ap.afterSearch(value);
+                                });
+                              },
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                      _query == null
-                          ? beforeSearchUI()
-                          : afterSearchUI(),
-                    ],
+                        _query == null ? beforeSearchUI() : afterSearchUI(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -358,7 +389,8 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
         });
   }
 
-  void _onOpenMore(BuildContext context, {String content, String title}) {
+  void _onOpenMore(BuildContext context, {String content, String title, String publishDate}) {
+    print(publishDate);
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     showModalBottomSheet<void>(
@@ -384,15 +416,14 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
             child: MoreArticleWidget(
               title: title,
               articleText: content,
+              informationDate: publishDate,
             ),
           );
         });
   }
   @override
   void dispose() {
-    ArticlesProvider().filteredData = [];
     ArticlesProvider().dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 }

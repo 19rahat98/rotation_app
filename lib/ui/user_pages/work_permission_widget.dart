@@ -329,7 +329,6 @@ class CommonStyle {
       ),
       isDense: true,
       contentPadding: EdgeInsets.only(top: 4, bottom: 8),
-      border: InputBorder.none,
       labelText: labelTextStr,
       hintText: hintTextStr,
     );

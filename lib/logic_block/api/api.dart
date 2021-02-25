@@ -8,7 +8,6 @@ import 'package:rotation_app/logic_block/models/result_api_model.dart';
 class Api {
   ///URL API
   static const String SEND_CODE_LOGIN = "/employees/send-code-login";
-  //static const String LOGIN_BY_PHONE_NUMBER = "/employees/login";
   static const String LOGIN = "/employees/login";
   static const String FIND_EMPLOYEE_BY_IIN = "/employees/get-employee-by-iin";
   static const String UPDATE_PHONE_NUMBER = "/employees/send-code-update";
@@ -63,7 +62,7 @@ class Api {
     final result = await httpManager.get(
         url: GET_MORE_ABOUT_ARTICLE + id.toString(),
     );
-    return ResponseApi.fromJson(result);
+    return result;
   }
 
   static Future<dynamic> getArticlesList() async{

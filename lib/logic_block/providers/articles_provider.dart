@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:rotation_app/logic_block/models/articles_model.dart';
 
@@ -31,19 +32,57 @@ class ArticlesProvider with ChangeNotifier {
       _articlesList = _convertList.map((item) {
         return Articles.fromJson(item);
       }).toList();
+      for(int i = 0; i < _articlesList.length; i++){
+        if(_articlesList[i] != null){
+          if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inDays <= 1){
+            if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours <= 1){
+              _articlesList[i].publishedOn = "только что";
+            }
+            else if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours > 1 && DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours < 24){
+              _articlesList[i].publishedOn = "сегодня, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+            }
+            else{
+              _articlesList[i].publishedOn = "вчера, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+            }
+          }
+          else{
+            _articlesList[i].publishedOn = "${DateFormat.MMMd('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+          }
+          //print(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedAt)).inDays);
+        }
+      }
       notifyListeners();
       return _articlesList;
     }
+
     notifyListeners();
     return null;
   }
 
   Future<MoreAboutArticle> aboutMoreArticle({int articleId}) async {
-    final ResponseApi result =
+    final result =
         await articlesRepository.aboutMore(id: articleId);
-    if (result.code == 200) {
-      _article = MoreAboutArticle.fromJson(result.data);
+
+    if (result['code'] == 200 && result.isNotEmpty) {
+      _article = MoreAboutArticle.fromJson(result['data']);
       notifyListeners();
+      if(_article != null){
+        if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inDays <= 1){
+          if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inHours <= 1){
+            _article.publishedOn = "только что";
+          }
+          else if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inHours > 1 && DateTime.now().difference(DateTime.parse(_article.publishedOn)).inHours < 24){
+            _article.publishedOn = "сегодня, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.publishedOn)).toString()}";
+          }
+          else{
+            _article.publishedOn = "вчера, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.publishedOn)).toString()}";
+          }
+        }
+        else{
+          _article.publishedOn = "${DateFormat.MMMd('ru').format(DateTime.parse(_article.publishedOn)).toString()}, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.publishedOn)).toString()}";
+        }
+        //print(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedAt)).inDays);
+      }
       return _article;
     }
     notifyListeners();

@@ -1,7 +1,12 @@
+import 'dart:ui';
+import 'dart:isolate';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 import 'package:rotation_app/logic_block/models/application_model.dart';
 
@@ -15,22 +20,16 @@ class TicketsBottomSheet extends StatefulWidget {
 }
 
 class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
-
   int _ticketPrice = 0;
   int _totalPrice = 0;
-  int _tariffPrice = 0;
 
-  void _calculateTicketPrice(){
-    int totalPrice = 0;
+  void _calculateTicketPrice() {
     if (widget.tripData.segments.isNotEmpty) {
       for (int i = 0; i < widget.tripData.segments.length; i++) {
-        if(widget.tripData.segments[i].ticket != null){
+        if (widget.tripData.segments[i].ticket != null) {
           _ticketPrice += widget.tripData.segments[i].ticket.minPrice;
-          _totalPrice +=  widget.tripData.segments[i].ticket.sum;
+          _totalPrice += widget.tripData.segments[i].ticket.sum;
         }
-      }
-      if(totalPrice > _ticketPrice){
-        _tariffPrice = totalPrice - _ticketPrice;
       }
     }
   }
@@ -53,24 +52,40 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
     Duration hour;
     initializeDateFormatting();
 
-    if(widget.tripData.segments.length - 1 > index){
-      hour = DateTime.parse(widget.tripData.segments[1].train.depDateTime).difference(DateTime.parse(widget.tripData.segments[0].train.arrDateTime));
+    if (widget.tripData.segments.length - 1 > index) {
+      hour = DateTime.parse(widget.tripData.segments[1].train.depDateTime)
+          .difference(
+              DateTime.parse(widget.tripData.segments[0].train.arrDateTime));
       return hour;
-    }
-    else
+    } else
       return Duration(hours: 0, minutes: 0);
+  }
+
+  ReceivePort _receivePort = ReceivePort();
+
+  static downloadingCallback(id, status, progress) {
+    ///Looking up for a send port
+    SendPort sendPort = IsolateNameServer.lookupPortByName("downloading");
+
+    ///sending the data
+    sendPort.send([id, status, progress]);
   }
 
   @override
   void initState() {
     _calculateTicketPrice();
-    // TODO: implement initState
+
+    ///register a send port for the other isolates
+    IsolateNameServer.registerPortWithName(
+        _receivePort.sendPort, "downloading");
+    FlutterDownloader.registerCallback(downloadingCallback);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.height;
+    //double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     initializeDateFormatting();
     return SingleChildScrollView(
@@ -234,12 +249,15 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        widget.tripData.segments[index].icon != null &&
-                                                widget.tripData.segments[index].icon
-                                                    .isNotEmpty
+                                        widget.tripData.segments[index].icon !=
+                                                    null &&
+                                                widget.tripData.segments[index]
+                                                    .icon.isNotEmpty
                                             ? Image(
-                                                image: NetworkImage(widget.tripData
-                                                    .segments[index].icon),
+                                                image: NetworkImage(widget
+                                                    .tripData
+                                                    .segments[index]
+                                                    .icon),
                                                 width: 33,
                                                 height: 33,
                                               )
@@ -258,7 +276,8 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               Text(
                                                 DateFormat.MMMEd('ru')
                                                     .format(
-                                                      DateTime.parse(widget.tripData
+                                                      DateTime.parse(widget
+                                                          .tripData
                                                           .segments[index]
                                                           .train
                                                           .depDateTime),
@@ -278,7 +297,8 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                                 child: Text(
                                                   DateFormat.Hm()
                                                       .format(DateTime.parse(
-                                                          widget.tripData
+                                                          widget
+                                                              .tripData
                                                               .segments[index]
                                                               .train
                                                               .depDateTime))
@@ -381,33 +401,116 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                         SizedBox(
                                           height: 8,
                                         ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: w * 0.25,
-                                              child: Text(
-                                                'вагон',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: "Root",
-                                                    fontSize: 14,
-                                                    color: Color(0xff748595)
-                                                        .withOpacity(0.7)),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: w * 0.55,
-                                              child: Text(
-                                                'Купе №',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: "Root",
-                                                    fontSize: 14,
-                                                    color: Color(0xff1B344F)),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                        widget.tripData.segments[index]
+                                                    .ticket ==
+                                                null
+                                            ? Row(
+                                                children: [
+                                                  Container(
+                                                    width: w * 0.25,
+                                                    child: Text(
+                                                      'вагон',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: "Root",
+                                                          fontSize: 14,
+                                                          color:
+                                                              Color(0xff748595)
+                                                                  .withOpacity(
+                                                                      0.7)),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: w * 0.55,
+                                                    child: Text(
+                                                      'Купе №',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: "Root",
+                                                          fontSize: 14,
+                                                          color: Color(
+                                                              0xff1B344F)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : widget.tripData.segments[index]
+                                                        .ticket.seatNumber ==
+                                                    null
+                                                ? Row(
+                                                    children: [
+                                                      Container(
+                                                        width: w * 0.25,
+                                                        child: Text(
+                                                          'вагон',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  "Root",
+                                                              fontSize: 14,
+                                                              color: Color(
+                                                                      0xff748595)
+                                                                  .withOpacity(
+                                                                      0.7)),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: w * 0.55,
+                                                        child: Text(
+                                                          'Купе № ${widget.tripData.segments[index].ticket.seatNumber}',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  "Root",
+                                                              fontSize: 14,
+                                                              color: Color(
+                                                                  0xff1B344F)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      Container(
+                                                        width: w * 0.25,
+                                                        child: Text(
+                                                          'вагон',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  "Root",
+                                                              fontSize: 14,
+                                                              color: Color(
+                                                                      0xff748595)
+                                                                  .withOpacity(
+                                                                      0.7)),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: w * 0.55,
+                                                        child: Text(
+                                                          'Купе №',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  "Root",
+                                                              fontSize: 14,
+                                                              color: Color(
+                                                                  0xff1B344F)),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                       ],
                                     ),
                                   ),
@@ -425,12 +528,15 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        widget.tripData.segments[index].icon != null &&
-                                                widget.tripData.segments[index].icon
-                                                    .isNotEmpty
+                                        widget.tripData.segments[index].icon !=
+                                                    null &&
+                                                widget.tripData.segments[index]
+                                                    .icon.isNotEmpty
                                             ? Image(
-                                                image: NetworkImage(widget.tripData
-                                                    .segments[index].icon),
+                                                image: NetworkImage(widget
+                                                    .tripData
+                                                    .segments[index]
+                                                    .icon),
                                                 width: 33,
                                                 height: 33,
                                               )
@@ -449,7 +555,8 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                               Text(
                                                 DateFormat.MMMEd('ru')
                                                     .format(
-                                                      DateTime.parse(widget.tripData
+                                                      DateTime.parse(widget
+                                                          .tripData
                                                           .segments[index]
                                                           .train
                                                           .arrDateTime),
@@ -469,7 +576,8 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                                 child: Text(
                                                   DateFormat.Hm()
                                                       .format(DateTime.parse(
-                                                          widget.tripData
+                                                          widget
+                                                              .tripData
                                                               .segments[index]
                                                               .train
                                                               .arrDateTime))
@@ -505,10 +613,12 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                           ],
                         ),
                       ),
-                      if (widget.tripData.segments.length > 1 && widget.tripData.segments.length - index > 1)
+                      if (widget.tripData.segments.length > 1 &&
+                          widget.tripData.segments.length - index > 1)
                         Container(
                           width: w,
-                          padding: EdgeInsets.only(top: 12, bottom: 12, left: 32),
+                          padding:
+                              EdgeInsets.only(top: 12, bottom: 12, left: 32),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
@@ -520,10 +630,10 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                           child: Text(
                             'Пересадка, ${widget.tripData.segments[index].arrStationName[0].toUpperCase()}${widget.tripData.segments[index].arrStationName.toLowerCase().substring(1)}: ${waitingTime(index).inHours} ч ${waitingTime(index).inMinutes.remainder(60)} мин',
                             style: TextStyle(
-                                fontFamily: "Root",
-                                fontSize: 14,
-                                color: Color(0xFF705D4D),
-                                fontWeight: FontWeight.bold,
+                              fontFamily: "Root",
+                              fontSize: 14,
+                              color: Color(0xFF705D4D),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
@@ -643,15 +753,35 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                   Color(0xff1262CB),
                 ]),
               ),
-              child: Center(
-                  child: Text(
-                'Скачать билеты',
-                style: TextStyle(
-                    fontFamily: "Root",
-                    fontSize: 17,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              )),
+              child: InkWell(
+                onTap: () async {
+                  final status = await Permission.storage.request();
+
+                  if (status.isGranted) {
+                    final externalDir = await getExternalStorageDirectory();
+
+                    final id = await FlutterDownloader.enqueue(
+                      url:
+                          "https://firebasestorage.googleapis.com/v0/b/storage-3cff8.appspot.com/o/2020-05-29%2007-18-34.mp4?alt=media&token=841fffde-2b83-430c-87c3-2d2fd658fd41",
+                      savedDir: externalDir.path,
+                      fileName: "dfsdfsdfdfdsf",
+                      showNotification: true,
+                      openFileFromNotification: true,
+                    );
+                  } else {
+                    print("Permission deined");
+                  }
+                },
+                child: Center(
+                    child: Text(
+                  'Скачать билеты',
+                  style: TextStyle(
+                      fontFamily: "Root",
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                )),
+              ),
             ),
           ],
         ),

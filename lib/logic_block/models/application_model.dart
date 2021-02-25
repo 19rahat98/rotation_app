@@ -422,7 +422,7 @@ class Ticket {
     carNumber = json['car_number'];
     carClass = json['car_class'];
     carDetail = json['car_detail'];
-    seatNumber = json['seat_number'];
+    seatNumber = json['seat_number'] ?? '';
     placeLevel = json['place_level'];
     placeOtsekNumber = json['place_otsek_number'];
     carrierName = json['carrier_name'];

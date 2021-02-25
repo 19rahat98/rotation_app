@@ -1,16 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rotation_app/logic_block/providers/conversation_rates_provider.dart';
-import 'package:rotation_app/ui/nav_bar/bottom_nav.dart';
 
 
 import 'more_about_passport_widget.dart';
 import 'package:rotation_app/ui/nav_bar/app.dart';
 import 'package:rotation_app/ui/user_pages/empty_data_widget.dart';
-import 'package:rotation_app/ui/user_pages/more_about_document_widget.dart';
 import 'package:rotation_app/ui/user_pages/work_permission_widget.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/ui/user_pages/more_about_document_widget.dart';
 
 
 class UserDocumentsScreen extends StatefulWidget {
@@ -27,6 +25,8 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    lp.getEmployeeData();
     return Scaffold(
       backgroundColor: Color(0xffF3F6FB),
       appBar: AppBar(
@@ -144,7 +144,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               margin: EdgeInsets.only(top: 8),
                               width: w * 0.3,
                               child: Text(
-                                '0005011',
+                                lp.employee.docNumber != null ? lp.employee.docNumber : '0000000',
                                 style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
@@ -156,7 +156,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               margin: EdgeInsets.only(top: 8),
                               width: w * 0.5,
                               child: Text(
-                                '10.07.2015 - 15.02.2021',
+                                '10.07.2015 - 15.02.2021*',
                                 style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
@@ -246,7 +246,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               margin: EdgeInsets.only(top: 8),
                               width: w * 0.3,
                               child: Text(
-                                '0005011',
+                                lp.employee.docNumber != null ? lp.employee.docNumber : '0000000',
                                 style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
@@ -258,7 +258,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                               margin: EdgeInsets.only(top: 8),
                               width: w * 0.5,
                               child: Text(
-                                '11.09.2017 - 11.09.2027, МВД РК',
+                                '11.09.2017 - 11.09.2027, МВД РК*',
                                 style: TextStyle(fontFamily: "Root",
                                   fontSize: 14,
                                   color: Color(0xff15304D),
@@ -322,7 +322,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                           margin: EdgeInsets.only(top: 13),
                           width: w * 0.8,
                           child: Text(
-                            'Вы еще не указали данные вашего паспорта. Нажмите, чтобы добавить.',
+                            'Вы еще не указали данные вашего паспорта. Нажмите, чтобы добавить.**',
                             style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,
                                 color: Color(0xff748595).withOpacity(0.5), fontWeight: FontWeight.w500),
@@ -332,7 +332,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                     ),
                   ),
               ),
-              Container(
+              /*Container(
                 width: w,
                 margin: EdgeInsets.only(top: 16),
                 padding:
@@ -395,7 +395,7 @@ class _UserDocumentsScreenState extends State<UserDocumentsScreen> {
                     ],
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),

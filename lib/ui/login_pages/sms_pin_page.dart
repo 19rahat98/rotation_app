@@ -25,10 +25,8 @@ class SmsPinPage extends StatefulWidget {
 }
 
 class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
-  final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
   var textFieldCtrl = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
-  StreamSubscription periodicSub;
   int secondValue = 60;
   Future<Status> _status;
 
@@ -52,7 +50,6 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
   checkLoginState() {
     UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     NotificationProvider np = Provider.of<NotificationProvider>(context, listen: false);
-    np.sendFmcTokenToServer();
     _status.then((value) {
       print(value);
       switch (value) {
@@ -77,7 +74,8 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
               });
         case Status.SuccessLogin:
           auth.saveDataToSP().then((value){
-            Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (BuildContext context) => StartPage()));
+            np.sendFmcTokenToServer();
+            Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => App()));
           });
       }
     });

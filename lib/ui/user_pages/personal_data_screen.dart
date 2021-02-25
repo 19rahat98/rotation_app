@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:group_button/group_button.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
-import 'package:rotation_app/ui/trips_pages/tickets_bottom_sheet.dart';
-import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
+
+import 'more_about_document_widget.dart';
 
 class PersonalDataScreen extends StatefulWidget {
   @override
@@ -338,62 +338,41 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
-                      margin: EdgeInsets.only(top: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Дата рождения',
-                            style: TextStyle(
-                              fontFamily: "Root",
-                              fontSize: 13,
-                              color: Color(0xff748595),
-                            ),
+                      margin: EdgeInsets.only(top: 12),
+                      child: Form(
+                        autovalidate: true,
+                        child: TextFormField(
+                          autofocus: false,
+                          toolbarOptions: ToolbarOptions(
+                            copy: true,
+                            cut: true,
+                            paste: true,
+                            selectAll: true,
                           ),
-                          Container(
-                            padding: EdgeInsets.only(bottom: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  child: TextFormField(
-                                    autofocus: false,
-                                    controller: _userBirthdayDateController,
-                                    inputFormatters: [dateTextFormatter],
-                                    keyboardType: TextInputType.phone,
-                                    style: TextStyle(
-                                      fontFamily: "Root",
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xff15304D),
-                                    ),
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding:
-                                          EdgeInsets.only(top: 4, bottom: 7),
-                                      border: InputBorder.none,
-                                    ),
-                                    validator: (value) {
-                                      if (value.length == 0)
-                                        return ("Comments can't be empty!");
-                                      return value = null;
-                                    },
-                                  ),
-                                  width: w * 0.75,
-                                ),
-                                SvgPicture.asset(
-                                  'assets/svg/Calendar.svg',
-                                  width: 24,
-                                  height: 24,
-                                  color: Color(0xff1262CB),
-                                ),
-                              ],
-                            ),
+                          controller: _userBirthdayDateController,
+                          inputFormatters: [dateTextFormatter],
+                          keyboardType: TextInputType.datetime,
+                          style: TextStyle(
+                            fontFamily: "Root",
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xff15304D),
                           ),
-                          Divider(
-                            height: 0,
+                          decoration: CommonStyle.textFieldStyle(
+                            labelTextStr: "Дата рождения",
+                            hintTextStr: "Дата рождения",
+                            istDate: true,
                           ),
-                        ],
+                          validator: (value) {
+                            if (value.length > 9) {
+                              if (!DateValidator('dd/MM/yyyy', errorText: "")
+                                  .isValid(value.replaceAll('.', '/'))) {
+                                return ("Введите корректное значение!");
+                              }
+                            }
+                            return value = null;
+                          },
+                        ),
                       ),
                     ),
                     Container(
@@ -801,34 +780,4 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     );
   }
 
-  void _onOpenMore(BuildContext context, String title, String text) {
-    double h = MediaQuery.of(context).size.height;
-    double w = MediaQuery.of(context).size.width;
-    showModalBottomSheet<void>(
-      backgroundColor: Colors.transparent,
-      context: context,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return Container(
-          width: w,
-          constraints: new BoxConstraints(
-            maxHeight: h * 0.90,
-          ),
-          //height: h * 0.90,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-          ),
-          child: MoreArticleWidget(
-            title: title,
-            articleText: text,
-          ),
-        );
-      },
-    );
-  }
 }
