@@ -72,7 +72,6 @@ class LoginProvider with ChangeNotifier {
   }
 
   Future<List<Application>> getEmployeeApplication() async {
-    print('asdasdadsaqd');
     final ResponseApi result = await userRepository.getApplication();
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
     if (result.code == 200) {

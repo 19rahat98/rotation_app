@@ -2,7 +2,7 @@ class Application {
   int id;
   int userId;
   int bookingId;
-  int groupApplicationId;
+  dynamic groupApplicationId;
   int employeeId;
   bool isExtra;
   String startStationCode;
@@ -18,14 +18,15 @@ class Application {
   String createdAt;
   String updatedAt;
   bool fromOld;
-  int oldId;
-  String deletedAt;
+  dynamic oldId;
+  dynamic deletedAt;
   bool isStored;
+  String issuedAt;
+  int businessTripDays;
   String startStation;
   String endStation;
-  int overTime;
   String productKey;
-  int businessTripDays;
+  int overTime;
   List<Segments> segments;
 
   Application(
@@ -51,13 +52,13 @@ class Application {
         this.oldId,
         this.deletedAt,
         this.isStored,
+        this.issuedAt,
+        this.businessTripDays,
         this.startStation,
         this.endStation,
-        this.segments,
-        this.overTime,
         this.productKey,
-        this.businessTripDays,
-      });
+        this.overTime,
+        this.segments});
 
   Application.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -82,11 +83,12 @@ class Application {
     oldId = json['old_id'];
     deletedAt = json['deleted_at'];
     isStored = json['is_stored'];
+    issuedAt = json['issued_at'];
+    businessTripDays = json['business_trip_days'];
     startStation = json['start_station'];
     endStation = json['end_station'];
-    overTime = json['overtime'];
     productKey = json['product_key'];
-    businessTripDays = json['business_trip_days'];
+    overTime = json['overtime'];
     if (json['segments'] != null) {
       segments = new List<Segments>();
       json['segments'].forEach((v) {
@@ -119,10 +121,12 @@ class Application {
     data['old_id'] = this.oldId;
     data['deleted_at'] = this.deletedAt;
     data['is_stored'] = this.isStored;
+    data['issued_at'] = this.issuedAt;
+    data['business_trip_days'] = this.businessTripDays;
     data['start_station'] = this.startStation;
     data['end_station'] = this.endStation;
-    data['overtime'] = this.overTime;
     data['product_key'] = this.productKey;
+    data['overtime'] = this.overTime;
     if (this.segments != null) {
       data['segments'] = this.segments.map((v) => v.toJson()).toList();
     }
@@ -138,17 +142,18 @@ class Segments {
   String arrStationCode;
   String arrStationName;
   String status;
-  //Null activeProcess;
+  dynamic activeProcess;
   int ticketId;
-  String closedReason;
+  dynamic closedReason;
   String createdAt;
   String updatedAt;
-  String deletedAt;
+  dynamic deletedAt;
   String depStation;
   String arrStation;
+  dynamic watcherTimeLimit;
+  String icon;
   Train train;
   Ticket ticket;
-  String icon;
 
   Segments(
       {this.id,
@@ -158,7 +163,7 @@ class Segments {
         this.arrStationCode,
         this.arrStationName,
         this.status,
-        //this.activeProcess,
+        this.activeProcess,
         this.ticketId,
         this.closedReason,
         this.createdAt,
@@ -166,10 +171,10 @@ class Segments {
         this.deletedAt,
         this.depStation,
         this.arrStation,
-        this.train,
-        this.ticket,
+        this.watcherTimeLimit,
         this.icon,
-      });
+        this.train,
+        this.ticket});
 
   Segments.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -179,7 +184,7 @@ class Segments {
     arrStationCode = json['arr_station_code'];
     arrStationName = json['arr_station_name'];
     status = json['status'];
-    //activeProcess = json['active_process'];
+    activeProcess = json['active_process'];
     ticketId = json['ticket_id'];
     closedReason = json['closed_reason'];
     createdAt = json['created_at'];
@@ -187,9 +192,11 @@ class Segments {
     deletedAt = json['deleted_at'];
     depStation = json['dep_station'];
     arrStation = json['arr_station'];
-    train = json['train'] != null ? new Train.fromJson(json['train']) : null;
-    ticket = json['ticket'] != null ? new Ticket.fromJson(json['ticket']) : null;
+    watcherTimeLimit = json['watcher_time_limit'];
     icon = json['icon'];
+    train = json['train'] != null ? new Train.fromJson(json['train']) : null;
+    ticket =
+    json['ticket'] != null ? new Ticket.fromJson(json['ticket']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -201,7 +208,7 @@ class Segments {
     data['arr_station_code'] = this.arrStationCode;
     data['arr_station_name'] = this.arrStationName;
     data['status'] = this.status;
-    //data['active_process'] = this.activeProcess;
+    data['active_process'] = this.activeProcess;
     data['ticket_id'] = this.ticketId;
     data['closed_reason'] = this.closedReason;
     data['created_at'] = this.createdAt;
@@ -209,15 +216,17 @@ class Segments {
     data['deleted_at'] = this.deletedAt;
     data['dep_station'] = this.depStation;
     data['arr_station'] = this.arrStation;
+    data['watcher_time_limit'] = this.watcherTimeLimit;
     data['icon'] = this.icon;
     if (this.train != null) {
       data['train'] = this.train.toJson();
     }
-    data['ticket'] = this.ticket;
+    if (this.ticket != null) {
+      data['ticket'] = this.ticket.toJson();
+    }
     return data;
   }
 }
-
 
 class Train {
   int id;
@@ -347,8 +356,9 @@ class Ticket {
   dynamic categoryName;
   dynamic categoryPlaceParam;
   dynamic categoryPlaceParamInd;
-  String carTypeLabel;
+  String ticketUrl;
   String seatLevel;
+  String carTypeLabel;
   List<Places> places;
 
   Ticket(
@@ -398,8 +408,9 @@ class Ticket {
         this.categoryName,
         this.categoryPlaceParam,
         this.categoryPlaceParamInd,
-        this.carTypeLabel,
+        this.ticketUrl,
         this.seatLevel,
+        this.carTypeLabel,
         this.places});
 
   Ticket.fromJson(Map<String, dynamic> json) {
@@ -422,7 +433,7 @@ class Ticket {
     carNumber = json['car_number'];
     carClass = json['car_class'];
     carDetail = json['car_detail'];
-    seatNumber = json['seat_number'] ?? '';
+    seatNumber = json['seat_number'];
     placeLevel = json['place_level'];
     placeOtsekNumber = json['place_otsek_number'];
     carrierName = json['carrier_name'];
@@ -449,8 +460,9 @@ class Ticket {
     categoryName = json['category_name'];
     categoryPlaceParam = json['category_place_param'];
     categoryPlaceParamInd = json['category_place_param_ind'];
-    carTypeLabel = json['car_type_label'];
+    ticketUrl = json['ticket_url'];
     seatLevel = json['seat_level'];
+    carTypeLabel = json['car_type_label'];
     if (json['places'] != null) {
       places = new List<Places>();
       json['places'].forEach((v) {
@@ -507,8 +519,9 @@ class Ticket {
     data['category_name'] = this.categoryName;
     data['category_place_param'] = this.categoryPlaceParam;
     data['category_place_param_ind'] = this.categoryPlaceParamInd;
-    data['car_type_label'] = this.carTypeLabel;
+    data['ticket_url'] = this.ticketUrl;
     data['seat_level'] = this.seatLevel;
+    data['car_type_label'] = this.carTypeLabel;
     if (this.places != null) {
       data['places'] = this.places.map((v) => v.toJson()).toList();
     }

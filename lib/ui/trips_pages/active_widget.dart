@@ -293,7 +293,7 @@ class ActiveWidget extends StatelessWidget {
             children: [
               Divider(),
               Container(
-                width: 250,
+                width: w,
                 child: Text(
                   'У вас овертайм +${tripData.overTime} дней,  билеты на новую дату куплены',
                   style: TextStyle(fontFamily: "Root",

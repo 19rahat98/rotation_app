@@ -114,7 +114,7 @@ class InactiveTripWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            tripData.overTime > 0 && tripData.overTime != null ? Container(
+                            /*tripData.overTime > 0 && tripData.overTime != null ? Container(
                               padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                               margin: EdgeInsets.only(right: 7),
                               decoration: BoxDecoration(
@@ -145,7 +145,7 @@ class InactiveTripWidget extends StatelessWidget {
                                 height: 24,
                                 color: AppTheme.nearlyWhite,
                               ),
-                            ),
+                            ),*/
                             tripData.segments.isEmpty ?
                             SvgPicture.asset(
                               'assets/svg/Ticket.svg',
@@ -172,9 +172,9 @@ class InactiveTripWidget extends StatelessWidget {
           ),
           Divider(),
           Container(
-            margin: EdgeInsets.only(top: 8, bottom: 8),
+            //margin: EdgeInsets.only(top: 8, bottom: 8),
             child: Text(
-              'Билеты еще не оформлены',
+              'Маршрут не известен, билеты еще не оформлены.',
               style: TextStyle(
                   fontFamily: "Root",
                   fontSize: 14,
