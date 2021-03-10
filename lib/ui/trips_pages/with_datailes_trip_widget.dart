@@ -6,17 +6,17 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:rotation_app/config/app+theme.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
 
-class WithDetailsTripWidget extends StatelessWidget {
+class SingleCustomDetailsTripWidget extends StatelessWidget {
   final Application tripData;
 
-  WithDetailsTripWidget({Key key, this.tripData}) : super(key: key);
+  SingleCustomDetailsTripWidget({Key key, this.tripData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width - 56;
     initializeDateFormatting();
     return Container(
-      width: w,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
@@ -152,37 +152,25 @@ class WithDetailsTripWidget extends StatelessWidget {
                                 color: AppTheme.nearlyWhite,
                               ),
                             ),*/
-                            tripData.segments.length > 1
-                                ? Container(
-                                    width: 32,
-                                    height: 32,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Color(0xffC5CAD1)),
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        "assets/svg/Trains.svg",
-                                        color: Colors.white,
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    width: 32,
-                                    height: 32,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Color(0xffC5CAD1)),
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                        "assets/svg/Train.svg",
-                                        color: Colors.white,
-                                        width: 24,
-                                        height: 24,
-                                      ),
-                                    ),
-                                  ),
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color:
+                                      tripData.segments.first.activeProcess ==
+                                              "watching"
+                                          ? Color(0xffEA9F3F)
+                                          : Color(0xffC5CAD1)),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  "assets/svg/Train.svg",
+                                  color: Colors.white,
+                                  width: 22,
+                                  height: 22,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -240,7 +228,7 @@ class WithDetailsTripWidget extends StatelessWidget {
                             style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 14,
-                                color: Color(0xff1B344F),
+                                color: Color(0xff1B344F).withOpacity(0.5),
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -265,7 +253,7 @@ class WithDetailsTripWidget extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 14,
-                                  color: Color(0xff1B344F),
+                                  color: Color(0xff1B344F).withOpacity(0.5),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -274,7 +262,7 @@ class WithDetailsTripWidget extends StatelessWidget {
                                     ' ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[index].train.depDateTime))} - ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[index].train.arrDateTime))}',
                                 style: new TextStyle(
                                     fontSize: 14,
-                                    color: Color(0xff1B344F),
+                                    color: Color(0xff1B344F).withOpacity(0.5),
                                     fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -287,25 +275,75 @@ class WithDetailsTripWidget extends StatelessWidget {
               );
             },
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Divider(),
-              Container(
-                width: w * 0.9,
-                //margin: EdgeInsets.only(bottom: 8),
-                child: Text(
-                  'Билеты еще не оформлены.',
-                  style: TextStyle(
-                    fontFamily: "Root",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff748595).withOpacity(0.6),
-                  ),
+          tripData.segments.first.activeProcess == "watching"
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(),
+                    Container(
+                      width: w,
+                      margin: EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 22,
+                            color: Color(0xff2D4461).withOpacity(0.6),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: w * 0.85,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Поездка находится в листе ожидания.',
+                                  style: TextStyle(
+                                    fontFamily: "Root",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff748595).withOpacity(0.6),
+                                  ),
+                                ),
+                                Text(
+                                  'Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments.first.watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments.first.watcherTimeLimit))}',
+                                  style: TextStyle(
+                                    fontFamily: "Root",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff748595).withOpacity(0.6),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(),
+                    Container(
+                      width: w * 0.9,
+                      //margin: EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        'Билеты еще не оформлены.',
+                        style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff748595).withOpacity(0.6),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
           if (tripData.overTime != 0)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,10 +409,6 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
       return Duration(hours: 0, minutes: 0);
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -511,13 +545,13 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                                 widget.tripData.productKey == "rail"
                                     ? SvgPicture.asset(
                                         "assets/svg/Train.svg",
-                                        color: Color(0xff1B344F).withOpacity(0.5),
+                                        color: widget.tripData.segments.first.activeProcess != null ? Color(0xffFFBE6B) : Color(0xff1BBC2CA),
                                         width: 24,
                                         height: 24,
                                       )
                                     : SvgPicture.asset(
                                         "assets/svg/Plane.svg",
-                                        color: Color(0xff1B344F).withOpacity(0.5),
+                                        color: widget.tripData.segments.first.activeProcess != null ? Color(0xffFFBE6B) :Color(0xff1BBC2CA),
                                         width: 24,
                                         height: 24,
                                       ),
@@ -531,7 +565,7 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                                   //height: 240,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xff1B344F).withOpacity(0.5),
+                                    color: widget.tripData.segments.first.activeProcess != null ? Color(0xffFFBE6B) :Color(0xff1BBC2CA),
                                   ),
                                 ),
                                 Container(
@@ -542,7 +576,7 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                                     borderRadius: BorderRadius.circular(50),
                                     border: Border.all(
                                       width: 3,
-                                      color: Color(0xff1B344F).withOpacity(0.5),
+                                      color: widget.tripData.segments.first.activeProcess != null ? Color(0xffFFBE6B) :Color(0xff1BBC2CA),
                                     ),
                                   ),
                                 )
@@ -559,10 +593,8 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        widget.tripData.segments[index].icon !=
-                                                    null &&
-                                                widget.tripData.segments[index]
-                                                    .icon.isNotEmpty
+                                        widget.tripData.segments[index].icon != null &&
+                                        widget.tripData.segments[index].icon.isNotEmpty
                                             ? Image(
                                                 image: NetworkImage(widget
                                                     .tripData
@@ -725,15 +757,29 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                                                         .withOpacity(0.7)),
                                               ),
                                             ),
+                                            widget.tripData.segments.first.activeProcess == null ?
                                             Container(
                                               width: w * 0.55,
                                               child: Text(
                                                 'билеты не куплены',
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: "Root",
-                                                    fontSize: 14,
-                                                  color: Color(0xff1B344F).withOpacity(0.5),),
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff1B344F)
+                                                      .withOpacity(0.5),
+                                                ),
+                                              ),
+                                            ) : Container(
+                                              width: w * 0.55,
+                                              child: Text(
+                                                'билеты в листе ожидания',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xffFFBE6B),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -755,15 +801,29 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                                                         .withOpacity(0.7)),
                                               ),
                                             ),
+                                            widget.tripData.segments.first.activeProcess == null ?
                                             Container(
                                               width: w * 0.55,
                                               child: Text(
                                                 'билеты не куплены',
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontFamily: "Root",
-                                                    fontSize: 14,
-                                                  color: Color(0xff1B344F).withOpacity(0.5),),
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff1B344F)
+                                                      .withOpacity(0.5),
+                                                ),
+                                              ),
+                                            ) : Container(
+                                              width: w * 0.55,
+                                              child: Text(
+                                                'билеты в листе ожидания',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xffEA9F3F),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -870,7 +930,7 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                           ],
                         ),
                       ),
-                      if (widget.tripData.segments.length > 1 &&
+                      /*if (widget.tripData.segments.length > 1 &&
                           widget.tripData.segments.length - index > 1)
                         Container(
                           width: w,
@@ -893,50 +953,98 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
+                        ),*/
                     ],
                   );
                 }),
-            Divider(
-              thickness: 1,
-              height: 0,
-              color: Color(0xffEBEBEB),
-            ),
-            Container(
-              width: w,
-              margin: EdgeInsets.only(top: 16, bottom: 16),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            widget.tripData.segments.first.activeProcess != null ?
+            Column(
+              children: [
+                Divider(
+                  thickness: 1,
+                  height: 0,
+                  color: Color(0xffEBEBEB),
+                ),
+                Container(
+                  width: w,
+                  margin: EdgeInsets.only(top: 16, bottom: 16),
+                  child: Column(
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.access_time_rounded, color: Color(0xff1B344F), size: 20,),
+                          SizedBox(width: 5,),
+                          Text(
+                            'Билеты еще не куплены!',
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Color(0xff1B344F),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Root"),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
                       Text(
-                        'Билеты еще не куплены!',
+                        widget.tripData.segments.first.watcherTimeLimit != null ?
+                        "Поездка находится в листе ожидания.  Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.watcherTimeLimit))}" : "Поездка находится в листе ожидания.  Тайм-лимит оформления: *",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 17,
-                            color: Color(0xff1B344F),
-                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Color(0xff1B344F).withOpacity(0.5),
+                            fontWeight: FontWeight.w500,
                             fontFamily: "Root"),
                       )
                     ],
                   ),
-                  SizedBox(
-                    height: 15,
+                ),
+              ],
+            )
+             : Column(
+              children: [
+                Divider(
+                  thickness: 1,
+                  height: 0,
+                  color: Color(0xffEBEBEB),
+                ),
+                Container(
+                  width: w,
+                  margin: EdgeInsets.only(top: 16, bottom: 16),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Билеты еще не куплены!',
+                            style: TextStyle(
+                                fontSize: 17,
+                                color: Color(0xff1B344F),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Root"),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Когда координатор закупит и оформит билеты на данную поездку, отобразится вся необходимая информация.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Color(0xff1B344F).withOpacity(0.5),
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Root"),
+                      )
+                    ],
                   ),
-                  Text(
-                    'Когда координатор закупит и оформит билеты на данную поездку, отобразится вся необходимая информация.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xff1B344F).withOpacity(0.5),
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Root"),
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
-
-            ///TODO
           ],
         ),
       ),

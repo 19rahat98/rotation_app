@@ -17,7 +17,7 @@ class InactiveTripWidget extends StatelessWidget {
     double w = MediaQuery.of(context).size.width  - 56;
     initializeDateFormatting();
     return Container(
-      width: w,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 12),
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(

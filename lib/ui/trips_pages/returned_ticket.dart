@@ -16,7 +16,7 @@ class ReturnedTicketWidget extends StatelessWidget {
     double w = MediaQuery.of(context).size.width - 56;
     initializeDateFormatting();
     return Container(
-      width: w,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
@@ -159,10 +159,11 @@ class ReturnedTicketWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(50),
                                   color: Color(0xffC5CAD1)),
                               child: Center(
-                                child: Icon(
-                                  Icons.not_interested_rounded,
+                                child: SvgPicture.asset(
+                                  "assets/svg/Returned.svg",
                                   color: Colors.white,
-                                  size: 22,
+                                  width: 20,
+                                  height: 20,
                                 ),
                               ),
                             ),
@@ -278,16 +279,33 @@ class ReturnedTicketWidget extends StatelessWidget {
             children: [
               Divider(),
               Container(
-                width: w * 0.9,
-                //margin: EdgeInsets.only(bottom: 8),
-                child: Text(
-                  'Билеты еще не оформлены.',
-                  style: TextStyle(
-                    fontFamily: "Root",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff748595).withOpacity(0.6),
-                  ),
+                width: w,
+                margin: EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.access_time_rounded,
+                      size: 22,
+                      color: Color(0xff2D4461).withOpacity(0.6),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      width: w * 0.85,
+                      child: Text(
+                      tripData.segments.first.ticket.returnedAt != null && tripData.segments.first.closedReason != null?
+                        'Поездка была отменена, по причине: ${tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments.first.ticket.returnedAt))} в ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments.first.ticket.returnedAt))}' :  'Поездка была отменена, по причине: *. Дата отмены: *',
+                        style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff748595).withOpacity(0.6),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -393,7 +411,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                               style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 22,
-                                  color: Color(0xff0C2B4C).withOpacity(0.5),
+                                  color: Color(0xff0C2B4C),
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -404,7 +422,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                               style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 22,
-                                  color: Color(0xff0C2B4C).withOpacity(0.5),
+                                  color: Color(0xff0C2B4C),
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -497,13 +515,13 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                 widget.tripData.productKey == "rail"
                                     ? SvgPicture.asset(
                                   "assets/svg/Train.svg",
-                                  color: Color(0xff1B344F).withOpacity(0.5),
+                                  color: Color(0xff1B344F).withOpacity(0.3),
                                   width: 24,
                                   height: 24,
                                 )
                                     : SvgPicture.asset(
                                   "assets/svg/Plane.svg",
-                                  color: Color(0xff1B344F).withOpacity(0.5),
+                                  color: Color(0xff1B344F).withOpacity(0.3),
                                   width: 24,
                                   height: 24,
                                 ),
@@ -517,7 +535,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                   //height: 240,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xff1B344F).withOpacity(0.5),
+                                    color: Color(0xff1B344F).withOpacity(0.3),
                                   ),
                                 ),
                                 Container(
@@ -528,7 +546,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                     borderRadius: BorderRadius.circular(50),
                                     border: Border.all(
                                       width: 3,
-                                      color: Color(0xff1B344F).withOpacity(0.5),
+                                      color: Color(0xff1B344F).withOpacity(0.3),
                                     ),
                                   ),
                                 )
@@ -583,7 +601,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                 style: TextStyle(
                                                     fontFamily: "Root",
                                                     fontSize: 16,
-                                                    color: Color(0xff1B344F),
+                                                    color: Color(0xff1B344F).withOpacity(0.3),
                                                     fontWeight:
                                                     FontWeight.bold),
                                               ),
@@ -603,7 +621,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                   style: TextStyle(
                                                       fontFamily: "Root",
                                                       fontSize: 20,
-                                                      color: Color(0xff1B344F),
+                                                      color: Color(0xff1B344F).withOpacity(0.3),
                                                       fontWeight:
                                                       FontWeight.bold),
                                                 ),
@@ -613,8 +631,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                 style: TextStyle(
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff748595)
-                                                        .withOpacity(0.7),
+                                                    color: Color(0xff748595).withOpacity(0.3),
                                                     fontWeight:
                                                     FontWeight.bold),
                                               ),
@@ -647,8 +664,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff748595)
-                                                        .withOpacity(0.7)),
+                                                    color: Color(0xff748595).withOpacity(0.3)),
                                               ),
                                             ),
                                             Container(
@@ -659,7 +675,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff1B344F)),
+                                                    color: Color(0xff1B344F).withOpacity(0.3)),
                                               ),
                                             ),
                                           ],
@@ -677,8 +693,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff748595)
-                                                        .withOpacity(0.7)),
+                                                    color: Color(0xff748595).withOpacity(0.3)),
                                               ),
                                             ),
                                             Container(
@@ -689,7 +704,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff1B344F)),
+                                                    color: Color(0xff1B344F).withOpacity(0.3)),
                                               ),
                                             ),
                                           ],
@@ -707,19 +722,19 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff748595)
-                                                        .withOpacity(0.7)),
+                                                    color: Color(0xff748595).withOpacity(0.3)),
                                               ),
                                             ),
                                             Container(
                                               width: w * 0.55,
                                               child: Text(
-                                                'билеты не куплены',
+                                                widget.tripData.segments.first.ticket.carTypeLabel != null && widget.tripData.segments.first.ticket.carNumber != null?
+                                                '№${widget.tripData.segments.first.ticket.carNumber}, ${widget.tripData.segments.first.ticket.carTypeLabel}' :  '*',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: "Root",
                                                   fontSize: 14,
-                                                  color: Color(0xff1B344F).withOpacity(0.5),),
+                                                  color: Color(0xff1B344F).withOpacity(0.3),),
                                               ),
                                             ),
                                           ],
@@ -737,19 +752,19 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff748595)
-                                                        .withOpacity(0.7)),
+                                                    color: Color(0xff748595).withOpacity(0.3)),
                                               ),
                                             ),
                                             Container(
                                               width: w * 0.55,
                                               child: Text(
-                                                'билеты не куплены',
+                                                widget.tripData.segments.first.ticket.places != null && widget.tripData.segments.first.ticket.places.isNotEmpty ?
+                                                '№${widget.tripData.segments.first.ticket.places.first.number}, ${widget.tripData.segments.first.ticket.places.first.floor > 1 ? 'верхнее' : 'нижнее'}' :  '*',
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w500,
                                                   fontFamily: "Root",
                                                   fontSize: 14,
-                                                  color: Color(0xff1B344F).withOpacity(0.5),),
+                                                  color: Color(0xff1B344F).withOpacity(0.3),),
                                               ),
                                             ),
                                           ],
@@ -809,7 +824,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                 style: TextStyle(
                                                     fontFamily: "Root",
                                                     fontSize: 16,
-                                                    color: Color(0xff1B344F),
+                                                    color: Color(0xff1B344F).withOpacity(0.3),
                                                     fontWeight:
                                                     FontWeight.bold),
                                               ),
@@ -829,7 +844,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                   style: TextStyle(
                                                       fontFamily: "Root",
                                                       fontSize: 20,
-                                                      color: Color(0xff1B344F),
+                                                      color: Color(0xff1B344F).withOpacity(0.3),
                                                       fontWeight:
                                                       FontWeight.bold),
                                                 ),
@@ -839,8 +854,7 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                                                 style: TextStyle(
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: Color(0xff748595)
-                                                        .withOpacity(0.7),
+                                                    color: Color(0xff748595).withOpacity(0.3),
                                                     fontWeight:
                                                     FontWeight.bold),
                                               ),
@@ -856,30 +870,6 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                           ],
                         ),
                       ),
-                      if (widget.tripData.segments.length > 1 &&
-                          widget.tripData.segments.length - index > 1)
-                        Container(
-                          width: w,
-                          padding:
-                          EdgeInsets.only(top: 12, bottom: 12, left: 32),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              width: 1,
-                              color: Color(0xFFE7DDD0),
-                            ),
-                            color: Color(0xFFFCFCF5),
-                          ),
-                          child: Text(
-                            'Пересадка, ${widget.tripData.segments[index].arrStationName[0].toUpperCase()}${widget.tripData.segments[index].arrStationName.toLowerCase().substring(1)}: ${waitingTime(index).inHours} ч ${waitingTime(index).inMinutes.remainder(60)} мин',
-                            style: TextStyle(
-                              fontFamily: "Root",
-                              fontSize: 14,
-                              color: Color(0xFF705D4D),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                     ],
                   );
                 }),
@@ -896,8 +886,10 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Icon(Icons.access_time_rounded, color: Color(0xff1B344F), size: 20,),
+                      SizedBox(width: 5,),
                       Text(
-                        'Билеты еще не куплены!',
+                        'Поездка отменена!',
                         style: TextStyle(
                             fontSize: 17,
                             color: Color(0xff1B344F),
@@ -910,7 +902,8 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
                     height: 15,
                   ),
                   Text(
-                    'Когда координатор закупит и оформит билеты на данную поездку, отобразится вся необходимая информация.',
+                    widget.tripData.segments.first.ticket.returnedAt != null && widget.tripData.segments.first.closedReason != null?
+                    'Поездка была отменена, по причине: ${widget.tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))} в ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))}' :  'Поездка была отменена, по причине: *. Дата отмены: *',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 15,
@@ -922,7 +915,6 @@ class _ReturnedTicketBottomSheetState extends State<ReturnedTicketBottomSheet> {
               ),
             ),
 
-            ///TODO
           ],
         ),
       ),

@@ -821,46 +821,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     color: Color(0xff748595),
                                     fontWeight: FontWeight.bold),
                               ),
-                              lp.data != null && lp.data.isNotEmpty
-                                  ? NearestTripWidget(tripsList: lp.data)
-                                  : Container(
-                                      width: w,
-                                      height: 50,
-                                      alignment: Alignment.centerLeft,
-                                      margin: EdgeInsets.only(top: 8),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 12),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.04),
-                                            spreadRadius: 0,
-                                            blurRadius: 8,
-                                            offset: Offset(0,
-                                                4), // changes position of shadow
-                                          ),
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.04),
-                                            spreadRadius: 0,
-                                            blurRadius: 2,
-                                            offset: Offset(0,
-                                                0), // changes position of shadow
-                                          ),
-                                        ],
-                                        borderRadius: BorderRadius.circular(6),
-                                        color: Colors.white,
-                                      ),
-                                      child: Text(
-                                        'У вас нет активных поездок.',
-                                        style: TextStyle(
-                                          fontFamily: "Root",
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              Color(0xff748595).withOpacity(0.6),
-                                        ),
-                                      ),
-                                    ),
+                              NearestTripWidget(tripsList: lp.data),
                             ],
                           ),
                         ),

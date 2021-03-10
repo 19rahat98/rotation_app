@@ -20,14 +20,12 @@ class TicketsBottomSheet extends StatefulWidget {
 }
 
 class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
-  int _ticketPrice = 0;
   int _totalPrice = 0;
 
   void _calculateTicketPrice() {
     if (widget.tripData.segments.isNotEmpty) {
       for (int i = 0; i < widget.tripData.segments.length; i++) {
         if (widget.tripData.segments[i].ticket != null) {
-          _ticketPrice += widget.tripData.segments[i].ticket.minPrice;
           _totalPrice += widget.tripData.segments[i].ticket.sum;
         }
       }
@@ -73,6 +71,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
 
   @override
   void initState() {
+    print(widget.tripData.id);
     _calculateTicketPrice();
 
     ///register a send port for the other isolates
@@ -134,13 +133,18 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            durationToString().toString() + " в пути",
-                            style: TextStyle(
-                                fontFamily: "Root",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff748595).withOpacity(0.7)),
+                          Container(
+                            width: w * 0.45,
+                            child: Text(
+                              "В ${widget.tripData.endStation[0].toUpperCase()}${widget.tripData.endStation.toLowerCase().substring(1)}. " + durationToString().toString() + " в пути",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontFamily: "Root",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xff748595).withOpacity(0.7)),
+                            ),
                           ),
                           widget.tripData.shift == 'night'
                               ? Row(
@@ -149,14 +153,17 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                     SvgPicture.asset(
                                       "assets/svg/Moon.svg",
                                     ),
-                                    Text(
-                                      'Ночная смена',
-                                      style: TextStyle(
-                                          fontFamily: "Root",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: Color(0xff748595)
-                                              .withOpacity(0.7)),
+                                    Container(
+                                      width: w * 0.3,
+                                      child: Text(
+                                        'Ночная смена',
+                                        style: TextStyle(
+                                            fontFamily: "Root",
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: Color(0xff748595)
+                                                .withOpacity(0.7)),
+                                      ),
                                     ),
                                   ],
                                 )
@@ -205,13 +212,13 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                 widget.tripData.productKey == "rail"
                                     ? SvgPicture.asset(
                                         "assets/svg/Train.svg",
-                                        color: Color(0xff1B344F),
+                                        color: Color(0xff00B688),
                                         width: 24,
                                         height: 24,
                                       )
                                     : SvgPicture.asset(
                                         "assets/svg/Plane.svg",
-                                        color: Color(0xff1B344F),
+                                        color: Color(0xff00B688),
                                         width: 24,
                                         height: 24,
                                       ),
@@ -221,7 +228,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                   height: 180,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xff1B344F),
+                                    color: Color(0xff00B688),
                                   ),
                                 ),
                                 Container(
@@ -232,7 +239,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                     borderRadius: BorderRadius.circular(50),
                                     border: Border.all(
                                       width: 3,
-                                      color: Color(0xff1B344F),
+                                      color: Color(0xff00B688),
                                     ),
                                   ),
                                 )
@@ -401,116 +408,63 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                                         SizedBox(
                                           height: 8,
                                         ),
-                                        widget.tripData.segments[index]
-                                                    .ticket ==
-                                                null
-                                            ? Row(
-                                                children: [
-                                                  Container(
-                                                    width: w * 0.25,
-                                                    child: Text(
-                                                      'вагон',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontFamily: "Root",
-                                                          fontSize: 14,
-                                                          color:
-                                                              Color(0xff748595)
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width: w * 0.55,
-                                                    child: Text(
-                                                      'Купе №',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontFamily: "Root",
-                                                          fontSize: 14,
-                                                          color: Color(
-                                                              0xff1B344F)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : widget.tripData.segments[index]
-                                                        .ticket.seatNumber ==
-                                                    null
-                                                ? Row(
-                                                    children: [
-                                                      Container(
-                                                        width: w * 0.25,
-                                                        child: Text(
-                                                          'вагон',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                      0xff748595)
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: w * 0.55,
-                                                        child: Text(
-                                                          'Купе № ${widget.tripData.segments[index].ticket.seatNumber}',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                  0xff1B344F)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Row(
-                                                    children: [
-                                                      Container(
-                                                        width: w * 0.25,
-                                                        child: Text(
-                                                          'вагон',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                      0xff748595)
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: w * 0.55,
-                                                        child: Text(
-                                                          'Купе №',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                  0xff1B344F)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: w * 0.25,
+                                              child: Text(
+                                                'вагон',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff748595)),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: w * 0.55,
+                                              child: Text(
+                                                widget.tripData.segments.first.ticket.carTypeLabel != null && widget.tripData.segments.first.ticket.carNumber != null?
+                                                '№${widget.tripData.segments.first.ticket.carNumber}, ${widget.tripData.segments.first.ticket.carTypeLabel}' :  '*',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff1B344F),),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: w * 0.25,
+                                              child: Text(
+                                                'место',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff748595)),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: w * 0.55,
+                                              child: Text(
+                                                widget.tripData.segments.first.ticket.places != null && widget.tripData.segments.first.ticket.places.isNotEmpty ?
+                                                '№${widget.tripData.segments.first.ticket.places.first.number}, ${widget.tripData.segments.first.ticket.places.first.floor > 1 ? 'верхнее' : 'нижнее'}' :  '*',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff1B344F),),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -613,30 +567,6 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                           ],
                         ),
                       ),
-                      if (widget.tripData.segments.length > 1 &&
-                          widget.tripData.segments.length - index > 1)
-                        Container(
-                          width: w,
-                          padding:
-                              EdgeInsets.only(top: 12, bottom: 12, left: 32),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              width: 1,
-                              color: Color(0xFFE7DDD0),
-                            ),
-                            color: Color(0xFFFCFCF5),
-                          ),
-                          child: Text(
-                            'Пересадка, ${widget.tripData.segments[index].arrStationName[0].toUpperCase()}${widget.tripData.segments[index].arrStationName.toLowerCase().substring(1)}: ${waitingTime(index).inHours} ч ${waitingTime(index).inMinutes.remainder(60)} мин',
-                            style: TextStyle(
-                              fontFamily: "Root",
-                              fontSize: 14,
-                              color: Color(0xFF705D4D),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                     ],
                   );
                 }),
@@ -667,7 +597,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Билеты',
+                        'Билет 1',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontFamily: "Root",
@@ -677,7 +607,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                       ),
                       Text(
                         //'${widget.tripData.segments[index].train} тг',
-                        '${_ticketPrice.toString()} тг',
+                        widget.tripData.segments[0].ticket != null ? '${widget.tripData.segments[0].ticket.sum} тг' : '* тг',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontFamily: "Root",
@@ -691,31 +621,7 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                     thickness: 1,
                     color: Color(0xffEBEBEB),
                   ),
-                  /*Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Тариф «Комфорт"',
-                        style: TextStyle(
-                          fontFamily: "Root",
-                          fontSize: 16,
-                          color: Color(0xff1B344F),
-                        ),
-                      ),
-                      Text(
-                        '+ ${_tariffPrice.toString()} тг',
-                        style: TextStyle(
-                          fontFamily: "Root",
-                          fontSize: 16,
-                          color: Color(0xff748595),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Color(0xffEBEBEB),
-                  ),*/
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -755,22 +661,27 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
               ),
               child: InkWell(
                 onTap: () async {
-                  final status = await Permission.storage.request();
+                  if(widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.ticketUrl != null){
+                    final status = await Permission.storage.request();
 
-                  if (status.isGranted) {
-                    final externalDir = await getExternalStorageDirectory();
+                    if (status.isGranted) {
+                      final externalDir = await getExternalStorageDirectory();
 
-                    final id = await FlutterDownloader.enqueue(
-                      url:
-                      "https://tmp.ptravels.kz/download-print/32592/issue",
-                      savedDir: externalDir.path,
-                      fileName: "dfsdfsdfdfdsf",
-                      showNotification: true,
-                      openFileFromNotification: true,
-                    );
-                  } else {
-                    print("Permission deined");
+                      final id = await FlutterDownloader.enqueue(
+                        url: widget.tripData.segments.first.ticket.ticketUrl,
+                        savedDir: externalDir.path,
+                        fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
+                        ).toString().replaceAll('.', ',')}",
+                        showNotification: true,
+                        openFileFromNotification: true,
+                      );
+                    } else {
+                      print("Permission deined");
+                    }
+                  }else{
+                    print("Ticket not found");
                   }
+
                 },
                 child: Center(
                     child: Text(

@@ -18,12 +18,32 @@ class CustomTripPage extends StatelessWidget {
 
   CustomTripPage({Key key, this.tripData}) : super(key: key);
 
+  String getTimeToWork({String tripeDate}){
+    if(tripeDate != null){
+      if(DateTime.parse(tripeDate).difference(DateTime.now()).inHours > 48){
+        return "через " + DateTime.parse(tripeDate).difference(DateTime.now()).inDays.toString() + " д";
+      }
+      else if(DateTime.parse(tripeDate).difference(DateTime.now()).inHours > 48 && DateTime.parse(tripeDate).difference(DateTime.now()).inHours > 24){
+        int hours = DateTime.parse(tripeDate).difference(DateTime.now()).inHours  % 24;
+        return "через " + DateTime.parse(tripeDate).difference(DateTime.now()).inDays.toString() + " д " + hours.toString() + " ч";
+      }
+      else if(DateTime.parse(tripeDate).difference(DateTime.now()).inHours < 24){
+        int hours = DateTime.parse(tripeDate).difference(DateTime.now()).inHours  % 24;
+        int minutes = DateTime.parse(tripeDate).difference(DateTime.now()).inMinutes  % 60;
+        return "через " + hours.toString() + " ч " + minutes.toString() + " м";
+      }
+      else{
+        return "через " + DateTime.parse(tripeDate).difference(DateTime.now()).inDays.toString() + " д";
+      }
+    }else return "";
+  }
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width - 56;
     initializeDateFormatting();
     return Container(
-      width: w,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
@@ -163,9 +183,11 @@ class CustomTripPage extends StatelessWidget {
                                       color: AppTheme.nearlyWhite,
                                     ),
                                   ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.segments.first.activeProcess == 'watching' &&
-                                tripData.segments.last.activeProcess == 'watching')
+                            if (tripData.segments.length == 2 &&
+                                tripData.segments.first.activeProcess ==
+                                    'watching' &&
+                                tripData.segments.last.activeProcess ==
+                                    'watching')
                               Container(
                                 width: 32,
                                 height: 32,
@@ -181,403 +203,30 @@ class CustomTripPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.status == 'partly' &&
-                                tripData.segments.first.status == 'issued' &&
-                                tripData.segments.last.status == "opened" &&
-                                tripData.segments.last.activeProcess == null)
+                            if (tripData.segments.length == 2 &&
+                                (tripData.segments.first.status == 'opened' &&
+                                tripData.segments[1].status == 'opened') &&
+                                (tripData.segments[1].activeProcess == null &&
+                                tripData.segments.first.activeProcess == null))
                               Container(
+                                width: 32,
                                 height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff00B688),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffC5CAD1),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Color(0xffC5CAD1),
+                                ),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/svg/Trains.svg",
+                                    color: Colors.white,
+                                    width: 24,
+                                    height: 24,
+                                  ),
                                 ),
                               ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.status == 'partly' &&
-                                tripData.segments.last.status == 'issued' &&
-                                tripData.segments.first.status == "opened" &&
-                                tripData.segments.first.activeProcess == null)
-                              Container(
-                                height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffC5CAD1),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff00B688),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.status == 'partly' &&
-                                tripData.segments.first.status == 'issued' &&
-                                tripData.segments.last.activeProcess == "watching")
-                              Container(
-                                height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff00B688),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffEA9F3F),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.status == 'partly' &&
-                                tripData.segments.last.status == 'issued' &&
-                                tripData.segments.first.activeProcess == "watching")
-                              Container(
-                                height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffEA9F3F),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff00B688),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.status == 'issued' &&
-                                tripData.segments.first.status == 'issued' &&
-                                tripData.segments.last.status == "returned")
-                              Container(
-                                height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff00B688),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffC5CAD1),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.not_interested_rounded,
-                                          color: Colors.white,
-                                          size: 22,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.status == 'partly' &&
-                                tripData.segments.last.status == 'issued' &&
-                                tripData.segments.first.status == "returned")
-                              Container(
-                                height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffEA9F3F),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xff00B688),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            if (tripData.segments.length >= 2 &&
-                                tripData.segments.first.activeProcess == 'watching' &&
-                                tripData.segments.last.status == "opened" &&
-                                tripData.segments.last.activeProcess == null)
-                              Container(
-                                height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffEA9F3F),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffC5CAD1),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.segments.last.activeProcess == 'watching' &&
-                                tripData.segments.first.status == "opened" &&
-                                tripData.segments.first.activeProcess == null)
-                              Container(
-                                height: 32,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffC5CAD1),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40),
-                                          bottomLeft: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 32,
-                                      width: 26,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xffEA9F3F),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          bottomRight: Radius.circular(40),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          "assets/svg/Train.svg",
-                                          color: Colors.white,
-                                          width: 24,
-                                          height: 24,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            if (tripData.segments.length >= 2 &&
-                                tripData.segments.first.status == 'opened' &&
-                                tripData.segments.last.status == "opened" &&
+                            if (tripData.segments.length == 2 &&
+                                tripData.segments.first.status == 'returned' &&
+                                tripData.segments.last.status == "returned" &&
                                 tripData.segments.last.activeProcess == null &&
                                 tripData.segments.first.activeProcess == null)
                               Container(
@@ -585,79 +234,260 @@ class CustomTripPage extends StatelessWidget {
                                 height: 32,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xffEA9F3F)),
+                                    color: Color(0xffC5CAD1)),
                                 child: Center(
                                   child: SvgPicture.asset(
-                                    "assets/svg/Trains.svg",
+                                    "assets/svg/Returned.svg",
                                     color: Colors.white,
-                                    width: 24,
-                                    height: 24,
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                               ),
-                            /*tripData.segments.length >= 2
-                                ? SvgPicture.asset('assets/svg/Ticket.svg',
-                                    width: 24,
-                                    height: 24,
-                                    color: AppTheme.nearlyWhite)
-                                : tripData.segments.length > 1 &&
-                                        tripData.productKey == 'rail'
-                                    ? Container(
-                                        width: 32,
-                                        height: 32,
+                            if (tripData.segments.length == 2 &&
+                                tripData.segments.first.status == 'issued' &&
+                                tripData.segments.last.status == "issued")
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Color(0xff00B688a)),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/svg/Returned.svg",
+                                    color: Colors.white,
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                ),
+                              ),
+                            if (tripData.segments.length == 2)
+                              Container(
+                                height: 32,
+                                child: Row(
+                                  children: [
+                                    if ((tripData.segments[1].activeProcess != null ||
+                                            tripData.segments[1].status == 'issued' ||
+                                            tripData.segments[1].status == "returned") &&
+                                        tripData.segments.first.status == 'opened' &&
+                                        tripData.segments.first.activeProcess == null &&
+                                        (tripData.segments.first.status != 'issued' ||
+                                            tripData.segments.first.status != "returned"))
+                                      Container(
+                                        width: 26,
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: Color(0xff00B688)),
+                                          color: Color(0xffC5CAD1),
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(50),
+                                            topLeft: Radius.circular(50),
+                                          ),
+                                        ),
                                         child: Center(
                                           child: SvgPicture.asset(
-                                            "assets/svg/Trains.svg",
+                                            "assets/svg/Train.svg",
                                             color: Colors.white,
                                             width: 24,
                                             height: 24,
                                           ),
                                         ),
-                                      )
-                                    : tripData.productKey == 'rail'
-                                        ? Container(
-                                            width: 32,
-                                            height: 32,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                color: Color(0xff00B688)),
-                                            child: Center(
-                                              child: SvgPicture.asset(
-                                                "assets/svg/Train.svg",
-                                                color: Colors.white,
-                                                width: 24,
-                                                height: 24,
-                                              ),
-                                            ),
-                                          )
-                                        : Container(
-                                            width: 32,
-                                            height: 32,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                color: Color(0xff00B688)),
-                                            child: Center(
-                                              child: SvgPicture.asset(
-                                                "assets/svg/Plane.svg",
-                                                color: Colors.white,
-                                                width: 24,
-                                                height: 24,
-                                              ),
-                                            ),
-                                          ),*/
+                                      ),
+                                    if (tripData.segments.first.status ==
+                                            'opened' &&
+                                        tripData.segments.first.activeProcess ==
+                                            "watching" &&
+                                        tripData.segments[1].activeProcess !=
+                                            "watching")
+                                      Container(
+                                        width: 26,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffEA9F3F),
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(50),
+                                            topLeft: Radius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/Train.svg",
+                                            color: Colors.white,
+                                            width: 24,
+                                            height: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    if (tripData.segments.first.status ==
+                                            'issued' &&
+                                        tripData.segments[1].status != 'issued')
+                                      Container(
+                                        width: 26,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff00B688),
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(50),
+                                            topLeft: Radius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/Train.svg",
+                                            color: Colors.white,
+                                            width: 24,
+                                            height: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    if (tripData.segments.first.status ==
+                                            'returned' &&
+                                        tripData.segments[1].status !=
+                                            'returned')
+                                      Container(
+                                        width: 26,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffC5CAD1),
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(50),
+                                            topLeft: Radius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/Returned.svg",
+                                            color: Colors.white,
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    if ((tripData.segments.first.activeProcess !=
+                                                null ||
+                                            tripData.segments.first.status ==
+                                                'issued' ||
+                                            tripData.segments.first.status ==
+                                                "returned") &&
+                                        tripData.segments[1].status ==
+                                            'opened' &&
+                                        tripData.segments[1].activeProcess ==
+                                            null &&
+                                        (tripData.segments[1].status !=
+                                                'issued' ||
+                                            tripData.segments[1].status !=
+                                                "returned"))
+                                      Container(
+                                        width: 26,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffC5CAD1),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(50),
+                                            bottomRight: Radius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/Train.svg",
+                                            color: Colors.white,
+                                            width: 24,
+                                            height: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    if (tripData.segments.first.activeProcess !=
+                                            "watching" &&
+                                        tripData.segments[1].status ==
+                                            'opened' &&
+                                        tripData.segments[1].activeProcess ==
+                                            "watching")
+                                      Container(
+                                        width: 26,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffEA9F3F),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(50),
+                                            bottomRight: Radius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/Train.svg",
+                                            color: Colors.white,
+                                            width: 24,
+                                            height: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    if (tripData.segments.first.status !=
+                                            'issued' &&
+                                        tripData.segments[1].status == 'issued')
+                                      Container(
+                                        width: 26,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff00B688),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(50),
+                                            bottomRight: Radius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/Train.svg",
+                                            color: Colors.white,
+                                            width: 24,
+                                            height: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    if (tripData.segments.first.status !=
+                                            'returned' &&
+                                        tripData.segments[1].status ==
+                                            'returned')
+                                      Container(
+                                        width: 26,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffC5CAD1),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(50),
+                                            bottomRight: Radius.circular(50),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/Returned.svg",
+                                            color: Colors.white,
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                       ),
                     ),
                   ],
                 ),
+                tripData.segments.first.status == 'issued' && tripData.segments[1].status == 'issued' ?
                 Text(
+                      tripData.endStation != null
+                      ? "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)} + (${getTimeToWork(tripeDate: tripData.date)})"
+                      : "",
+                  style: TextStyle(
+                      fontFamily: "Root",
+                      fontSize: 14,
+                      color: Color(0xff748595),
+                      fontWeight: FontWeight.w500),
+                ) : Text(
+                  tripData.endStation != null
+                      ? "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}"
+                      : "",
+                  style: TextStyle(
+                      fontFamily: "Root",
+                      fontSize: 14,
+                      color: Color(0xff748595),
+                      fontWeight: FontWeight.w500),
+                )
+                /*Text(
                   tripData.businessTripDays != null &&
                           tripData.endStation != null
                       ? "на ${tripData.businessTripDays} дней, " +
@@ -668,7 +498,7 @@ class CustomTripPage extends StatelessWidget {
                       fontSize: 14,
                       color: Color(0xff748595),
                       fontWeight: FontWeight.w500),
-                ),
+                ),*/
               ],
             ),
           ),
@@ -710,8 +540,14 @@ class CustomTripPage extends StatelessWidget {
                             style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 14,
-                                decoration: tripData.segments[index].status == "returned" ?  TextDecoration.lineThrough : null,
-                                color: tripData.segments[index].status == "returned" ? Color(0xff1B344F).withOpacity(0.5) : Color(0xff1B344F),
+                                decoration: tripData.segments[index].status ==
+                                        "returned"
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                                color:
+                                    tripData.segments[index].status != "issued"
+                                        ? Color(0xff1B344F).withOpacity(0.5)
+                                        : Color(0xff1B344F),
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -736,8 +572,14 @@ class CustomTripPage extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 14,
-                                  decoration: tripData.segments[index].status == "returned" ?  TextDecoration.lineThrough : null,
-                                  color: tripData.segments[index].status == "returned" ? Color(0xff1B344F).withOpacity(0.5) : Color(0xff1B344F),
+                                  decoration: tripData.segments[index].status ==
+                                          "returned"
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                  color: tripData.segments[index].status !=
+                                          "issued"
+                                      ? Color(0xff1B344F).withOpacity(0.5)
+                                      : Color(0xff1B344F),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -746,8 +588,15 @@ class CustomTripPage extends StatelessWidget {
                                     ' ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[index].train.depDateTime))} - ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[index].train.arrDateTime))}',
                                 style: new TextStyle(
                                     fontSize: 14,
-                                    decoration: tripData.segments[index].status == "returned" ?  TextDecoration.lineThrough : null,
-                                    color: tripData.segments[index].status == "returned" ? Color(0xff1B344F).withOpacity(0.5) : Color(0xff1B344F),
+                                    decoration:
+                                        tripData.segments[index].status ==
+                                                "returned"
+                                            ? TextDecoration.lineThrough
+                                            : null,
+                                    color: tripData.segments[index].status !=
+                                            "issued"
+                                        ? Color(0xff1B344F).withOpacity(0.5)
+                                        : Color(0xff1B344F),
                                     fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -760,6 +609,198 @@ class CustomTripPage extends StatelessWidget {
               );
             },
           ),
+          if ((tripData.segments.first.activeProcess == "watching" &&
+                  tripData.segments[1].status == "issued") ||
+              (tripData.segments[1].activeProcess == "watching" &&
+                  tripData.segments.first.status == "issued"))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                  width: w,
+                  margin: EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.access_time_rounded,
+                        size: 22,
+                        color: Color(0xff2D4461).withOpacity(0.6),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        width: w * 0.89,
+                        child: RichText(
+                          textAlign: TextAlign.start,
+                          text: new TextSpan(
+                            style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 13,
+                                color: Color(0xffCFD5DC),
+                                fontWeight: FontWeight.w400),
+                            children: <TextSpan>[
+                              new TextSpan(
+                                text:
+                                    'Часть билетов оформлены, а другая находится в листе ожидания. ',
+                                style: TextStyle(
+                                  fontFamily: "Root",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xff748595).withOpacity(0.6),
+                                ),
+                              ),
+                              new TextSpan(
+                                text: tripData.segments.first.watcherTimeLimit != null
+                                    ? 'Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments.first.watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments.first.watcherTimeLimit))}'
+                                    : tripData.segments[1].watcherTimeLimit != null
+                                        ? 'Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments[1].watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[1].watcherTimeLimit))}'
+                                        : 'Тайм-лимит оформления: *',
+                                style: TextStyle(
+                                  fontFamily: "Root",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xff748595).withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          if ((tripData.segments.first.activeProcess == "watching" &&
+              tripData.segments[1].activeProcess == null &&
+              tripData.segments[1].status != "issued" &&
+               tripData.segments.first.status == "opened" ) ||
+              (tripData.segments[1].activeProcess == "watching" &&
+                  tripData.segments.first.status != "issued" &&
+                  tripData.segments.first.activeProcess == null) &&
+                  tripData.segments[1].status == "opened")
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                  width: w,
+                  margin: EdgeInsets.only(bottom: 8),
+                  child: Text(tripData.segments.first.activeProcess == "watching" && tripData.segments.first.watcherTimeLimit != null ?
+                    'Часть билетов находятся в листе ожидания. Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments.first.watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments.first.watcherTimeLimit))}' :
+                      tripData.segments[1].activeProcess == "watching" && tripData.segments[1].watcherTimeLimit != null ? 'Часть билетов находятся в листе ожидания. Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments[1].watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[1].watcherTimeLimit))}' :
+                      'Часть билетов находятся в листе ожидания. Тайм-лимит оформления: *',
+                    style: TextStyle(
+                      fontFamily: "Root",
+                      fontSize: 13,
+                      color: Color(0xff748595),
+                      fontWeight: FontWeight.w500),)
+                ),
+              ],
+            ),
+          if ((tripData.segments[1].activeProcess == null &&
+              tripData.segments[1].status == 'opened') &&
+              (tripData.segments.first.activeProcess == null &&
+                  tripData.segments.first.status == "opened"))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                    width: w,
+                    margin: EdgeInsets.only(bottom: 8),
+                    child: Text('Билеты еще не оформлены.', style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 13,
+                        color: Color(0xff748595),
+                        fontWeight: FontWeight.w500),)
+                ),
+              ],
+            ),
+          if ((tripData.segments.first.activeProcess == null &&
+              tripData.segments.first.status == 'opened' &&
+              tripData.segments[1].status == 'issued') ||
+              (tripData.segments[1].activeProcess == null &&
+                  tripData.segments[1].status == 'opened' &&
+                  tripData.segments.first.status == "issued"))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                    width: w,
+                    margin: EdgeInsets.only(bottom: 8),
+                    child: Text('Поездка оформлена частично.', style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 13,
+                        color: Color(0xff748595),
+                        fontWeight: FontWeight.w500),)
+                ),
+              ],
+            ),
+          if ((tripData.segments.first.status == "returned" &&
+              tripData.segments[1].status == 'issued') ||
+              (tripData.segments[1].status == 'returned' &&
+                  tripData.segments.first.status == 'issued'))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                    width: w,
+                    margin: EdgeInsets.only(bottom: 8),
+                    child: Text( tripData.segments.first.closedReason != null && tripData.segments.first.ticket != null && tripData.segments.first.ticket.returnedAt != null ?
+                    'Часть билетов были оформлены. Часть билетов были отменены, по причине: ${tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments.first.ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments.first.ticket.returnedAt))}' :
+                    tripData.segments[1].closedReason != null && tripData.segments[1].ticket != null && tripData.segments[1].ticket.returnedAt != null ? 'Часть билетов были оформлены. Часть билетов были отменены, по причине: ${tripData.segments[1].closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments[1].ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[1].ticket.returnedAt))}' :
+                    'Часть билетов были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 13,
+                          color: Color(0xff748595),
+                          fontWeight: FontWeight.w500),)
+                ),
+              ],
+            ),
+          if (tripData.segments.first.status == "returned" &&
+              tripData.segments[1].status == 'returned')
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                    width: w,
+                    margin: EdgeInsets.only(bottom: 8),
+                    child: Text( tripData.segments.first.closedReason != null ? 'Поездка была отменена, по причине:  ${tripData.segments.first.closedReason}' : tripData.segments[1].closedReason != null ? 'Поездка была отменена, по причине:  ${tripData.segments[1].closedReason}' : 'Поездка была отменена, по причине: ',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 13,
+                          color: Color(0xff748595),
+                          fontWeight: FontWeight.w500),)
+                ),
+              ],
+            ),
+          if (tripData.status == "partly" && (tripData.segments.first.status == "returned" ||
+              tripData.segments[1].status == 'returned'))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                    width: w,
+                    margin: EdgeInsets.only(bottom: 8),
+                    child: Text(tripData.segments.first.closedReason != null ? 'Поездка была отменена, по причине:  ${tripData.segments.first.closedReason}' : tripData.segments[1].closedReason != null ? 'Поездка была отменена, по причине:  ${tripData.segments[1].closedReason}' : 'Поездка была отменена, по причине: ',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 13,
+                          color: Color(0xff748595),
+                          fontWeight: FontWeight.w500),
+                    ),
+                ),
+              ],
+            ),
           if (tripData.overTime != 0)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -795,14 +836,12 @@ class CustomTripSheet extends StatefulWidget {
 }
 
 class _CustomTripSheetState extends State<CustomTripSheet> {
-  int _ticketPrice = 0;
   int _totalPrice = 0;
 
   void _calculateTicketPrice() {
     if (widget.tripData.segments.isNotEmpty) {
       for (int i = 0; i < widget.tripData.segments.length; i++) {
         if (widget.tripData.segments[i].ticket != null) {
-          _ticketPrice += widget.tripData.segments[i].ticket.minPrice;
           _totalPrice += widget.tripData.segments[i].ticket.sum;
         }
       }
@@ -909,13 +948,19 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            durationToString().toString() + " в пути",
-                            style: TextStyle(
-                                fontFamily: "Root",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff748595).withOpacity(0.7)),
+                          Container(
+                            width: w * 0.45,
+                            child: Text(
+                      "В ${widget.tripData.endStation[0].toUpperCase()}${widget.tripData.endStation.toLowerCase().substring(1)}. " + durationToString().toString() + " в пути",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontFamily: "Root",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xff748595).withOpacity(0.7),
+                              ),
+                            ),
                           ),
                           widget.tripData.shift == 'night'
                               ? Row(
@@ -924,14 +969,19 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                     SvgPicture.asset(
                                       "assets/svg/Moon.svg",
                                     ),
-                                    Text(
-                                      'Ночная смена',
-                                      style: TextStyle(
-                                          fontFamily: "Root",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: Color(0xff748595)
-                                              .withOpacity(0.7)),
+                                    Container(
+                                      width: w * 0.3,
+                                      child: Text(
+                                        'Ночная смена',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontFamily: "Root",
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            color: Color(0xff748595)
+                                                .withOpacity(0.7)),
+                                      ),
                                     ),
                                   ],
                                 )
@@ -975,28 +1025,29 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Column(
+                            if(widget.tripData.segments[index].status == "opened" && widget.tripData.segments[index].activeProcess == null)
+                              Column(
                               children: [
                                 widget.tripData.productKey == "rail"
                                     ? SvgPicture.asset(
                                         "assets/svg/Train.svg",
-                                        color: Color(0xff1B344F),
+                                        color: Color(0xff1BBC2CA),
                                         width: 24,
                                         height: 24,
                                       )
                                     : SvgPicture.asset(
                                         "assets/svg/Plane.svg",
-                                        color: Color(0xff1B344F),
+                                        color: Color(0xff1BBC2CA),
                                         width: 24,
                                         height: 24,
                                       ),
                                 Container(
                                   margin: EdgeInsets.symmetric(vertical: 3),
                                   width: 2,
-                                  height: 180,
+                                  height: 200,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xff1B344F),
+                                    color: Color(0xff1BBC2CA),
                                   ),
                                 ),
                                 Container(
@@ -1007,12 +1058,129 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                     borderRadius: BorderRadius.circular(50),
                                     border: Border.all(
                                       width: 3,
-                                      color: Color(0xff1B344F),
+                                      color: Color(0xff1BBC2CA),
                                     ),
                                   ),
                                 )
                               ],
                             ),
+                            if(widget.tripData.segments[index].status == "opened" && widget.tripData.segments[index].activeProcess == "watching")
+                              Column(
+                                children: [
+                                  widget.tripData.productKey == "rail"
+                                      ? SvgPicture.asset(
+                                    "assets/svg/Train.svg",
+                                    color: Color(0xffFFBE6B),
+                                    width: 24,
+                                    height: 24,
+                                  ) : SvgPicture.asset(
+                                    "assets/svg/Plane.svg",
+                                    color: Color(0xffFFBE6B),
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 3),
+                                    width: 2,
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Color(0xffFFBE6B),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    margin: EdgeInsets.only(top: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(
+                                        width: 3,
+                                        color: Color(0xffFFBE6B),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            if(widget.tripData.segments[index].status == "returned")
+                              Column(
+                                children: [
+                                  widget.tripData.productKey == "rail"
+                                      ? SvgPicture.asset(
+                                    "assets/svg/Train.svg",
+                                    color: Color(0xff1BBC2CA),
+                                    width: 24,
+                                    height: 24,
+                                  )
+                                      : SvgPicture.asset(
+                                    "assets/svg/Plane.svg",
+                                    color: Color(0xff1BBC2CA),
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 3),
+                                    width: 2,
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Color(0xff1BBC2CA),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    margin: EdgeInsets.only(top: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(
+                                        width: 3,
+                                        color: Color(0xff1BBC2CA),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            if(widget.tripData.segments[index].status == "issued")
+                              Column(
+                                children: [
+                                  widget.tripData.productKey == "rail"
+                                      ? SvgPicture.asset(
+                                    "assets/svg/Train.svg",
+                                    color: Color(0xff00B688),
+                                    width: 24,
+                                    height: 24,
+                                  )
+                                      : SvgPicture.asset(
+                                    "assets/svg/Plane.svg",
+                                    color: Color(0xff00B688),
+                                    width: 24,
+                                    height: 24,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 3),
+                                    width: 2,
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Color(0xff00B688),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    margin: EdgeInsets.only(top: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      border: Border.all(
+                                        width: 3,
+                                        color: Color(0xff00B688),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1176,116 +1344,229 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                         SizedBox(
                                           height: 8,
                                         ),
-                                        widget.tripData.segments[index]
-                                                    .ticket ==
-                                                null
-                                            ? Row(
-                                                children: [
-                                                  Container(
-                                                    width: w * 0.25,
-                                                    child: Text(
-                                                      'вагон',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontFamily: "Root",
-                                                          fontSize: 14,
-                                                          color:
-                                                              Color(0xff748595)
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width: w * 0.55,
-                                                    child: Text(
-                                                      'Купе №',
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontFamily: "Root",
-                                                          fontSize: 14,
-                                                          color: Color(
-                                                              0xff1B344F)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : widget.tripData.segments[index]
-                                                        .ticket.seatNumber ==
-                                                    null
-                                                ? Row(
-                                                    children: [
-                                                      Container(
-                                                        width: w * 0.25,
-                                                        child: Text(
-                                                          'вагон',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                      0xff748595)
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: w * 0.55,
-                                                        child: Text(
-                                                          'Купе № ${widget.tripData.segments[index].ticket.seatNumber}',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                  0xff1B344F)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Row(
-                                                    children: [
-                                                      Container(
-                                                        width: w * 0.25,
-                                                        child: Text(
-                                                          'вагон',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                      0xff748595)
-                                                                  .withOpacity(
-                                                                      0.7)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: w * 0.55,
-                                                        child: Text(
-                                                          'Купе №',
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  "Root",
-                                                              fontSize: 14,
-                                                              color: Color(
-                                                                  0xff1B344F)),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                        if(widget.tripData.segments[index].status == "opened" && widget.tripData.segments[index].activeProcess == null)
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'вагон',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.7)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  "билеты не куплены",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff1B344F).withOpacity(0.3),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        if(widget.tripData.segments[index].status == "opened" && widget.tripData.segments[index].activeProcess == "watching")
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'вагон',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.7)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  "билеты в листе ожидания",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xffEA9F3F),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        if(widget.tripData.segments[index].status == "returned")
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'вагон',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.3)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  widget.tripData.segments.first.ticket.carTypeLabel != null && widget.tripData.segments.first.ticket.carNumber != null?
+                                                  '№${widget.tripData.segments.first.ticket.carNumber}, ${widget.tripData.segments.first.ticket.carTypeLabel}' :  '*',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff1B344F).withOpacity(0.3),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        if(widget.tripData.segments[index].status == "issued")
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'вагон',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.7)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  widget.tripData.segments.first.ticket.carTypeLabel != null && widget.tripData.segments.first.ticket.carNumber != null?
+                                                  '№${widget.tripData.segments.first.ticket.carNumber}, ${widget.tripData.segments.first.ticket.carTypeLabel}' :  '*',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff1B344F),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        if(widget.tripData.segments[index].status == "opened" && widget.tripData.segments[index].activeProcess == null)
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'место',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.7)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  "билеты не куплены",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff1B344F).withOpacity(0.3),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        if(widget.tripData.segments[index].status == "opened" && widget.tripData.segments[index].activeProcess == "watching")
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'место',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.7)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  "билеты в листе ожидания",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xffEA9F3F),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        if(widget.tripData.segments[index].status == "returned")
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'место',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.3)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  widget.tripData.segments.first.ticket.places != null && widget.tripData.segments.first.ticket.places.isNotEmpty ?
+                                                  '№${widget.tripData.segments.first.ticket.places.first.number}, ${widget.tripData.segments.first.ticket.places.first.floor > 1 ? 'верхнее' : 'нижнее'}' :  '*',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff1B344F).withOpacity(0.3),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        if(widget.tripData.segments[index].status == "issued")
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: w * 0.25,
+                                                child: Text(
+                                                  'место',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: "Root",
+                                                      fontSize: 14,
+                                                      color: Color(0xff748595).withOpacity(0.7)),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: w * 0.55,
+                                                child: Text(
+                                                  widget.tripData.segments.first.ticket.places != null && widget.tripData.segments.first.ticket.places.isNotEmpty ?
+                                                  '№${widget.tripData.segments.first.ticket.places.first.number}, ${widget.tripData.segments.first.ticket.places.first.floor > 1 ? 'верхнее' : 'нижнее'}' :  '*',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Root",
+                                                    fontSize: 14,
+                                                    color: Color(0xff1B344F),),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                       ],
                                     ),
                                   ),
@@ -1415,7 +1696,585 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                     ],
                   );
                 }),
+            Divider(
+              thickness: 1,
+              height: 0,
+              color: Color(0xffEBEBEB),
+            ),
+
+            if ((widget.tripData.segments.first.activeProcess == "watching" &&
+                widget.tripData.segments[1].status == "issued") ||
+                (widget.tripData.segments[1].activeProcess == "watching" &&
+                    widget.tripData.segments.first.status == "issued"))
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: w,
+                    margin: EdgeInsets.only(top: 20, bottom: 12),
+                    alignment: Alignment.center,
+                    child: Text('Билеты еще не куплены!',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 17,
+                          color: Color(0xff1B344F),
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  Container(
+                    width: w,
+                    child: Container(
+                      width: w * 0.89,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: new TextSpan(
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 15,
+                              color: Color(0xffCFD5DC),
+                              fontWeight: FontWeight.w400),
+                          children: <TextSpan>[
+                            new TextSpan(
+                              text:
+                              'Часть билетов оформлены, а другая находится в листе ожидания. ',
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff748595).withOpacity(0.6),
+                              ),
+                            ),
+                            new TextSpan(
+                              text: widget.tripData.segments.first.watcherTimeLimit != null
+                                  ? 'Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.watcherTimeLimit))}'
+                                  : widget.tripData.segments[1].watcherTimeLimit != null
+                                  ? 'Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[1].watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[1].watcherTimeLimit))}'
+                                  : 'Тайм-лимит оформления: *',
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff748595).withOpacity(0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            if ((widget.tripData.segments.first.activeProcess == "watching" &&
+                widget.tripData.segments[1].activeProcess == null &&
+                widget.tripData.segments[1].status != "issued" &&
+                widget.tripData.segments.first.status == "opened" ) ||
+                (widget.tripData.segments[1].activeProcess == "watching" &&
+                    widget.tripData.segments.first.status != "issued" &&
+                    widget.tripData.segments.first.activeProcess == null) &&
+                    widget.tripData.segments[1].status == "opened")
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: w,
+                    margin: EdgeInsets.only(top: 20, bottom: 12),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.access_time_rounded, color: Color(0xff1B344F), size: 20,),
+                        SizedBox(width: 5,),
+                        Text('Билеты еще не куплены!',
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 17,
+                              color: Color(0xff1B344F),
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                      width: w,
+                      margin: EdgeInsets.only(bottom: 8),
+                      child: Text(widget.tripData.segments.first.activeProcess == "watching" && widget.tripData.segments.first.watcherTimeLimit != null ?
+                      'Часть билетов находятся в листе ожидания. Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.watcherTimeLimit))}' :
+                      widget.tripData.segments[1].activeProcess == "watching" && widget.tripData.segments[1].watcherTimeLimit != null ? 'Часть билетов находятся в листе ожидания. Тайм-лимит оформления: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[1].watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[1].watcherTimeLimit))}' :
+                      'Часть билетов находятся в листе ожидания. Тайм-лимит оформления: *',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: "Root",
+                            fontSize: 15,
+                            color: Color(0xff1B344F).withOpacity(0.5),
+                            fontWeight: FontWeight.w500),)
+                  ),
+                ],
+              ),
+            if ((widget.tripData.segments[1].activeProcess == null &&
+                widget.tripData.segments[1].status == 'opened') &&
+                (widget.tripData.segments.first.activeProcess == null &&
+                    widget.tripData.segments.first.status == "opened"))
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                      width: w,
+                      margin: EdgeInsets.only(top: 20, bottom: 12),
+                      alignment: Alignment.center,
+                      child: Text('Билеты еще не куплены!',
+                        style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 17,
+                          color: Color(0xff1B344F),
+                          fontWeight: FontWeight.w800),
+                      ),
+                  ),
+                  Container(
+                    width: w * 0.9,
+                    child: Text(
+                      'Когда координатор закупит и оформит билеты на данную поездку, отобразится вся необходимая информация.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 15,
+                        color: Color(0xff1B344F).withOpacity(0.5),
+                        fontWeight: FontWeight.w500
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            if ((widget.tripData.segments.first.activeProcess == null &&
+                widget.tripData.segments.first.status == 'opened' &&
+                widget.tripData.segments[1].status == 'issued') ||
+                (widget.tripData.segments[1].activeProcess == null &&
+                    widget.tripData.segments[1].status == 'opened' &&
+                    widget.tripData.segments.first.status == "issued"))
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: w,
+                    margin: EdgeInsets.only(top: 20, bottom: 12),
+                    alignment: Alignment.center,
+                    child: Text('Поездка оформлена частично.',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 17,
+                          color: Color(0xff1B344F),
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  if(widget.tripData.segments.first.status == "issued")
+                    Container(
+                    width: w * 0.9,
+                    child: Text(
+                      'Билеты оформлены по направлению: ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation}.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 15,
+                          color: Color(0xff1B344F).withOpacity(0.5),
+                          fontWeight: FontWeight.w500
+                      ),
+                    ),
+                  ),
+                  if(widget.tripData.segments[1].status == "issued")
+                    Container(
+                      width: w * 0.9,
+                      child: Text(
+                        'Билеты оформлены по направлению: ${widget.tripData.segments[1].train.depStation} - ${widget.tripData.segments[1].train.arrStation}.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: "Root",
+                            fontSize: 15,
+                            color: Color(0xff1B344F).withOpacity(0.5),
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            if ((widget.tripData.segments.first.status == "returned" &&
+                widget.tripData.segments[1].status == 'issued') ||
+                (widget.tripData.segments[1].status == 'returned' &&
+                    widget.tripData.segments.first.status == 'issued'))
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: w,
+                    margin: EdgeInsets.only(top: 20, bottom: 12),
+                    alignment: Alignment.center,
+                    child: Text('Часть билетов были оформлены,  часть билетов были отменены!',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 17,
+                          color: Color(0xff1B344F),
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  if(widget.tripData.segments.first.status == "returned")
+                    Container(
+                      width: w,
+                      margin: EdgeInsets.only(bottom: 8),
+                      child: Text( widget.tripData.segments.first.closedReason != null && widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.returnedAt != null ?
+                      'Билеты по направлению ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} были отменены, по причине: ${widget.tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))}' :
+                      'Часть билетов были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: "Root",
+                            fontSize: 13,
+                            color: Color(0xff748595),
+                            fontWeight: FontWeight.w500),)
+                  ),
+                  if(widget.tripData.segments[1].status == "returned")
+                    Container(
+                        width: w,
+                        margin: EdgeInsets.only(bottom: 8),
+                        child: Text( widget.tripData.segments[1].closedReason != null && widget.tripData.segments[1].ticket != null && widget.tripData.segments[1].ticket.returnedAt != null ?
+                        'Билеты по направлению ${widget.tripData.segments[1].train.depStation} - ${widget.tripData.segments[1].train.arrStation} были отменены, по причине: ${widget.tripData.segments[1].closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))}' :
+                        'Билеты по направлению * были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 13,
+                              color: Color(0xff748595),
+                              fontWeight: FontWeight.w500),)
+                    ),
+                ],
+              ),
+            if (widget.tripData.segments.first.status == "returned" &&
+                widget.tripData.segments[1].status == 'returned')
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: w,
+                    margin: EdgeInsets.only(top: 20, bottom: 12),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.access_time_rounded, color: Color(0xff1B344F), size: 20,),
+                        SizedBox(width: 5,),
+                        Text('Поездка отменена!',
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 17,
+                              color: Color(0xff1B344F),
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Container(
+                      width: w,
+                      margin: EdgeInsets.only(bottom: 8),
+                      child: Text( widget.tripData.segments.first.closedReason != null && widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.returnedAt != null ?
+                      'Часть билетов были оформлены. Часть билетов были отменены, по причине: ${widget.tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))}' :
+                      widget.tripData.segments[1].closedReason != null && widget.tripData.segments[1].ticket != null && widget.tripData.segments[1].ticket.returnedAt != null ? 'Часть билетов были оформлены. Часть билетов были отменены, по причине: ${widget.tripData.segments[1].closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))}' :
+                      'Часть билетов были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: "Root",
+                            fontSize: 13,
+                            color: Color(0xff748595),
+                            fontWeight: FontWeight.w500),)
+                  ),
+                ],
+              ),
+            if (widget.tripData.status == "opened" && (widget.tripData.segments.first.status == "returned" ||
+                widget.tripData.segments[1].status == 'returned'))
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: w,
+                    margin: EdgeInsets.only(top: 20, bottom: 12),
+                    alignment: Alignment.center,
+                    child: Text('Часть билетов были отменены!',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 17,
+                          color: Color(0xff1B344F),
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                  if(widget.tripData.segments.first.status == "returned")
+                    Container(
+                        width: w,
+                        margin: EdgeInsets.only(bottom: 8),
+                        child: Text( widget.tripData.segments.first.closedReason != null && widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.returnedAt != null ?
+                        'Билеты по направлению ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} были отменены, по причине: ${widget.tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))}' :
+                        'Часть билетов были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 13,
+                              color: Color(0xff748595),
+                              fontWeight: FontWeight.w500),)
+                    ),
+                  if(widget.tripData.segments[1].status == "returned")
+                    Container(
+                        width: w,
+                        margin: EdgeInsets.only(bottom: 8),
+                        child: Text( widget.tripData.segments[1].closedReason != null && widget.tripData.segments[1].ticket != null && widget.tripData.segments[1].ticket.returnedAt != null ?
+                        'Билеты по направлению ${widget.tripData.segments[1].train.depStation} - ${widget.tripData.segments[1].train.arrStation} были отменены, по причине: ${widget.tripData.segments[1].closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))}' :
+                        'Билеты по направлению * были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 13,
+                              color: Color(0xff748595),
+                              fontWeight: FontWeight.w500),)
+                    ),
+                ],
+              ),
+
+            widget.tripData.segments.first.status == "issued" && widget.tripData.segments[1].status == "issued" ?
+            Column(
+              children: [
+                Container(
+                  width: w,
+                  margin: EdgeInsets.only(top: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Color(0xffF5F8FB),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 14),
+                        child: Text(
+                          'Стоимость',
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 18,
+                              color: Color(0xff1B344F),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Билет 1',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Root",
+                              fontSize: 16,
+                              color: Color(0xff1B344F),
+                            ),
+                          ),
+                          Text(
+                            //'${widget.tripData.segments[index].train} тг',
+                            widget.tripData.segments[0].ticket != null ? '${widget.tripData.segments[0].ticket.sum} тг' : '* тг',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Root",
+                              fontSize: 16,
+                              color: Color(0xff748595),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Color(0xffEBEBEB),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Билет 2',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Root",
+                              fontSize: 16,
+                              color: Color(0xff1B344F),
+                            ),
+                          ),
+                          Text(
+                            //'${widget.tripData.segments[index].train} тг',
+                            widget.tripData.segments[1].ticket != null ? '${widget.tripData.segments[1].ticket.sum} тг' : '* тг',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Root",
+                              fontSize: 16,
+                              color: Color(0xff748595),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: Color(0xffEBEBEB),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Итого',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "Root",
+                              fontSize: 16,
+                              color: Color(0xff1B344F),
+                            ),
+                          ),
+                          Text(
+                            '${_totalPrice.toString()} тг',
+                            style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 16,
+                                color: Color(0xff2D4461),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: w,
+                  height: 52,
+                  margin: EdgeInsets.only(top: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    gradient: RadialGradient(radius: 4,
+                      colors: [
+                        Color(0xff1989DD),
+                        Color(0xff1262CB),
+                      ],
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      if(widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.ticketUrl != null){
+                        final status = await Permission.storage.request();
+
+                        if (status.isGranted) {
+                          final externalDir = await getExternalStorageDirectory();
+
+                          final id = await FlutterDownloader.enqueue(
+                            url: widget.tripData.segments.first.ticket.ticketUrl,
+                            savedDir: externalDir.path,
+                            fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
+                            ).toString().replaceAll('.', ',')}",
+                            showNotification: true,
+                            openFileFromNotification: true,
+                          );
+                        } else {
+                          print("Permission deined");
+                        }
+                      }else{
+                        print("Ticket not found");
+                      }
+
+                    },
+                    child: Center(
+                        child: Text(
+                          'Скачать билеты',
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 17,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ),
+                ),
+              ],
+            ) :
+            (widget.tripData.segments.first.status == "issued" && widget.tripData.segments[1].status != "issued") || (widget.tripData.segments[1].status == "issued" && widget.tripData.segments.first.status != "issued" ) ?
             Container(
+              width: w,
+              height: 52,
+              margin: EdgeInsets.only(top: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                gradient: RadialGradient(radius: 4, colors: [
+                  Color(0xff1989DD),
+                  Color(0xff1262CB),
+                ]),
+              ),
+              child: InkWell(
+                onTap: () async {
+                  if(widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.ticketUrl != null){
+                    final status = await Permission.storage.request();
+
+                    if (status.isGranted) {
+                      final externalDir = await getExternalStorageDirectory();
+
+                      final id = await FlutterDownloader.enqueue(
+                        url: widget.tripData.segments.first.ticket.ticketUrl,
+                        savedDir: externalDir.path,
+                        fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
+                        ).toString().replaceAll('.', ',')}",
+                        showNotification: true,
+                        openFileFromNotification: true,
+                      );
+                    }
+                    else if(widget.tripData.segments[1].ticket != null && widget.tripData.segments[1].ticket.ticketUrl != null){
+                      final status = await Permission.storage.request();
+
+                      if (status.isGranted) {
+                      final externalDir = await getExternalStorageDirectory();
+
+                      final id = await FlutterDownloader.enqueue(
+                        url: widget.tripData.segments.first.ticket.ticketUrl,
+                        savedDir: externalDir.path,
+                        fileName: "Билет ${widget.tripData.segments[1].train.depStation} - ${widget.tripData.segments[1].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[1].train.depDateTime),).toString().replaceAll('.', ',')}",
+                        showNotification: true,
+                        openFileFromNotification: true,
+                      );
+                    }
+                    else {
+                      print("Permission deined");
+                      }
+                    }
+                  }
+                  else{
+                    print("Ticket not found");
+                  }
+                },
+                child: widget.tripData.segments.first.status == "issued" ?
+                Center(
+                  child: Text(
+                    'Скачать билет: ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation}',
+                    style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 17,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ) : widget.tripData.segments[1].status == "issued" ? Center(
+                  child: Text(
+                    'Скачать билет: ${widget.tripData.segments[1].train.depStation} - ${widget.tripData.segments[1].train.arrStation}',
+                    style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 17,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ) : Center(
+                  child: Text(
+                    'Скачать билеты',
+                    style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 17,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ) : Container(),
+            /*Container(
               width: w,
               margin: EdgeInsets.only(top: 16),
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
@@ -1452,7 +2311,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                       ),
                       Text(
                         //'${widget.tripData.segments[index].train} тг',
-                        '${_ticketPrice.toString()} тг',
+                        '${widget.tripData.segments.first.ticket != null ? widget.tripData.segments.first.ticket.sum : ''} тг',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontFamily: "Root",
@@ -1466,7 +2325,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                     thickness: 1,
                     color: Color(0xffEBEBEB),
                   ),
-                  /*Row(
+                  *//*Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -1490,7 +2349,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   Divider(
                     thickness: 1,
                     color: Color(0xffEBEBEB),
-                  ),*/
+                  ),*//*
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -1516,48 +2375,8 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   SizedBox(height: 16),
                 ],
               ),
-            ),
-            Container(
-              width: w,
-              height: 52,
-              margin: EdgeInsets.only(top: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                gradient: RadialGradient(radius: 4, colors: [
-                  Color(0xff1989DD),
-                  Color(0xff1262CB),
-                ]),
-              ),
-              child: InkWell(
-                onTap: () async {
-                  final status = await Permission.storage.request();
+            ),*/
 
-                  if (status.isGranted) {
-                    final externalDir = await getExternalStorageDirectory();
-
-                    final id = await FlutterDownloader.enqueue(
-                      url:
-                          "https://firebasestorage.googleapis.com/v0/b/storage-3cff8.appspot.com/o/2020-05-29%2007-18-34.mp4?alt=media&token=841fffde-2b83-430c-87c3-2d2fd658fd41",
-                      savedDir: externalDir.path,
-                      fileName: "dfsdfsdfdfdsf",
-                      showNotification: true,
-                      openFileFromNotification: true,
-                    );
-                  } else {
-                    print("Permission deined");
-                  }
-                },
-                child: Center(
-                    child: Text(
-                  'Скачать билеты',
-                  style: TextStyle(
-                      fontFamily: "Root",
-                      fontSize: 17,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                )),
-              ),
-            ),
           ],
         ),
       ),

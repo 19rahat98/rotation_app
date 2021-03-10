@@ -25,6 +25,7 @@ class SmsPinPage extends StatefulWidget {
 }
 
 class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
+  Stream _stream;
   var textFieldCtrl = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
   int secondValue = 60;

@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
+import 'package:rotation_app/ui/trips_pages/returned_ticket.dart';
+import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
 import 'inactive_trip_widget.dart';
 import 'tickets_bottom_sheet.dart';
@@ -39,7 +42,7 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
     print(_activeTrip);
   }
 
-  void _onOpenMore(BuildContext context, Application tripData) {
+  void _onOpenMore(BuildContext context, {routName}) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     showModalBottomSheet<void>(
@@ -61,7 +64,7 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
               topRight: Radius.circular(10),
             ),
           ),
-          child: TicketsBottomSheet(tripData: tripData),
+          child: routName,
         );
       },
     );
@@ -72,32 +75,195 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Container(
-      height: h,
-        padding: EdgeInsets.only(left: 16, right: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
+          key: GlobalKey(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          children: _activeTrip.map((item) {
-            if(item.segments.isNotEmpty){
+          children: _activeTrip.map(
+                (item) {
+              if(item.segments.isEmpty && item.status == "opened"){
+                return InkWell(
+                  onTap: () {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            InactiveTripActionSheet(tripData: item));
+                  },
+                  child: InactiveTripWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length == 1 && item.status == "opened"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: WithDetailsTripSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: SingleCustomDetailsTripWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length == 1 && item.status == "returned"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: ReturnedTicketBottomSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: ReturnedTicketWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length == 1 && item.status == "issued"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: TicketsBottomSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: SingleActiveWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length > 1 ){
+                return InkWell(
+                  onTap: () {
+                    print(item.id);
+
+                    _onOpenMore(context,
+                        routName: CustomTripSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: CustomTripPage(tripData: item),
+                );
+              }
+              else{
+                print(item.id);
+                return Container(
+                  width: w,
+                  height: 50,
+                  color: Colors.red,
+                );
+              }
+              /*if (item.status == "opened" && item.segments.isEmpty) {
+                return InkWell(
+                  onTap: () {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            InactiveTripActionSheet(tripData: item));
+                  },
+                  child: InactiveTripWidget(tripData: item),
+                );
+              }
+              else if (*//*item.status == "opened" && *//*item.segments.length == 1) {
+                if (item.segments.first.activeProcess == 'watching' &&
+                    item.segments.first.status == "opened") {
+                  return InkWell(
+                    onTap: () {
+                      _onOpenMore(context,
+                          routName: OnWaitingListTripSheet(
+                            tripData: item,
+                          ));
+                    },
+                    child: OnWaitingListWidget(tripData: item),
+                  );
+                }
+                else if (item.segments.first.status == "opened") {
+                  return InkWell(
+                    onTap: () {
+                      _onOpenMore(context,
+                          routName: WithDetailsTripSheet(
+                            tripData: item,
+                          ));
+                    },
+                    child: WithDetailsTripWidget(tripData: item),
+                  );
+                }
+                else if (item.segments.first.status == "returned") {
+                  return InkWell(
+                    onTap: () {
+                      _onOpenMore(context,
+                          routName: ReturnedTicketBottomSheet(
+                            tripData: item,
+                          ));
+                    },
+                    child: ReturnedTicketWidget(tripData: item),
+                  );
+                }
+                else {
+                  return InkWell(
+                    onTap: () {
+                      _onOpenMore(context,
+                          routName: ReturnedTicketBottomSheet(
+                            tripData: item,
+                          ));
+                    },
+                    child: ReturnedTicketWidget(tripData: item),
+                  );
+                }
+              } else if (item.segments.length > 1) {
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: CustomTripSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: CustomTripPage(tripData: item),
+                );
+              } else {
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: TicketsBottomSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: ActiveWidget(tripData: item),
+                );
+              }*/
+              /*else if(item.status == "opened" &&  item.segments.isNotEmpty){
+            print(item.id);
+            bool _isOpened = false;
+            for(int i = 0; i < item.segments.length; i++){
+              print(item.segments[i].status);
+              if(item.segments[i].status == "opened" && _isOpened || item.segments[i].status == "opened" && i == 0 ){
+               _isOpened = true;
+              }else _isOpened = false;
+            }
+            */ /* Вид заявки "C деталями" запланированная, application status": "opened", segments  "status": "opened"*/ /*
+            if(_isOpened && item.segments.first.activeProcess == null){
               return InkWell(
                 onTap: () {
-                  _onOpenMore(context, item);
+                  _onOpenMore(context, routName: WithDetailsTripSheet(tripData: item,));
                 },
-                child: ActiveWidget(tripData: item ),
-              );
-            }else{
-              return InkWell(
-                onTap: () {
-                  showCupertinoModalPopup(
-                      context: context,
-                      builder: (BuildContext context) => InactiveTripActionSheet(tripData: item));
-                },
-                child: InactiveTripWidget(tripData: item),
+                child: WithDetailsTripWidget(tripData: item),
               );
             }
-          },
+            else if(_isOpened && item.segments.first.activeProcess == 'watching'){
+              return InkWell(
+                onTap: () {
+                  _onOpenMore(context, routName: OnWaitingListTripSheet(tripData: item,));
+                },
+                child: OnWaitingListWidget(tripData: item),
+              );
+            }
+            else return Container(width: w, height: 10, color: Colors.red,);
+
+          }
+          else{
+            return InkWell(
+              onTap: () {
+                _onOpenMore(context, routName: TicketsBottomSheet(tripData: item,));
+              },
+              child: ActiveWidget(tripData: item),
+            );
+          }*/
+            },
           ).toList(),
-        )
-    );
+        ));
   }
 }

@@ -45,7 +45,8 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
     final ArticlesProvider ap =
         Provider.of<ArticlesProvider>(context, listen: false);
     double w = MediaQuery.of(context).size.width;
-    return ListView(
+    double h = MediaQuery.of(context).size.height;
+    return ap.filteredData.isNotEmpty && ap.filteredData != null ? ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -138,6 +139,13 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
           return Container();
         }
       }).toList(),
+    ) :
+    Container(
+      width: w,
+      height: h / 2,
+      child: Center(
+        child: Text('Нет результатов',style: TextStyle(fontFamily: "Root",fontSize: 17, color: Color(0xff15304D), fontWeight: FontWeight.w500), ),
+      ),
     );
   }
 

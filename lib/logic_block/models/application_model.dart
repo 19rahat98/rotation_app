@@ -142,7 +142,7 @@ class Segments {
   String arrStationCode;
   String arrStationName;
   String status;
-  dynamic activeProcess;
+  String activeProcess;
   int ticketId;
   dynamic closedReason;
   String createdAt;
@@ -340,7 +340,7 @@ class Ticket {
   dynamic returnUserId;
   dynamic returnSum;
   dynamic returnCommission;
-  dynamic returnedAt;
+  String returnedAt;
   String status;
   int bookUserId;
   String bookedAt;

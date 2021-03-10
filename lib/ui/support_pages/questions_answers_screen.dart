@@ -31,7 +31,8 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
   Widget afterSearchUI() {
     final QuestionProvider qp = Provider.of<QuestionProvider>(context, listen: false);
     double w = MediaQuery.of(context).size.width;
-    return ListView(
+    double h = MediaQuery.of(context).size.height;
+    return qp.filteredData.isNotEmpty && qp.filteredData != null ? ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -67,6 +68,12 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
           return Container();
         }
       }).toList(),
+    ) : Container(
+      width: w,
+      height: h / 2,
+      child: Center(
+        child: Text('Нет результатов',style: TextStyle(fontFamily: "Root",fontSize: 17, color: Color(0xff15304D), fontWeight: FontWeight.w500), ),
+      ),
     );
   }
 

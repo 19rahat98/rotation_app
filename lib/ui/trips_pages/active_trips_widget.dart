@@ -81,8 +81,7 @@ class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
           shrinkWrap: true,
           children: _activeTrip.map(
             (item) {
-              /*Вид заявки "Без деталей" запланированная, application status": "opened", segments пустые*/
-              if (item.status == "opened" && item.segments.isEmpty) {
+              if(item.segments.isEmpty && item.status == "opened"){
                 return InkWell(
                   onTap: () {
                     showCupertinoModalPopup(
@@ -93,7 +92,72 @@ class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
                   child: InactiveTripWidget(tripData: item),
                 );
               }
-              else if (/*item.status == "opened" && */item.segments.length == 1) {
+              else if(item.segments.length == 1 && item.status == "opened"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: WithDetailsTripSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: SingleCustomDetailsTripWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length == 1 && item.status == "returned"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: ReturnedTicketBottomSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: ReturnedTicketWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length == 1 && item.status == "issued"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: TicketsBottomSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: SingleActiveWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length > 1 ){
+                return InkWell(
+                  onTap: () {
+                    print(item.id);
+
+                    _onOpenMore(context,
+                        routName: CustomTripSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: CustomTripPage(tripData: item),
+                );
+              }
+              else{
+                print(item.id);
+                return Container(
+                  width: w,
+                  height: 50,
+                  color: Colors.red,
+                );
+              }
+              /*if (item.status == "opened" && item.segments.isEmpty) {
+                return InkWell(
+                  onTap: () {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            InactiveTripActionSheet(tripData: item));
+                  },
+                  child: InactiveTripWidget(tripData: item),
+                );
+              }
+              else if (*//*item.status == "opened" && *//*item.segments.length == 1) {
                 if (item.segments.first.activeProcess == 'watching' &&
                     item.segments.first.status == "opened") {
                   return InkWell(
@@ -159,7 +223,7 @@ class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
                   },
                   child: ActiveWidget(tripData: item),
                 );
-              }
+              }*/
               /*else if(item.status == "opened" &&  item.segments.isNotEmpty){
             print(item.id);
             bool _isOpened = false;

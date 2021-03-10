@@ -21,6 +21,8 @@ class AppState extends State<App> {
   final _firebaseMessaging = FirebaseMessaging();
 
   void _fcmHandle() async {
+    print('testtest');
+
     _firebaseMessaging.requestNotificationPermissions();
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -44,17 +46,24 @@ class AppState extends State<App> {
     final dynamic data = message['data'] ?? message;
     final String itemId = data['id'];
     final Item item = _items.putIfAbsent(itemId, () => Item(itemId: itemId))
-      .._matchteam = data['matchteam']
-      .._score = data['score'];
+      //.._contentAvailable = data['content_available']
+      .._priority = data['priority']
+      .._type = data['type']
+      //.._segmentId = data['segment_id']
+      //.._isImportant = data['is_important']
+      .._content = data['content']
+      .._title = data['title'];
     return item;
   }
 
   void _navigateToItemDetail(Map<String, dynamic> message) {
     final Item item = _itemForMessage(message);
     Navigator.popUntil(context, (Route<dynamic> route) => route is PageRoute);
-    if (!item.route.isCurrent) {
       Navigator.push(context, item.route);
-    }
+    print('asdasdasdasdasdasdasdasdadasd');
+
+    /*if (!item.route.isCurrent) {
+    }*/
   }
 
   @override
@@ -113,7 +122,6 @@ class AppState extends State<App> {
     return WillPopScope(
       onWillPop: () async {
         final isFirstRouteInCurrentTab = !await tabs[currentTab].key.currentState.maybePop();
-        print('asdad');
         if (isFirstRouteInCurrentTab) {
           // if not on the 'main' tab
           print('isFirstRouteInCurrentTab');
@@ -163,28 +171,66 @@ class Item {
   StreamController<Item> _controller = StreamController<Item>.broadcast();
   Stream<Item> get onChanged => _controller.stream;
 
-  String _matchteam;
-  String get matchteam => _matchteam;
-  set matchteam(String value) {
-    _matchteam = value;
+  bool _contentAvailable;
+  bool get contentAvailable => _contentAvailable;
+  set contentAvailable(bool value) {
+    _contentAvailable = value;
     _controller.add(this);
   }
 
-  String _score;
-  String get score => _score;
-  set score(String value) {
-    _score = value;
+  String _priority;
+  String get priority => _priority;
+  set priority(String value) {
+    _priority = value;
     _controller.add(this);
   }
+
+  String _type;
+  String get type => _type;
+  set type(String value) {
+    _type = value;
+    _controller.add(this);
+  }
+
+  int _segmentId;
+  int get segmentId => _segmentId;
+  set segmentId(int value) {
+    _segmentId = value;
+    _controller.add(this);
+  }
+
+  bool _isImportant;
+  bool get isImportant => _isImportant;
+  set isImportant(bool value) {
+    _isImportant = value;
+    _controller.add(this);
+  }
+
+  String _content;
+  String get content => _content;
+  set content(String value) {
+    _content = value;
+    _controller.add(this);
+  }
+
+
+  String _title;
+  String get title => _title;
+  set title(String value) {
+    _title = value;
+    _controller.add(this);
+  }
+
 
   static final Map<String, Route<void>> routes = <String, Route<void>>{};
   Route<void> get route {
+    print('try open page');
     final String routeName = '/detail/$itemId';
     return routes.putIfAbsent(
       routeName,
           () => MaterialPageRoute<void>(
         settings: RouteSettings(name: routeName),
-        builder: (BuildContext context) => NotificationsListScreen(itemId: itemId, matchteam: _matchteam, score: _score,),
+        builder: (BuildContext context) => NotificationsListScreen(itsAction: true, contentAvailable: _contentAvailable, priority: _priority, type: _type, orderId: itemId, segmentId: _segmentId, isImportant: _isImportant, content: _content, title: _title,),
         //builder: (BuildContext context) => NotificationsListScreen(),
       ),
     );

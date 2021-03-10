@@ -1,29 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:rotation_app/ui/support_pages/social_media_widget.dart';
 
 class NotificationsListScreen extends StatefulWidget {
-  final String itemId;
-  final String matchteam;
-  final String score;
+  final bool contentAvailable;
+  final bool isImportant;
+  final String type;
+  final int segmentId;
+  final String orderId;
+  final String priority;
+  final String content;
+  final String title;
+  final bool itsAction;
 
-  const NotificationsListScreen({Key key, this.itemId, this.matchteam, this.score}) : super(key: key);
+  const NotificationsListScreen({Key key, this.itsAction = false, this.contentAvailable, this.isImportant, this.type, this.segmentId, this.priority, this.content, this.title, this.orderId}) : super(key: key);
   @override
-  _NotificationsListScreenState createState() =>
-      _NotificationsListScreenState();
+  _NotificationsListScreenState createState() => _NotificationsListScreenState();
 }
 
 class _NotificationsListScreenState extends State<NotificationsListScreen> {
 
   @override
   void initState() {
-    print(widget.itemId);
-    print(widget.matchteam);
-    print(widget.score);
+    print(widget.contentAvailable);
+    print(widget.isImportant);
+    print(widget.type);
+    print(widget.segmentId);
+    print(widget.orderId);
+    print(widget.priority);
+    print(widget.content);
+    print(widget.title);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(widget.itsAction){
+        return showCupertinoModalPopup<void>(
+            context: context,
+            builder: (BuildContext context) => NotificationBottomSheet(contentAvailable: widget.contentAvailable, isImportant: widget.isImportant, type: widget.type, orderId: widget.orderId, segmentId: widget.segmentId, content: widget.content, title: widget.title, priority: widget.priority,));
+      }
+    });
     // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xffF3F6FB),
@@ -56,9 +76,6 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(widget.score != null ? widget.score : 'score'),
-              Text(widget.matchteam != null ? widget.matchteam : 'matchteam'),
-              Text(widget.itemId != null ? widget.itemId : 'itemId'),
               Container(
                 child: Text(
                   'Уведомления',
@@ -276,37 +293,44 @@ class _NotificationsListScreenState extends State<NotificationsListScreen> {
                             ],
                           ),
                         ),
-                        Container(
-                          width: w * 0.7,
-                          margin: EdgeInsets.only(left: 5),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Свежие новости COVID-19',
-                                style: TextStyle(fontFamily: "Root",
-                                    fontSize: 18,
-                                    color: Color(0xff1262CB),
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                margin: EdgeInsets.symmetric(vertical: 6),
-                                child: Text(
-                                  'Нажмите, чтобы читать статью ',
+                        InkWell(
+                          onTap: (){
+                            return showCupertinoModalPopup<void>(
+                                context: context,
+                                builder: (BuildContext context) => NotificationBottomSheet());
+                          },
+                          child: Container(
+                            width: w * 0.7,
+                            margin: EdgeInsets.only(left: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Свежие новости COVID-19',
                                   style: TextStyle(fontFamily: "Root",
-                                      fontSize: 14,
-                                      color: Color(0xff385780).withOpacity(0.7),
-                                      fontWeight: FontWeight.w500),
+                                      fontSize: 18,
+                                      color: Color(0xff1262CB),
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                              Text(
-                                'вчера, 10:30',
-                                style: TextStyle(fontFamily: "Root",
-                                    fontSize: 11,
-                                    color: Color(0xff1B344F).withOpacity(0.5),
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
+                                Container(
+                                  margin: EdgeInsets.symmetric(vertical: 6),
+                                  child: Text(
+                                    'Нажмите, чтобы читать статью ',
+                                    style: TextStyle(fontFamily: "Root",
+                                        fontSize: 14,
+                                        color: Color(0xff385780).withOpacity(0.7),
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                Text(
+                                  'вчера, 10:30',
+                                  style: TextStyle(fontFamily: "Root",
+                                      fontSize: 11,
+                                      color: Color(0xff1B344F).withOpacity(0.5),
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
                           ),
                         )
                       ],

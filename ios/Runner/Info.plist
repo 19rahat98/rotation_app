@@ -15,13 +15,31 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FDAllFilesDownloadedMessage</key>
+	<string>All files have been downloaded</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Apple Music is not used in this application.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>I only added this because Apple wanted me to I never use NSCalendarsUsageDescription in my app.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>I only added this because Apple wanted me to I never use NSContactsUsageDescription in my app.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need access to your location to show you relevant place result.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is required for xyz benefits for you</string>
+	<key>NSMotionUsageDescription</key>
+	<string>I only added this because Apple wanted me to I never use NSMotionUsageDescription in my app.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>I only added this because Apple wanted me to I never use NSSpeechRecognitionUsageDescription in my app.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -46,7 +64,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>FDAllFilesDownloadedMessage</key>
-    <string>All files have been downloaded</string>
 </dict>
 </plist>
