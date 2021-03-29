@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:masked_text/masked_text.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
@@ -21,8 +21,6 @@ class UpdatePhoneNumber extends StatefulWidget {
 class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
     with TickerProviderStateMixin {
   var textFieldCtrl = TextEditingController();
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
   Future<Status> _status;
 
   @override
@@ -36,9 +34,8 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
     UserLoginProvider auth =
         Provider.of<UserLoginProvider>(context, listen: false);
     FocusScope.of(context).requestFocus(new FocusNode());
-    if (maskFormatter.getUnmaskedText().length == 10) {
-      print(maskFormatter.getUnmaskedText());
-      _status = auth.updatePhoneNumber(phone: '7' + maskFormatter.getUnmaskedText());
+    if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 12) {
+      _status = auth.updatePhoneNumber(phone: textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
       handleLogin();
     }
   }
@@ -180,16 +177,12 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(top: 5),
-                                  padding: EdgeInsets.symmetric(vertical: 3),
-                                  child: TextFormField(
-                                    inputFormatters: [maskFormatter],
-                                    autofocus: false,
-                                    controller: textFieldCtrl,
-                                    style: TextStyle(fontFamily: "Root",
-                                        color: Colors.white,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold),
-                                    decoration: InputDecoration(
+                                  child: MaskedTextField(
+                                    maskedTextFieldController: textFieldCtrl,
+                                    mask: "+ 7(xxx) xxx xxx xxxx",
+                                    maxLength: 19,
+                                    keyboardType: TextInputType.number,
+                                    inputDecoration: new InputDecoration(
                                       hintText: '+ 7 (',
                                       hintStyle: TextStyle(
                                           color: Colors.white,
@@ -198,13 +191,8 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                       isDense: true,
                                       contentPadding: EdgeInsets.all(0.0),
                                       border: InputBorder.none,
+                                      counterText: '',
                                     ),
-                                    keyboardType: TextInputType.phone,
-                                    validator: (value) {
-                                      if (value.length == 0)
-                                        return ("Comments can't be empty!");
-                                      return value = null;
-                                    },
                                   ),
                                 ),
                               ],
@@ -293,7 +281,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
-                              new TextSpan(text: 'сервиса Odyssey Rotation'),
+                              new TextSpan(text: 'сервиса Odyssey'),
                             ],
                           ),
                         ),

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:device_info/device_info.dart';
 import 'package:rotation_app/logic_block/api/http_request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,6 +59,21 @@ class UserLoginProvider with ChangeNotifier {
   String _userIIN;
   String get userIIN => _userIIN;
   set userIIN(String iin) => _userIIN = userIIN;
+
+  UserLoginProvider(){
+    _sendDeviceId();
+  }
+
+  _sendDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      httpManager.baseOptions.headers["deviceID"] =  iosDeviceInfo.identifierForVendor;
+    } else {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      httpManager.baseOptions.headers["deviceID"] =  androidDeviceInfo.androidId;
+    }
+  }
 
   Future saveDataToSP() async{
     final SharedPreferences prefs = await _prefs;
@@ -209,7 +226,6 @@ class UserLoginProvider with ChangeNotifier {
         authLogId: _authLogId,
         code: smsCode);
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
-
     try {
       if (result.code == 200) {
         _token = decodeData.data["token"];

@@ -365,8 +365,16 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                           ),
                           validator: (value) {
                             if (value.length > 9) {
+                              DateFormat inputFormat = DateFormat("dd/MM/yyyy");
+                              print(value);
                               if (!DateValidator('dd/MM/yyyy', errorText: "")
                                   .isValid(value.replaceAll('.', '/'))) {
+                                return ("Введите корректное значение!");
+                              }
+                              else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                                return ("Введите корректное значение!");
+                              }
+                              else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
                                 return ("Введите корректное значение!");
                               }
                             }

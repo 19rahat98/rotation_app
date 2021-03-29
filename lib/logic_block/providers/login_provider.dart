@@ -1,11 +1,14 @@
+import 'dart:math';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
-import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:device_info/device_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:rotation_app/logic_block/api/http_request.dart';
 import 'package:rotation_app/logic_block/models/user_model.dart';
 import 'package:rotation_app/logic_block/models/result_api_model.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
 import 'package:rotation_app/logic_block/repository/login_repository.dart';
 
 class LoginProvider with ChangeNotifier {
@@ -44,6 +47,17 @@ class LoginProvider with ChangeNotifier {
     checkSignIn();
   }
 
+  _sendDeviceId() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      httpManager.baseOptions.headers["deviceid"] =  iosDeviceInfo.identifierForVendor;
+    } else {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      httpManager.baseOptions.headers["deviceid"] =  androidDeviceInfo.androidId;
+    }
+  }
+
   Future<bool> getUserInfo() async{
     final SharedPreferences prefs = await _prefs;
     final ResponseApi result = await userRepository.getUserInfo();
@@ -59,6 +73,7 @@ class LoginProvider with ChangeNotifier {
     final SharedPreferences prefs = await _prefs;
     final hasUser = prefs.getString("userToken");
     if (hasUser != null) {
+      await _sendDeviceId();
       httpManager.baseOptions.headers["Authorization"] = "Bearer " + hasUser;
       notifyListeners();
       final ResponseApi result = await userRepository.getApplication();
@@ -72,6 +87,7 @@ class LoginProvider with ChangeNotifier {
   }
 
   Future<List<Application>> getEmployeeApplication() async {
+    await _sendDeviceId();
     final ResponseApi result = await userRepository.getApplication();
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
     if (result.code == 200) {
@@ -87,6 +103,7 @@ class LoginProvider with ChangeNotifier {
   }
 
   Future<Employee> getEmployeeData() async {
+    await _sendDeviceId();
     final SharedPreferences prefs = await _prefs;
     final hasUser = prefs.getString("employee");
     if (hasUser != null) {

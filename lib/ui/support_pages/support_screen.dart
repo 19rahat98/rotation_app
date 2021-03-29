@@ -205,7 +205,7 @@ class SupportScreen extends StatelessWidget {
                         width: w - 100,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Пресс-служба',
+                          'Новости',
                           style: TextStyle(fontFamily: "Root",
                               fontSize: 17,
                               color: Color(0xff1B344F),

@@ -10,14 +10,39 @@ import 'package:rotation_app/ui/trips_pages/archive_trips_widget.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 
-class TripsPage extends StatelessWidget {
+class TripsPage extends StatefulWidget {
+
+  @override
+  _TripsPageState createState() => _TripsPageState();
+}
+
+class _TripsPageState extends State<TripsPage> {
+
+  LoginProvider lp;
+
+  @override
+  void initState() {
+    super.initState();
+    new Stream.periodic(const Duration(seconds: 30), (v) => v)
+        .listen((count) {
+      setState(() {
+        _onRefresh();
+      });
+    });
+    lp = Provider.of<LoginProvider>(context, listen: false);
+  }
+
+  void _onRefresh(){
+    lp.getEmployeeApplication();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting();
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    //LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
     return FutureBuilder<List<Application>>(
       future: lp.getEmployeeApplication(),
       builder: (context, snapshot) {
@@ -86,21 +111,29 @@ class TripsPage extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        child: TabBarView(
-                          children: [
-                            lp.data != null && lp.data.isNotEmpty
+                      child: TabBarView(
+                        children: [
+                          RefreshIndicator(
+                            onRefresh: () async {
+                              _onRefresh();
+                            },
+                            child: lp.data != null && lp.data.isNotEmpty
                                 ? ActiveTripsWidget(
                                   tripsList: lp.data,
                                 )
                                 : Container(),
-                            lp.data != null && lp.data.isNotEmpty
+                          ),
+                          RefreshIndicator(
+                            onRefresh: () async {
+                              _onRefresh();
+                            },
+                            child: lp.data != null && lp.data.isNotEmpty
                                 ? ArchiveTrips(
                                   tripsList: lp.data,
                                 )
                                 : Container(),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

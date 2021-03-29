@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:masked_text/masked_text.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
@@ -22,8 +22,7 @@ class UserIdPage extends StatefulWidget {
 class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
 
   var textFieldCtrl = TextEditingController();
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '# # # # # # # # # # # #', filter: {"#": RegExp(r'[0-9]')});
+
   Future<Status> _status;
   @override
   void initState() {
@@ -35,9 +34,9 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
   void _searchEmployee(){
     UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     FocusScope.of(context).requestFocus(new FocusNode());
-    if (maskFormatter.getUnmaskedText().length == 12) {
-      print(maskFormatter.getUnmaskedText());
-      _status = auth.searchEmployeeByIin(iin: maskFormatter.getUnmaskedText());
+    print(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
+    if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 12) {
+      _status = auth.searchEmployeeByIin(iin: textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
       handleLogin();
     }
   }
@@ -136,6 +135,26 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(top: 5),
+                                  child: MaskedTextField(
+                                    maskedTextFieldController: textFieldCtrl,
+                                    mask: "x x x x x x x x x x x x ",
+                                    maxLength: 23,
+                                    keyboardType: TextInputType.number,
+                                    inputDecoration: new InputDecoration(
+                                      hintText: '_ _ _ _ _ _ _ _ _ _ _ _',
+                                      hintStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.all(0.0),
+                                      border: InputBorder.none,
+                                      counterText: '',
+                                    ),
+                                  ),
+                                ),
+                                /*Container(
+                                  margin: EdgeInsets.only(top: 5),
                                   child: TextFormField(
                                     inputFormatters: [maskFormatter],
                                     autofocus: false,
@@ -161,7 +180,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                                       return value = null;
                                     },
                                   ),
-                                ),
+                                ),*/
                               ],
                             ),
                           ),
@@ -248,7 +267,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
-                              new TextSpan(text: 'сервиса Odyssey Rotation'),
+                              new TextSpan(text: 'сервиса Odyssey'),
                             ],
                           ),
                         ),

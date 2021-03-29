@@ -46,7 +46,7 @@ class AppState extends State<App> {
     final dynamic data = message['data'] ?? message;
     final String itemId = data['id'];
     final Item item = _items.putIfAbsent(itemId, () => Item(itemId: itemId))
-      //.._contentAvailable = data['content_available']
+      .._contentAvailable = data['content_available']
       .._priority = data['priority']
       .._type = data['type']
       //.._segmentId = data['segment_id']
@@ -59,11 +59,16 @@ class AppState extends State<App> {
   void _navigateToItemDetail(Map<String, dynamic> message) {
     final Item item = _itemForMessage(message);
     Navigator.popUntil(context, (Route<dynamic> route) => route is PageRoute);
+    if(Navigator.canPop(context)){
+      Navigator.pop(context);
       Navigator.push(context, item.route);
-    print('asdasdasdasdasdasdasdasdadasd');
-
-    /*if (!item.route.isCurrent) {
-    }*/
+    }
+    else if (!item.route.isCurrent) {
+      Navigator.push(context, item.route);
+    }
+    else{
+      Navigator.push(context, item.route);
+    }
   }
 
   @override
@@ -171,9 +176,9 @@ class Item {
   StreamController<Item> _controller = StreamController<Item>.broadcast();
   Stream<Item> get onChanged => _controller.stream;
 
-  bool _contentAvailable;
-  bool get contentAvailable => _contentAvailable;
-  set contentAvailable(bool value) {
+  String _contentAvailable;
+  String get contentAvailable => _contentAvailable;
+  set contentAvailable(String value) {
     _contentAvailable = value;
     _controller.add(this);
   }
@@ -226,6 +231,8 @@ class Item {
   Route<void> get route {
     print('try open page');
     final String routeName = '/detail/$itemId';
+    print(routes);
+    routes.clear();
     return routes.putIfAbsent(
       routeName,
           () => MaterialPageRoute<void>(

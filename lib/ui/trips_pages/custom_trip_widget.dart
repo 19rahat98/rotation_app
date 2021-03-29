@@ -12,6 +12,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 
 import 'package:rotation_app/config/app+theme.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/ui/pdf_viewer.dart';
 
 class CustomTripPage extends StatelessWidget {
   final Application tripData;
@@ -146,7 +147,7 @@ class CustomTripPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                            tripData.overTime != null && tripData.overTime > 0
+                           /* tripData.overTime != null && tripData.overTime > 0
                                 ? Container(
                                     height: 32,
                                     padding: EdgeInsets.only(
@@ -182,7 +183,7 @@ class CustomTripPage extends StatelessWidget {
                                       height: 24,
                                       color: AppTheme.nearlyWhite,
                                     ),
-                                  ),
+                                  ),*/
                             if (tripData.segments.length == 2 &&
                                 tripData.segments.first.activeProcess ==
                                     'watching' &&
@@ -224,11 +225,22 @@ class CustomTripPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (tripData.segments.length == 2 &&
+                            if ((tripData.segments.length == 2 &&
                                 tripData.segments.first.status == 'returned' &&
                                 tripData.segments.last.status == "returned" &&
                                 tripData.segments.last.activeProcess == null &&
-                                tripData.segments.first.activeProcess == null)
+                                tripData.segments.first.activeProcess == null) ||
+                                (tripData.segments.length == 2 &&
+                                tripData.segments.first.status == 'canceled' &&
+                                tripData.segments.last.status == "canceled" &&
+                                tripData.segments.last.activeProcess == null &&
+                                tripData.segments.first.activeProcess == null) ||
+                                (tripData.segments.length == 2 &&
+                                tripData.segments.first.status == 'canceled' &&
+                                tripData.segments.last.status == "returned") ||
+                                (tripData.segments.length == 2 &&
+                                tripData.segments.first.status == 'returned' &&
+                                tripData.segments.last.status == "canceled"))
                               Container(
                                 width: 32,
                                 height: 32,
@@ -339,8 +351,8 @@ class CustomTripPage extends StatelessWidget {
                                       ),
                                     if (tripData.segments.first.status ==
                                             'returned' &&
-                                        tripData.segments[1].status !=
-                                            'returned')
+                                        tripData.segments[1].status != 'returned' &&
+                                        tripData.segments[1].status != 'canceled')
                                       Container(
                                         width: 26,
                                         decoration: BoxDecoration(
@@ -436,10 +448,9 @@ class CustomTripPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                    if (tripData.segments.first.status !=
-                                            'returned' &&
-                                        tripData.segments[1].status ==
-                                            'returned')
+                                    if (tripData.segments.first.status != 'returned' &&
+                                        tripData.segments[1].status == 'returned' &&
+                                        tripData.segments.first.status != 'canceled')
                                       Container(
                                         width: 26,
                                         decoration: BoxDecoration(
@@ -745,6 +756,29 @@ class CustomTripPage extends StatelessWidget {
               tripData.segments[1].status == 'issued') ||
               (tripData.segments[1].status == 'returned' &&
                   tripData.segments.first.status == 'issued'))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(),
+                Container(
+                    width: w,
+                    margin: EdgeInsets.only(bottom: 8),
+                    child: Text( tripData.segments.first.closedReason != null && tripData.segments.first.ticket != null && tripData.segments.first.ticket.returnedAt != null ?
+                    'Часть билетов были оформлены. Часть билетов были отменены, по причине: ${tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments.first.ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments.first.ticket.returnedAt))}' :
+                    tripData.segments[1].closedReason != null && tripData.segments[1].ticket != null && tripData.segments[1].ticket.returnedAt != null ? 'Часть билетов были оформлены. Часть билетов были отменены, по причине: ${tripData.segments[1].closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(tripData.segments[1].ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(tripData.segments[1].ticket.returnedAt))}' :
+                    'Часть билетов были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                      style: TextStyle(
+                          fontFamily: "Root",
+                          fontSize: 13,
+                          color: Color(0xff748595),
+                          fontWeight: FontWeight.w500),)
+                ),
+              ],
+            ),
+          if ((tripData.segments.first.status == "returned" &&
+              tripData.segments[1].status == 'canceled') ||
+              (tripData.segments.first.status == "canceled" &&
+                  tripData.segments[1].status == 'returned'))
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1102,7 +1136,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                   )
                                 ],
                               ),
-                            if(widget.tripData.segments[index].status == "returned")
+                            if(widget.tripData.segments[index].status == "returned" || widget.tripData.segments[index].status == "canceled")
                               Column(
                                 children: [
                                   widget.tripData.productKey == "rail"
@@ -1985,6 +2019,63 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   ),
                 ],
               ),
+            if ((widget.tripData.segments.first.status == "returned" &&
+                widget.tripData.segments[1].status == 'canceled') ||
+                (widget.tripData.segments.first.status == "canceled" &&
+                    widget.tripData.segments[1].status == 'returned'))
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: w,
+                    margin: EdgeInsets.only(top: 20, bottom: 12),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.access_time_rounded, color: Color(0xff1B344F), size: 20,),
+                        SizedBox(width: 5,),
+                        Text('Поездка отменена!',
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 17,
+                              color: Color(0xff1B344F),
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  if(widget.tripData.segments.first.status == "returned")
+                    Container(
+                        width: w,
+                        margin: EdgeInsets.only(bottom: 8),
+                        child: Text( widget.tripData.segments.first.closedReason != null && widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.returnedAt != null ?
+                        'Билеты по направлению ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} были отменены, по причине: ${widget.tripData.segments.first.closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments.first.ticket.returnedAt))}' :
+                        'Часть билетов были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 13,
+                              color: Color(0xff748595),
+                              fontWeight: FontWeight.w500),)
+                    ),
+                  if(widget.tripData.segments[1].status == "returned")
+                    Container(
+                        width: w,
+                        margin: EdgeInsets.only(bottom: 8),
+                        child: Text( widget.tripData.segments[1].closedReason != null && widget.tripData.segments[1].ticket != null && widget.tripData.segments[1].ticket.returnedAt != null ?
+                        'Билеты по направлению ${widget.tripData.segments[1].train.depStation} - ${widget.tripData.segments[1].train.arrStation} были отменены, по причине: ${widget.tripData.segments[1].closedReason}. Дата отмены: ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[1].ticket.returnedAt))}' :
+                        'Билеты по направлению * были оформлены. Часть билетов были отменены, по причине: *. Дата отмены: *',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Root",
+                              fontSize: 13,
+                              color: Color(0xff748595),
+                              fontWeight: FontWeight.w500),)
+                    ),
+                ],
+              ),
             if (widget.tripData.status == "opened" && (widget.tripData.segments.first.status == "returned" ||
                 widget.tripData.segments[1].status == 'returned'))
               Column(
@@ -2161,15 +2252,24 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
 
                         if (status.isGranted) {
                           final externalDir = await getExternalStorageDirectory();
-
-                          final id = await FlutterDownloader.enqueue(
+                          print(externalDir.path);
+                          print('adsasdsdadasdasdasd');
+                          FlutterDownloader.enqueue(
                             url: widget.tripData.segments.first.ticket.ticketUrl,
                             savedDir: externalDir.path,
                             fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
                             ).toString().replaceAll('.', ',')}",
                             showNotification: true,
                             openFileFromNotification: true,
-                          );
+                          ).then((value) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PDFScreen(path: externalDir.path, title: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
+                                ).toString().replaceAll('.', ',')}",),
+                              ),
+                            );
+                          });
                         } else {
                           print("Permission deined");
                         }

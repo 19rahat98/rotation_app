@@ -14,14 +14,19 @@ class PressServiceScreen extends StatefulWidget {
 }
 
 class _PressServiceScreenState extends State<PressServiceScreen> {
-  final TextEditingController _searchQuestionTextController =
-      TextEditingController();
+  final TextEditingController _searchQuestionTextController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   String _query;
 
   @override
   void initState() {
     _searchQuestionTextController.addListener(() {});
+    new Stream.periodic(const Duration(seconds: 5), (v) => v)
+        .listen((count) {
+      setState(() {
+        _onRefresh();
+      });
+    });
     super.initState();
   }
 
@@ -112,7 +117,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                               width: w - 70,
                               margin: EdgeInsets.only(bottom: 12),
                               child: Text(
-                                'вчера, в 13:40',
+                                item.publishedOn,
                                 style: TextStyle(
                                     fontFamily: "Root",
                                     fontSize: 12,
@@ -281,7 +286,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                   ),
                 ),
                 title: Text(
-                  'Пресс-служба',
+                  'Новости',
                   style: TextStyle(
                       fontFamily: "Root",
                       fontSize: 17,
@@ -302,7 +307,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                       children: [
                         Container(
                           child: Text(
-                            'Пресс-служба',
+                            'Новости',
                             style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 24,

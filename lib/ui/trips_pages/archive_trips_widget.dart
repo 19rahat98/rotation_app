@@ -12,35 +12,11 @@ import 'tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/trips_pages/active_widget.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
 
-class ArchiveTrips extends StatefulWidget {
+class ArchiveTrips extends StatelessWidget{
   final List<Application> tripsList;
 
   const ArchiveTrips({Key key, this.tripsList}) : super(key: key);
 
-  @override
-  _ArchiveTripsState createState() => _ArchiveTripsState();
-}
-
-class _ArchiveTripsState extends State<ArchiveTrips> {
-  List<Application> _activeTrip = List<Application>();
-
-
-  @override
-  void initState() {
-    super.initState();
-    initializeDateFormatting();
-    getActiveTrips();
-  }
-
-  void getActiveTrips(){
-    for (var x in widget.tripsList) {
-      print(new DateFormat.yMMMd('ru').format(DateTime.parse(x.date)));
-      if (DateTime.now().isAfter(DateTime.parse(x.date))) {
-        _activeTrip.add(x);
-      }
-    }
-    print(_activeTrip);
-  }
 
   void _onOpenMore(BuildContext context, {routName}) {
     double h = MediaQuery.of(context).size.height;
@@ -80,11 +56,12 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
           key: GlobalKey(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          children: _activeTrip.map(
-                (item) {
+          children: tripsList.map((item) {
+            if (DateTime.now().isAfter(DateTime.parse(item.date)) || ((item.segments.first.status == "returned" || item.segments[1].status == "returned" || item.segments.first.status == "canceled" || item.segments[1].status == "canceled"))) {
               if(item.segments.isEmpty && item.status == "opened"){
                 return InkWell(
                   onTap: () {
+                    print(item.id);
                     showCupertinoModalPopup(
                         context: context,
                         builder: (BuildContext context) =>
@@ -96,6 +73,8 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
               else if(item.segments.length == 1 && item.status == "opened"){
                 return InkWell(
                   onTap: () {
+                    print(item.id);
+
                     _onOpenMore(context,
                         routName: WithDetailsTripSheet(
                           tripData: item,
@@ -104,10 +83,11 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
                   child: SingleCustomDetailsTripWidget(tripData: item),
                 );
               }
-              else if(item.segments.length == 1 && item.status == "returned"){
+              else if(item.segments.length == 1 && item.status == "returned" || item.segments.length == 1 && item.status == "canceled"){
                 return InkWell(
                   onTap: () {
-                    _onOpenMore(context,
+                    print(item.id);
+                  _onOpenMore(context,
                         routName: ReturnedTicketBottomSheet(
                           tripData: item,
                         ));
@@ -118,7 +98,8 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
               else if(item.segments.length == 1 && item.status == "issued"){
                 return InkWell(
                   onTap: () {
-                    _onOpenMore(context,
+                    print(item.id);
+                  _onOpenMore(context,
                         routName: TicketsBottomSheet(
                           tripData: item,
                         ));
@@ -130,11 +111,12 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
                 return InkWell(
                   onTap: () {
                     print(item.id);
-
+                    print(item.id);
                     _onOpenMore(context,
                         routName: CustomTripSheet(
                           tripData: item,
-                        ));
+                        ),
+                    );
                   },
                   child: CustomTripPage(tripData: item),
                 );
@@ -147,6 +129,11 @@ class _ArchiveTripsState extends State<ArchiveTrips> {
                   color: Colors.red,
                 );
               }
+            }
+            else{
+              return Container();
+            }
+
               /*if (item.status == "opened" && item.segments.isEmpty) {
                 return InkWell(
                   onTap: () {

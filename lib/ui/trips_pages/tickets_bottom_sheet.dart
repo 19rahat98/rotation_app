@@ -3,12 +3,14 @@ import 'dart:isolate';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
 import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/ui/pdf_viewer.dart';
 
 class TicketsBottomSheet extends StatefulWidget {
   final Application tripData;
@@ -663,18 +665,25 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
                 onTap: () async {
                   if(widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.ticketUrl != null){
                     final status = await Permission.storage.request();
-
+                    String path = await ExtStorage.getExternalStoragePublicDirectory(
+                        ExtStorage.DIRECTORY_DOWNLOADS);
                     if (status.isGranted) {
-                      final externalDir = await getExternalStorageDirectory();
-
-                      final id = await FlutterDownloader.enqueue(
+                      FlutterDownloader.enqueue(
                         url: widget.tripData.segments.first.ticket.ticketUrl,
-                        savedDir: externalDir.path,
+                        savedDir: path,
                         fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
-                        ).toString().replaceAll('.', ',')}",
+                        ).toString()}",
                         showNotification: true,
                         openFileFromNotification: true,
-                      );
+                      ).whenComplete(() {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PDFScreen(path: path, title: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
+                            ).toString()}",),
+                          ),
+                        );
+                      });
                     } else {
                       print("Permission deined");
                     }

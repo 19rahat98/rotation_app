@@ -15,19 +15,152 @@ import 'package:rotation_app/ui/trips_pages/returned_ticket.dart';
 import 'package:rotation_app/ui/trips_pages/tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
-class NearestTripWidget extends StatefulWidget {
+class NearestTripWidget extends StatelessWidget {
   final List<Application> tripsList;
 
   const NearestTripWidget({Key key, this.tripsList}) : super(key: key);
 
+
   @override
-  _NearestTripWidgetState createState() => _NearestTripWidgetState();
-}
+  Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    if(tripsList != null && tripsList.isNotEmpty){
+      print(tripsList.length);
+      for(int i = 0; i < tripsList.length; i++){
+        if (DateTime.now().isBefore(DateTime.parse(tripsList[i].date))) {
+          print(tripsList[i].date);
+          /*if(tripsList[i].segments.isEmpty && tripsList[i].status == "opened"){
+            return InkWell(
+              onTap: () {
+                showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) =>
+                        InactiveTripActionSheet(tripData: tripsList[i]));
+              },
+              child: InactiveTripWidget(tripData: tripsList[i]),
+            );
+          }*/
+          /*if(tripsList[i].segments.length == 1 && tripsList[i].status == "opened"){
+            print('sdsdsdsd');
+            return InkWell(
+              onTap: () {
+                _onOpenMore(context,
+                    routName: WithDetailsTripSheet(
+                      tripData: tripsList[i],
+                    ));
+              },
+              child: SingleCustomDetailsTripWidget(tripData: tripsList[i]),
+            );
+          }*/
+          if(tripsList[i].segments.length == 1 && tripsList[i].status == "issued"){
+            return InkWell(
+              onTap: () {
+                _onOpenMore(context,
+                    routName: TicketsBottomSheet(
+                      tripData: tripsList[i],
+                    ));
+              },
+              child: SingleActiveWidget(tripData: tripsList[i]),
+            );
+          }
+          else if(tripsList[i].segments.length == 1 && tripsList[i].status == "opened" && tripsList[i].segments.first.activeProcess == "watching"){
+            return InkWell(
+              onTap: () {
+                _onOpenMore(context,
+                    routName: WithDetailsTripSheet(
+                      tripData: tripsList[i],
+                    ));
+              },
+              child: SingleCustomDetailsTripWidget(tripData: tripsList[i]),
+            );
+          }
+          else if(tripsList[i].segments.length > 1 && (tripsList[i].status == 'issued' || (tripsList[i].status == 'opened' && (tripsList[i].segments.first.activeProcess == "watching" || tripsList[i].segments[1].activeProcess == "watching")) || tripsList[i].status == 'partly')){
+            return InkWell(
+              onTap: () {
+                print(tripsList[i].id);
+                _onOpenMore(context,
+                    routName: CustomTripSheet(
+                      tripData: tripsList[i],
+                    ));
+              },
+              child: CustomTripPage(tripData: tripsList[i]),
+            );
+          }
+        }
+      }
+      return Container(
+        width: w,
+        height: 48,
+        margin: EdgeInsets.only(top: 8),
+        padding: EdgeInsets.only(left: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              spreadRadius: 0,
+              blurRadius: 8,
+              offset: Offset(0, 4), // changes position of shadow
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              spreadRadius: 0,
+              blurRadius: 2,
+              offset: Offset(0, 0), // changes position of shadow
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
+        child: Text('У вас нет активных поездок.',
+          style: TextStyle(
+            fontFamily: "Root",
+            fontSize: 15,
+            color: Color(0xff748595).withOpacity(0.6),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    }
+    else{
+      return Container(
+        width: w,
+        height: 48,
+        margin: EdgeInsets.only(top: 8),
+        padding: EdgeInsets.only(left: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              spreadRadius: 0,
+              blurRadius: 8,
+              offset: Offset(0, 4), // changes position of shadow
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              spreadRadius: 0,
+              blurRadius: 2,
+              offset: Offset(0, 0), // changes position of shadow
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
+        child: Text('У вас нет активных поездок.',
+          style: TextStyle(
+            fontFamily: "Root",
+            fontSize: 15,
+            color: Color(0xff748595).withOpacity(0.6),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    }
 
-class _NearestTripWidgetState extends State<NearestTripWidget> {
 
-  Application nearestTrip;
 
+  }
   void _onOpenMore(BuildContext context, {routName}) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
@@ -56,87 +189,4 @@ class _NearestTripWidgetState extends State<NearestTripWidget> {
     );
   }
 
-  @override
-  void initState() {
-    if(widget.tripsList != null && widget.tripsList.isNotEmpty) nearestTrip = getAllTrips();
-    super.initState();
-  }
-
-  Application getAllTrips() {
-    for (var x in widget.tripsList) {
-      if (DateTime.now().isBefore(DateTime.parse(x.date))) {
-        return x;
-      }
-    }
-    return null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    if(nearestTrip.segments.isEmpty && nearestTrip.status == "opened"){
-      return InkWell(
-        onTap: () {
-          showCupertinoModalPopup(
-              context: context,
-              builder: (BuildContext context) =>
-                  InactiveTripActionSheet(tripData: nearestTrip));
-        },
-        child: InactiveTripWidget(tripData: nearestTrip),
-      );
-    }
-    else if(nearestTrip.segments.length == 1 && nearestTrip.status == "opened"){
-      return InkWell(
-        onTap: () {
-          _onOpenMore(context,
-              routName: WithDetailsTripSheet(
-                tripData: nearestTrip,
-              ));
-        },
-        child: SingleCustomDetailsTripWidget(tripData: nearestTrip),
-      );
-    }
-    else if(nearestTrip.segments.length == 1 && nearestTrip.status == "returned"){
-      return InkWell(
-        onTap: () {
-          _onOpenMore(context,
-              routName: ReturnedTicketBottomSheet(
-                tripData: nearestTrip,
-              ));
-        },
-        child: ReturnedTicketWidget(tripData: nearestTrip),
-      );
-    }
-    else if(nearestTrip.segments.length == 1 && nearestTrip.status == "issued"){
-      return InkWell(
-        onTap: () {
-          _onOpenMore(context,
-              routName: TicketsBottomSheet(
-                tripData: nearestTrip,
-              ));
-        },
-        child: SingleActiveWidget(tripData: nearestTrip),
-      );
-    }
-    else if(nearestTrip.segments.length > 1 ){
-      return InkWell(
-        onTap: () {
-          print(nearestTrip.id);
-
-          _onOpenMore(context,
-              routName: CustomTripSheet(
-                tripData: nearestTrip,
-              ));
-        },
-        child: CustomTripPage(tripData: nearestTrip),
-      );
-    }
-    else{
-      print(nearestTrip.id);
-      return Container(
-        width: w,
-        height: 50,
-      );
-    }
-  }
 }

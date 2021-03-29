@@ -269,7 +269,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                                 recognizer: new TapGestureRecognizer()
                                   ..onTap = () => print('Tap Here onTap'),
                               ),
-                              new TextSpan(text: 'сервиса Odyssey Rotation'),
+                              new TextSpan(text: 'сервиса Odyssey'),
                             ],
                           ),
                         ),

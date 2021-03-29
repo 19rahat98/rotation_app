@@ -174,8 +174,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   _updateData(){
-    new Stream.periodic(const Duration(milliseconds: 1000), (v) => v)
-        .take(5)
+    new Stream.periodic(const Duration(seconds: 30), (v) => v)
         .listen((count) {
       setState(() {
         Provider.of<LoginProvider>(context, listen: false).getEmployeeApplication();
@@ -189,7 +188,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.initState();
     weekDays();
     monthDays();
-    //_updateData();
+    _updateData();
   }
 
   @override
@@ -666,7 +665,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ],
                           ),
                         ),
-                        FutureBuilder<bool>(
+                        /*FutureBuilder<bool>(
                             future: crp.getExchangeRate(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
@@ -806,7 +805,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     child: CircularProgressIndicator(),
                                   ),
                                 );
-                            }),
+                            }),*/
                         Container(
                           width: w,
                           margin: EdgeInsets.only(top: 16, left: 16, right: 16),

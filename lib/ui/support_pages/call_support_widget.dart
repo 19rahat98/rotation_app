@@ -27,20 +27,20 @@ class CallSupportWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 12, bottom: 5),
                     child: Text(
-                      '+7 727 355 37 37',
+                      '+7(701)705-16-16',
                       style: TextStyle(fontFamily: "Root",
                         fontSize: 15,
                         color: Color(0xff1B3652).withOpacity(0.5),
                       ),
                     ),
                   ),
-                  Text(
+                  /*Text(
                     '+7 727 355 37 37',
                     style: TextStyle(fontFamily: "Root",
                       fontSize: 15,
                       color: Color(0xff1B3652).withOpacity(0.5),
                     ),
-                  ),
+                  ),*/
                   Padding(
                     padding: EdgeInsets.only(top: 12, bottom: 5),
                     child: Text(
@@ -67,7 +67,7 @@ class CallSupportWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             onPressed: () {
-              launch("tel://+77273553737");
+              launch("tel://+7(701)7051616");
             },
           ),
         ],

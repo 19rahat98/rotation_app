@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -68,6 +70,13 @@ class SocialMediaBottomSheet extends StatelessWidget {
             ),
             onPressed: () {
               print('pressed');
+              if (Platform.isAndroid) {
+                print('pressed');
+                launch("https://wa.me/+77017051616/?text=");
+                //return "https://wa.me/+77017051616/?text="; // new line
+              } else {
+                launch("https://api.whatsapp.com/send?phone=+77017051616=");
+              }
             },
           ),
           CupertinoActionSheetAction(
@@ -136,7 +145,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
 }
 
 class NotificationBottomSheet extends StatelessWidget {
-  final bool contentAvailable;
+  final String contentAvailable;
   final bool isImportant;
   final String type;
   final int segmentId;
@@ -149,7 +158,7 @@ class NotificationBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
-    return contentAvailable != null && contentAvailable == true ?
+    return contentAvailable != null && contentAvailable == "true" ?
     CupertinoActionSheet(
         actions: <Widget>[
           CupertinoActionSheetAction(

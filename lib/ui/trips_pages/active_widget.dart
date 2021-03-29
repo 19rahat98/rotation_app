@@ -112,7 +112,7 @@ class ActiveWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            tripData.overTime > 0 && tripData.overTime != null ? Container(
+                            /*tripData.overTime > 0 && tripData.overTime != null ? Container(
                               height: 32,
                               padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                               margin: EdgeInsets.only(right: 7),
@@ -144,7 +144,7 @@ class ActiveWidget extends StatelessWidget {
                                 height: 24,
                                 color: AppTheme.nearlyWhite,
                               ),
-                            ),
+                            ),*/
                             tripData.segments.isEmpty ?
                             SvgPicture.asset(
                                 'assets/svg/Ticket.svg',
@@ -333,7 +333,7 @@ class SingleActiveWidget extends StatelessWidget {
       else{
         return "через " + DateTime.parse(tripeDate).difference(DateTime.now()).inDays.toString() + " д";
       }
-    }else return "";
+    } else return "";
   }
 
   @override
@@ -438,7 +438,7 @@ class SingleActiveWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            tripData.overTime > 0 && tripData.overTime != null ? Container(
+                            /*tripData.overTime > 0 && tripData.overTime != null ? Container(
                               height: 32,
                               padding: EdgeInsets.only(right: 8, top: 2, bottom: 2, left: 3),
                               margin: EdgeInsets.only(right: 7),
@@ -470,7 +470,7 @@ class SingleActiveWidget extends StatelessWidget {
                                 height: 24,
                                 color: AppTheme.nearlyWhite,
                               ),
-                            ),
+                            ),*/
                             Container(
                               width: 32,
                               height: 32,

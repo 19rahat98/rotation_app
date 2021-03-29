@@ -268,9 +268,17 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                   ),
                   validator: (value) {
                     if (value.length > 9) {
+                      DateFormat inputFormat = DateFormat("dd/MM/yyyy");
                       if (!DateValidator('dd/MM/yyyy', errorText: "")
                           .isValid(value.replaceAll('.', '/'))) {
                         _isValidate = true;
+
+                        return ("Введите корректное значение!");
+                      }
+                      else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                        return ("Введите корректное значение!");
+                      }
+                      else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
                         return ("Введите корректное значение!");
                       }
                     }
@@ -390,10 +398,17 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                   ),
                   validator: (value) {
                     if (value.length > 9) {
+                      DateFormat inputFormat = DateFormat("dd/MM/yyyy");
                       if (!DateValidator('dd/MM/yyyy', errorText: "")
                           .isValid(value.replaceAll('.', '/'))) {
                         _isValidate = true;
 
+                        return ("Введите корректное значение!");
+                      }
+                      else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                        return ("Введите корректное значение!");
+                      }
+                      else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
                         return ("Введите корректное значение!");
                       }
                     }
@@ -431,9 +446,17 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                   ),
                   validator: (value) {
                     if (value.length > 9) {
+                      DateFormat inputFormat = DateFormat("dd/MM/yyyy");
                       if (!DateValidator('dd/MM/yyyy', errorText: "")
                           .isValid(value.replaceAll('.', '/'))) {
                         _isValidate = true;
+
+                        return ("Введите корректное значение!");
+                      }
+                      else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                        return ("Введите корректное значение!");
+                      }
+                      else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
                         return ("Введите корректное значение!");
                       }
                     }

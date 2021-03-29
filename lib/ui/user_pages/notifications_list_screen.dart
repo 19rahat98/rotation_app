@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:rotation_app/ui/support_pages/social_media_widget.dart';
 
 class NotificationsListScreen extends StatefulWidget {
-  final bool contentAvailable;
+  final String contentAvailable;
   final bool isImportant;
   final String type;
   final int segmentId;

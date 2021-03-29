@@ -26,6 +26,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     np.sendFmcTokenToServer();
     lp.getUserInfo();
     lp.checkSignIn().then((value){
+      print(value);
       var page = value == true ? App() : LoginPage();
       Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => page));
     });

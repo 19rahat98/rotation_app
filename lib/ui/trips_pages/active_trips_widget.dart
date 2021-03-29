@@ -13,33 +13,10 @@ import 'tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/trips_pages/active_widget.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
 
-class ActiveTripsWidget extends StatefulWidget {
+class ActiveTripsWidget extends StatelessWidget {
   final List<Application> tripsList;
 
   const ActiveTripsWidget({Key key, this.tripsList}) : super(key: key);
-
-  @override
-  _ActiveTripsWidgetState createState() => _ActiveTripsWidgetState();
-}
-
-class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
-  List<Application> _activeTrip = List<Application>();
-
-  @override
-  void initState() {
-    super.initState();
-    getActiveTrips();
-    initializeDateFormatting();
-  }
-
-  void getActiveTrips() {
-    for (var x in widget.tripsList) {
-      print(new DateFormat.yMMMd('ru').format(DateTime.parse(x.date)));
-      if (DateTime.now().isBefore(DateTime.parse(x.date))) {
-        _activeTrip.add(x);
-      }
-    }
-  }
 
   void _onOpenMore(BuildContext context, {routName}) {
     double h = MediaQuery.of(context).size.height;
@@ -79,72 +56,75 @@ class _ActiveTripsWidgetState extends State<ActiveTripsWidget> {
           key: GlobalKey(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          children: _activeTrip.map(
+          children: tripsList.map(
             (item) {
-              if(item.segments.isEmpty && item.status == "opened"){
-                return InkWell(
-                  onTap: () {
-                    showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            InactiveTripActionSheet(tripData: item));
-                  },
-                  child: InactiveTripWidget(tripData: item),
-                );
-              }
-              else if(item.segments.length == 1 && item.status == "opened"){
-                return InkWell(
-                  onTap: () {
-                    _onOpenMore(context,
-                        routName: WithDetailsTripSheet(
-                          tripData: item,
-                        ));
-                  },
-                  child: SingleCustomDetailsTripWidget(tripData: item),
-                );
-              }
-              else if(item.segments.length == 1 && item.status == "returned"){
-                return InkWell(
-                  onTap: () {
-                    _onOpenMore(context,
-                        routName: ReturnedTicketBottomSheet(
-                          tripData: item,
-                        ));
-                  },
-                  child: ReturnedTicketWidget(tripData: item),
-                );
-              }
-              else if(item.segments.length == 1 && item.status == "issued"){
-                return InkWell(
-                  onTap: () {
-                    _onOpenMore(context,
-                        routName: TicketsBottomSheet(
-                          tripData: item,
-                        ));
-                  },
-                  child: SingleActiveWidget(tripData: item),
-                );
-              }
-              else if(item.segments.length > 1 ){
-                return InkWell(
-                  onTap: () {
-                    print(item.id);
-
-                    _onOpenMore(context,
-                        routName: CustomTripSheet(
-                          tripData: item,
-                        ));
-                  },
-                  child: CustomTripPage(tripData: item),
-                );
+              if (DateTime.now().isBefore(DateTime.parse(item.date))){
+                if(item.segments.isEmpty && item.status == "opened"){
+                  return InkWell(
+                    onTap: () {
+                      showCupertinoModalPopup(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              InactiveTripActionSheet(tripData: item));
+                    },
+                    child: InactiveTripWidget(tripData: item),
+                  );
+                }
+                else if(item.segments.length == 1 && item.status == "opened"){
+                  return InkWell(
+                    onTap: () {
+                      _onOpenMore(context,
+                          routName: WithDetailsTripSheet(
+                            tripData: item,
+                          ));
+                    },
+                    child: SingleCustomDetailsTripWidget(tripData: item),
+                  );
+                }
+                /*else if(item.segments.length == 1 && item.status == "returned"){
+                  return InkWell(
+                    onTap: () {
+                      _onOpenMore(context,
+                          routName: ReturnedTicketBottomSheet(
+                            tripData: item,
+                          ));
+                    },
+                    child: ReturnedTicketWidget(tripData: item),
+                  );
+                }*/
+                else if(item.segments.length == 1 && item.status == "issued"){
+                  return InkWell(
+                    onTap: () {
+                      print(item.segments.first.status);
+                      print(item.id);
+                      _onOpenMore(context,
+                          routName: TicketsBottomSheet(
+                            tripData: item,
+                          ));
+                    },
+                    child: SingleActiveWidget(tripData: item),
+                  );
+                }
+                else if(item.segments.length > 1 && (item.segments.first.status != "returned" && item.segments[1].status != "returned" && item.segments.first.status != "canceled" && item.segments[1].status != "canceled")){
+                  return InkWell(
+                    onTap: () {
+                      print(item.id);
+                      _onOpenMore(context,
+                          routName: CustomTripSheet(
+                            tripData: item,
+                          ),
+                      );
+                    },
+                    child: CustomTripPage(tripData: item),
+                  );
+                }
+                else{
+                  print(item.id);
+                  return Container();
+                }
               }
               else{
-                print(item.id);
-                return Container(
-                  width: w,
-                  height: 50,
-                  color: Colors.red,
-                );
+                return Container();
               }
               /*if (item.status == "opened" && item.segments.isEmpty) {
                 return InkWell(

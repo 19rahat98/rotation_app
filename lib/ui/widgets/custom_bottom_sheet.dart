@@ -63,11 +63,27 @@ class NoAccountBottomSheet extends StatelessWidget {
 }
 
 class ShowTooManyRequestAlert extends StatelessWidget{
+  var test = StringBuffer();
   @override
   Widget build(BuildContext context) {
-    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: true);
+    //UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: true);
     return Consumer(
         builder: (context, UserLoginProvider user, _) {
+          if(user.errorMessage != null){
+            print(user.errorMessage);
+            final splitText = user.errorMessage.split(" ", );
+            if(int.parse(splitText[9]) >= 60 && int.parse(splitText[9]) < 120){
+              splitText[9] = '1';
+              splitText[10] = 'минуту';
+            }
+            else if(int.parse(splitText[9]) >= 120){
+              splitText[9] = (int.parse(splitText[9])/60).toStringAsFixed(0);
+              splitText[10] = 'минуты';
+            }
+            splitText.forEach((item){
+              test.write(item + ' ');
+            });
+          }
           print(user.errorMessage);
           return AlertDialog(
             title: Text('Предупреждение'),
@@ -77,7 +93,7 @@ class ShowTooManyRequestAlert extends StatelessWidget{
                   Text('Количество запросов в минуту превысила норму.'),
                 ],
               ),
-            ) :  Text(user.errorMessage),
+            ) :  Text(test.toString()),
             actions: <Widget>[
               TextButton(
                 child: Text('ОК'),
