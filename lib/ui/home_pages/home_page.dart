@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +17,19 @@ import 'package:rotation_app/logic_block/providers/conversation_rates_provider.d
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/notification_provider.dart';
 import 'package:rotation_app/ui/home_pages/widgets/nearest_trip_widget.dart';
+import 'package:rotation_app/ui/home_pages/widgets/push_notification_list_widget.dart';
 import 'package:rotation_app/ui/support_pages/call_support_widget.dart';
 import 'package:rotation_app/ui/support_pages/questions_answers_screen.dart';
 import 'package:rotation_app/ui/support_pages/social_media_widget.dart';
+import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
 import 'package:rotation_app/ui/widgets/emptyPage.dart';
 
 class HomePage extends StatefulWidget {
+  final bool pushMessage;
+  final String applicationId;
+
+  const HomePage({Key key, this.pushMessage, this.applicationId}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -30,6 +39,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   String _weekDay = '';
   String _monthName = '';
   CalendarCarousel _calendarCarouselNoHeader;
+  Timer timer;
 
   void weekDays() async {
     switch (_targetDateTime.weekday) {
@@ -173,22 +183,85 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  _updateData(){
-    new Stream.periodic(const Duration(seconds: 30), (v) => v)
-        .listen((count) {
+  void _onOpenMore(BuildContext context, String applicationId) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    showModalBottomSheet<void>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return FutureBuilder<Application>(
+          future: lp.findApplicationById(applicationId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.none)
+              return Center(child: CircularProgressIndicator());
+            else if (snapshot.hasError)
+              return Center(
+                  child: emptyPage(Icons.error_outline, 'Something is wrong'));
+            else if(snapshot.data != null){
+              return Container(
+                width: w,
+                constraints: new BoxConstraints(
+                  maxHeight: h * 0.9,
+                ),
+                //height: h * 0.90,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                ),
+                child: CustomTripSheet(tripData: snapshot.data,),
+              );
+            }
+            else return Container(
+                width: w,
+                constraints: new BoxConstraints(
+                  maxHeight: h * 0.9,
+                ),
+                //height: h * 0.90,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                ),
+                child: Center(child: CircularProgressIndicator()),
+              );
+          }
+        );
+      },
+    );
+  }
+
+  void timerVoid() {
+    if(true){
       setState(() {
         Provider.of<LoginProvider>(context, listen: false).getEmployeeApplication();
         print('test');
       });
-    });
+    }
   }
+
+
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(widget.pushMessage != null && widget.pushMessage){
+        print('_onOpenMore');
+        _onOpenMore(context, widget.applicationId);
+      }
+    });
     super.initState();
     weekDays();
     monthDays();
-    _updateData();
+    timer = Timer.periodic(Duration(seconds: 20), (Timer t) => timerVoid());
   }
 
   @override
@@ -264,18 +337,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           else if (snapshot.data != null) {
             return Scaffold(
               backgroundColor: Color(0xffF3F6FB),
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                title: Text(
-                  'Главная',
-                  style: TextStyle(
-                      fontFamily: "Root",
-                      fontSize: 17,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(45.0),
+                child: AppBar(
+                  automaticallyImplyLeading: false,
+                  title: Text(
+                    'Главная',
+                    style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 17,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  centerTitle: true,
+                  backgroundColor: Color(0xff2D4461),
                 ),
-                centerTitle: true,
-                backgroundColor: Color(0xff2D4461),
               ),
               body:  RefreshIndicator(
                 onRefresh: _onRefresh,
@@ -430,7 +506,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              Container(
+                              PushNotificationListWidget(),
+                              /*Container(
                                 width: w,
                                 height: 110,
                                 padding: EdgeInsets.only(top: 8),
@@ -441,14 +518,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     SizedBox(width: 16),
                                     InkWell(
                                       onTap: () async {
-                                        /* np.sendFmcTokenToServer();
+                                        np.sendFmcTokenToServer();
+                                        *//* np.sendFmcTokenToServer();
                                         final taskId = await FlutterDownloader.enqueue(
                                           url: 'https://tmp.ptravels.kz/download-print/32470/issue',
                                           savedDir: '/test',
                                           showNotification: true, // show download progress in status bar (for Android)
                                           openFileFromNotification: true, // click on notification to open downloaded file (for Android)
                                         );
-                                        print(taskId);*/
+                                        print(taskId);*//*
                                       },
                                       child: Container(
                                         width: 200,
@@ -661,7 +739,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ),
                                   ],
                                 ),
-                              ),
+                              ),*/
                             ],
                           ),
                         ),
@@ -1014,9 +1092,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
             );
-          } else {
+          }
+          else {
             return Center(child: CircularProgressIndicator());
           }
         });
+  }
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 }

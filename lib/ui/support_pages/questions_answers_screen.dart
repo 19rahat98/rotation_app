@@ -45,13 +45,11 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
             ),
             child: InkWell(
               onTap: () {
-                print(item.id);
                 if (item.id == _chosenId) {
                   _chosenId = null;
                   _controller.add(null);
                 } else {
                   _chosenId = item.id;
-                  print(item.question);
                   _controller.add(item.id);
                 }
               },
@@ -93,13 +91,11 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
               ),
               child: InkWell(
                 onTap: () {
-                  print(item.id);
                   if (item.id == _chosenId) {
                     _chosenId = null;
                     _controller.add(null);
                   } else {
                     _chosenId = item.id;
-                    print(item.question);
                     _controller.add(item.id);
                   }
                 },

@@ -52,7 +52,9 @@ class TabItem {
         },
         onGenerateRoute: (routeSettings) {
           if(routeSettings.name == '/login'){
-            print(routeSettings.name);
+            key.currentState.dispose();
+            key.currentState.push(MaterialPageRoute(
+              builder: (_) => LoginPage()));
           }
           return MaterialPageRoute(
             builder: (_) => _page,

@@ -25,10 +25,11 @@ class SmsPinPage extends StatefulWidget {
 }
 
 class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
-  Stream _stream;
+  Timer timer;
   var textFieldCtrl = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
   int secondValue = 60;
+  int _timerLimit = 60;
   Future<Status> _status;
 
   BoxDecoration get _pinPutDecoration {
@@ -38,14 +39,12 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
         color: Color(0xff76B0FD).withOpacity(0.19));
   }
 
-  void timer() {
-    new Stream.periodic(const Duration(milliseconds: 1000), (v) => v)
-        .take(60)
-        .listen((count) {
+  void timerVoid() {
+    if(secondValue > 0){
       setState(() {
         secondValue -= 1;
       });
-    });
+    }
   }
 
   checkLoginState() {
@@ -69,14 +68,15 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
         case Status.LoginFail:
           return showDialog<void>(
               context: context,
-              barrierDismissible: false, // user must tap button!
+              barrierDismissible: false, // user  must tap button!
               builder: (BuildContext context) {
                 return ShowErrorCodeAlert();
               });
         case Status.SuccessLogin:
           auth.saveDataToSP().then((value){
             np.sendFmcTokenToServer();
-            Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => App()));
+            //Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => App()));
+            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => App()),  ModalRoute.withName('/'),);
           });
       }
     });
@@ -84,7 +84,8 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    timer();
+    //timer();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) => timerVoid());
     textFieldCtrl.addListener(() {});
     super.initState();
   }
@@ -208,7 +209,6 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                                   onTap: () {
                                     auth.retrySendSmsCode();
                                     secondValue = 60;
-                                    timer();
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(top: 15),
@@ -287,6 +287,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    timer.cancel();
     // TODO: implement dispose
     textFieldCtrl.dispose();
     super.dispose();

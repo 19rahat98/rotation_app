@@ -499,13 +499,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         child: GestureDetector(
                           onTap: () async {
-                            print(await lp.getEmployeeToken());
                             final _result = await lp.deleteEmployeeData();
                             if (_result) {
-                              Navigator.of(context, rootNavigator: true).push(
+                              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()),  ModalRoute.withName('/'),);
+                              /*Navigator.of(context, rootNavigator: true).push(
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          LoginPage()));
+                                          LoginPage()));*/
                             }
                           },
                           child: Center(

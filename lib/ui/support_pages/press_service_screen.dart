@@ -9,6 +9,11 @@ import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
 import 'package:rotation_app/ui/widgets/emptyPage.dart';
 
 class PressServiceScreen extends StatefulWidget {
+  final bool pushMessage;
+  final String articleId;
+
+  const PressServiceScreen({Key key, this.pushMessage, this.articleId}) : super(key: key);
+
   @override
   _PressServiceScreenState createState() => _PressServiceScreenState();
 }
@@ -17,22 +22,34 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
   final TextEditingController _searchQuestionTextController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   String _query;
+  Timer timer;
+
+  void timerVoid() {
+    if(true){
+      _onRefresh();
+    }
+  }
 
   @override
   void initState() {
-    _searchQuestionTextController.addListener(() {});
-    new Stream.periodic(const Duration(seconds: 5), (v) => v)
-        .listen((count) {
-      setState(() {
-        _onRefresh();
-      });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(widget.pushMessage != null && widget.pushMessage){
+        ArticlesProvider().aboutMoreArticle(articleId: widget.articleId).then((value) {
+          if(value != null){
+            _onOpenMore(context, content: value.content, title: value.title, publishDate: value.publishedOn);
+          }
+        });
+      }
     });
+
+    _searchQuestionTextController.addListener(() {});
+    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => timerVoid());
     super.initState();
   }
 
   Future<void> _onRefresh() async {
     setState(() {
-      print('asd');
       Provider.of<ArticlesProvider>(context, listen: false).getArticles();
     });
   }
@@ -65,11 +82,9 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    await ap.makeAsReadArticle(articleId: item.id.toString());
                     ap.aboutMoreArticle(articleId: item.id).then((value) {
-                      print('+++++++');
-                      print(value.title);
-                      print(value.content);
                     });
                   },
                   child: Container(
@@ -170,12 +185,11 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: InkWell(
-              onTap: () {
-                ap.aboutMoreArticle(articleId: item.id).then((value) {
+              onTap: () async{
+                await ap.makeAsReadArticle(articleId: item.id.toString());
+                ap.aboutMoreArticle(articleId: item.id.toString()).then((value) {
                   if(value != null){
-                    print(value.title);
-                    _onOpenMore(context,
-                        content: value.content, title: value.title, publishDate: value.publishedOn);
+                    _onOpenMore(context, content: value.content, title: value.title, publishDate: value.publishedOn);
                   }
                 });
               },
@@ -264,7 +278,6 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
     return FutureBuilder<List<Articles>>(
         future: ap.getArticles(),
         builder: (context, snapshot) {
-          print(snapshot.data);
           if (snapshot.connectionState == ConnectionState.none)
             return Center(child: CircularProgressIndicator());
           else if (snapshot.hasError)
@@ -403,7 +416,6 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
   }
 
   void _onOpenMore(BuildContext context, {String content, String title, String publishDate}) {
-    print(publishDate);
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     showModalBottomSheet<void>(
@@ -436,7 +448,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
   }
   @override
   void dispose() {
-    ArticlesProvider().dispose();
+    timer.cancel();
     super.dispose();
   }
 }

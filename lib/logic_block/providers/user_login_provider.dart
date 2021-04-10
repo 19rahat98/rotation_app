@@ -111,6 +111,11 @@ class UserLoginProvider with ChangeNotifier {
           _status = Status.LoginFail;
           notifyListeners();
         }
+        else{
+          _errorMessage = decodeData.message;
+          _status = Status.LoginFail;
+          notifyListeners();
+        }
       } else if (result.code == 429) {
         _status = Status.TooManyRequest;
         _errorMessage = decodeData.message;

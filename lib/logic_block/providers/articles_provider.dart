@@ -24,6 +24,69 @@ class ArticlesProvider with ChangeNotifier {
 
   final ArticlesListRepository articlesRepository = ArticlesListRepository();
 
+  Future<Articles> getFirstArticle()async{
+    if(_articlesList.isNotEmpty){
+      for(int i = 0; i < _articlesList.length; i++){
+        try{
+          if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inDays <= 1){
+            if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours <= 1){
+              _articlesList[i].publishedOn = "только что";
+              return _articlesList[i];
+            }
+            else if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours > 1 && DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours < 24){
+              _articlesList[i].publishedOn = "сегодня, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+              return _articlesList[i];
+            }
+            else{
+              _articlesList[i].publishedOn = "вчера, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+              return _articlesList[i];
+            }
+          }
+          else{
+            _articlesList[i].publishedOn = "${DateFormat.MMMd('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+            return _articlesList[i];
+          }
+          //print(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedAt)).inDays);
+        }catch(e){
+          print(e);
+          return _articlesList[i];
+        }
+      }
+    }else{
+      final ResponseApi result = await articlesRepository.articlesFromDB();
+      final List decodeData = result.data['data'];
+      if (result.code == 200) {
+        Iterable _convertList = decodeData;
+        _articlesList = _convertList.map((item) {
+          return Articles.fromJson(item);
+        }).toList();
+        for(int i = 0; i < _articlesList.length; i++){
+          if(_articlesList[i] != null){
+            if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inDays <= 1){
+              if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours <= 1){
+                _articlesList[i].publishedOn = "только что";
+                return _articlesList[i];
+              }
+              else if(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours > 1 && DateTime.now().difference(DateTime.parse(_articlesList[i].publishedOn)).inHours < 24){
+                _articlesList[i].publishedOn = "сегодня, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+                return _articlesList[i];
+              }
+              else{
+                _articlesList[i].publishedOn = "вчера, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+                return _articlesList[i];
+              }
+            }
+            else{
+              _articlesList[i].publishedOn = "${DateFormat.MMMd('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+              return _articlesList[i];
+            }
+            //print(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedAt)).inDays);
+          }
+        }
+      }
+    }
+  }
+
   Future<List<Articles>> getArticles() async {
     final ResponseApi result = await articlesRepository.articlesFromDB();
     final List decodeData = result.data['data'];
@@ -59,14 +122,12 @@ class ArticlesProvider with ChangeNotifier {
     return null;
   }
 
-  Future<MoreAboutArticle> aboutMoreArticle({int articleId}) async {
-    final result =
-        await articlesRepository.aboutMore(id: articleId);
-
+  Future<MoreAboutArticle> aboutMoreArticle({String articleId}) async {
+    final result = await articlesRepository.aboutMore(id: articleId);
     if (result['code'] == 200 && result.isNotEmpty) {
       _article = MoreAboutArticle.fromJson(result['data']);
       notifyListeners();
-      if(_article != null){
+      if(_article != null && _article.publishedOn != null){
         if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inDays <= 1){
           if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inHours <= 1){
             _article.publishedOn = "только что";
@@ -87,6 +148,15 @@ class ArticlesProvider with ChangeNotifier {
     }
     notifyListeners();
     return null;
+  }
+
+  Future<bool> makeAsReadArticle({String articleId}) async{
+    final ResponseApi result = await articlesRepository.markAsReadNews(id: articleId);
+    if(result.code == 200){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   afterSearch(value) {

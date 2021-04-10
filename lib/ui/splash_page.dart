@@ -21,12 +21,12 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   nextPage(){
     final LoginProvider lp = Provider.of<LoginProvider>(context,listen: false);
     NotificationProvider np = Provider.of<NotificationProvider>(context, listen: false);
-    ConversationRatesProvider crp = Provider.of<ConversationRatesProvider>(context, listen: false);
-    crp.getExchangeRate();
-    np.sendFmcTokenToServer();
-    lp.getUserInfo();
+    //crp.getExchangeRate();
     lp.checkSignIn().then((value){
-      print(value);
+      if(value){
+        np.sendFmcTokenToServer();
+        lp.getUserInfo();
+      }
       var page = value == true ? App() : LoginPage();
       Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context) => page));
     });

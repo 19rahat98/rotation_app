@@ -8,6 +8,7 @@ import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
 import vn.hunghd.flutterdownloader.FlutterDownloaderPlugin
 
 class Application : FlutterApplication(), PluginRegistrantCallback {
+
     override fun onCreate() {
         super.onCreate()
         FlutterFirebaseMessagingService.setPluginRegistrant(this);

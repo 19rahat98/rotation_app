@@ -157,7 +157,7 @@ class ReturnedTicketWidget extends StatelessWidget {
                               height: 32,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: Color(0xffC5CAD1)),
+                                  color: Color(0xffFF4242)),
                               child: Center(
                                 child: SvgPicture.asset(
                                   "assets/svg/Returned.svg",
@@ -221,6 +221,7 @@ class ReturnedTicketWidget extends StatelessWidget {
                           width: w * 0.35,
                           child: Text(
                             "${tripData.segments[index].train.depStationName[0].toUpperCase()}${tripData.segments[index].train.depStationName.toLowerCase().substring(1)} - ${tripData.segments[index].train.arrStationName[0].toUpperCase()}${tripData.segments[index].train.arrStationName.toLowerCase().substring(1)}",
+                            maxLines: 1,
                             style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 14,

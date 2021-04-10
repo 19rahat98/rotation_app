@@ -36,6 +36,7 @@ class Employee {
   String docType;
   String docNumber;
   String homeStation;
+  String countryCode;
 
   Employee(
       {this.id,
@@ -52,6 +53,7 @@ class Employee {
         this.docNumber,
         this.homeStation,
         this.orgName,
+        this.countryCode
       });
 
   Employee.fromJson(Map<String, dynamic> json) {
@@ -69,6 +71,7 @@ class Employee {
     docNumber = json['doc_number'];
     homeStation = json['home_station'];
     orgName = json['org_name'];
+    countryCode = json['country_code'];
   }
 
   Map<String, dynamic> toJson() {
@@ -87,6 +90,7 @@ class Employee {
     data['doc_number'] = this.docNumber;
     data['home_station'] = this.homeStation;
     data['org_name'] = this.orgName;
+    data['country_code'] = this.countryCode;
     return data;
   }
 }

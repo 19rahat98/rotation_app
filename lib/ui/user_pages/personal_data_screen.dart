@@ -366,7 +366,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                           validator: (value) {
                             if (value.length > 9) {
                               DateFormat inputFormat = DateFormat("dd/MM/yyyy");
-                              print(value);
                               if (!DateValidator('dd/MM/yyyy', errorText: "")
                                   .isValid(value.replaceAll('.', '/'))) {
                                 return ("Введите корректное значение!");

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,24 +19,26 @@ class TripsPage extends StatefulWidget {
 }
 
 class _TripsPageState extends State<TripsPage> {
-
+  Timer timer;
   LoginProvider lp;
+
+  void timerVoid() {
+    if(true){
+      _onRefresh();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    new Stream.periodic(const Duration(seconds: 30), (v) => v)
-        .listen((count) {
-      setState(() {
-        _onRefresh();
-      });
-    });
+    //timer = Timer.periodic(Duration(seconds: 2), (Timer t) => timerVoid());
     lp = Provider.of<LoginProvider>(context, listen: false);
   }
 
   void _onRefresh(){
-    lp.getEmployeeApplication();
-    setState(() {});
+    setState(() {
+      lp.getEmployeeApplication();
+    });
   }
 
   @override
@@ -144,6 +148,12 @@ class _TripsPageState extends State<TripsPage> {
         }
       },
     );
+  }
+
+  @override
+  void dispose() {
+    //timer.cancel();
+    super.dispose();
   }
 }
 

@@ -203,7 +203,7 @@ class ActiveWidget extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  tripData.businessTripDays != null && tripData.endStation != null ? "на ${tripData.businessTripDays} дней, " + "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}" : "",
+                  tripData.businessTripDays != null && tripData.endStation != null ? "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}" : "",
                   style: TextStyle(fontFamily: "Root",
                       fontSize: 14,
                       color: Color(0xff748595),
@@ -531,6 +531,7 @@ class SingleActiveWidget extends StatelessWidget {
                           width: w * 0.35,
                           child: Text(
                             "${tripData.segments[index].train.depStationName[0].toUpperCase()}${tripData.segments[index].train.depStationName.toLowerCase().substring(1)} - ${tripData.segments[index].train.arrStationName[0].toUpperCase()}${tripData.segments[index].train.arrStationName.toLowerCase().substring(1)}",
+                            maxLines: 1,
                             style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 14,

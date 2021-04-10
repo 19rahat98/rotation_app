@@ -27,7 +27,7 @@ class ResultApiModel {
         success: json['success'] as bool ?? true,
         message: json['message'] as String,
         type: json['type'] as String ?? '',
-        data: json['data'],
+        data: json["data"],
         pagination: json['pagination'],
         attr: json['attr'],
         code: json['code'].toString() ?? 'Unknown',

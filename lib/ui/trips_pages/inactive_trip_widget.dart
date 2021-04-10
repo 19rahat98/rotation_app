@@ -88,16 +88,7 @@ class InactiveTripWidget extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            tripData.shift == 'day' ?
-                            Container(
-                              margin: EdgeInsets.only(right: 5),
-                              child: SvgPicture.asset(
-                                'assets/svg/Moon.svg',
-                                width: 24,
-                                height: 24,
-                                color: AppTheme.nearlyWhite,
-                              ),
-                            ) :
+                            tripData.shift == 'night' ?
                             Container(
                               width: 32,
                               height: 32,
@@ -112,6 +103,14 @@ class InactiveTripWidget extends StatelessWidget {
                                   width: 24,
                                   height: 24,
                                 ),
+                              ),
+                            ) : Container(
+                              margin: EdgeInsets.only(right: 5),
+                              child: SvgPicture.asset(
+                                'assets/svg/Moon.svg',
+                                width: 24,
+                                height: 24,
+                                color: AppTheme.nearlyWhite,
                               ),
                             ),
                             /*tripData.overTime > 0 && tripData.overTime != null ? Container(
@@ -165,7 +164,8 @@ class InactiveTripWidget extends StatelessWidget {
                       fontFamily: "Root",
                       fontSize: 14,
                       color: Color(0xff748595),
-                      fontWeight: FontWeight.w500),
+                      fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -234,14 +234,14 @@ class InactiveTripActionSheet extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text(
+                    /*Text(
                       tripData.businessTripDays != null && tripData.endStation != null ? "на ${tripData.businessTripDays} дней, " + "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}" : "",
                       style: TextStyle(fontFamily: "Root",
                           fontSize: 14,
                           color: Color(0xff748595).withOpacity(0.7),
                           fontWeight: FontWeight.w500),
-                    ),
-                    tripData.shift != 'night'
+                    ),*/
+                    tripData.shift == 'night'
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [

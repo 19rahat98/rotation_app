@@ -18,6 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   var textFieldCtrl = TextEditingController();
+  bool _firstPress = true ;
   Future<Status> _status;
 
   @override
@@ -33,9 +34,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void _login() {
     UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     FocusScope.of(context).requestFocus(new FocusNode());
-    print(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length);
+    print(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
     if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 11) {
-      _status = auth.signInByPhoneNumber(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
+      _status = auth.signInByPhoneNumber(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '')).whenComplete(() => _firstPress = true);
       auth.userPhoneNumber = textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '');
       handleLogin();
     }
@@ -120,9 +121,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       margin: EdgeInsets.only(top: 5),
                                       child: MaskedTextField(
                                         maskedTextFieldController: textFieldCtrl,
-                                        mask: "+ 7(xxx) xxx xx xx ",
-                                        maxLength: 18,
-                                        keyboardType: TextInputType.number,
+                                        mask: "+ 7(xxx) xxx xxxx",
+                                        maxLength: 17,
+                                        keyboardType: TextInputType.phone,
                                         inputDecoration: new InputDecoration(
                                           hintText: '+ 7 (',
                                           hintStyle: TextStyle(
@@ -191,7 +192,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 child: InkWell(
                                   onTap: () {
-                                    _login();
+                                    if(_firstPress){
+                                      _login();
+                                      _firstPress = false;
+                                    }
                                   },
                                   child: Center(
                                     child: Text(

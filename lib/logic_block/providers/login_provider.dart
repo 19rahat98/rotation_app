@@ -77,12 +77,231 @@ class LoginProvider with ChangeNotifier {
       httpManager.baseOptions.headers["Authorization"] = "Bearer " + hasUser;
       notifyListeners();
       final ResponseApi result = await userRepository.getApplication();
-      if (result.code != 200)
-        return false;
-      else
+      if (result.code == 200)
         return true;
+      else
+        return false;
     } else {
       return false;
+    }
+  }
+
+  Future<Application> findApplicationById(String applicationId) async{
+    print(applicationId);
+    if (_data != null && _data.isNotEmpty) {
+      for(Application item in _data){
+        if(item.id == int.parse(applicationId)){
+          return item;
+        }
+      }
+      final ResponseApi result = await userRepository.getApplication(applicationId: applicationId);
+      final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
+      if (result.code == 200) {
+        return Application.fromJson( decodeData.data["data"][0]);
+      }
+      return null;
+    }
+    return null;
+  }
+
+
+  Map<dynamic, dynamic> getStatusApplication(Application item){
+    Map statusCode = Map();
+    if(item.segments != null && item.segments.isNotEmpty){
+      for(int i = 0; i < item.segments.length; i++){
+        if(item.status == "opened" ){
+          if(item.segments[i].status == "opened" && item.segments[i].activeProcess == null){
+            if (statusCode.containsKey('grey')) {
+              statusCode.update('grey', (int) => statusCode['grey'] + 1);
+            }else{
+              statusCode["grey"] = 1;
+            }
+          }
+          else if(item.segments[i].activeProcess == 'watching'){
+            if (statusCode.containsKey('yellow')) {
+              statusCode.update('yellow', (int) => statusCode['yellow']+1);
+            }else{
+              statusCode["yellow"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'issued'){
+            if (statusCode.containsKey('green')) {
+              statusCode.update('red', (int) => statusCode['green']+1);
+            }else{
+              statusCode["green"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'returned'){
+            if (statusCode.containsKey('red')) {
+              statusCode.update('red', (int) => statusCode['red']+1);
+            }else{
+              statusCode["red"] = 1;
+            }
+          }else if(item.segments[i].status == 'canceled'){
+            if (statusCode.containsKey('canceled')) {
+              statusCode.update('canceled', (int) => statusCode['canceled']+1);
+            }else{
+              statusCode.addAll({"canceled": 1});
+            }
+          }
+        }
+        else if(item.status == 'returned'){
+          if((item.segments[i].status == "opened" ) && item.segments[i].activeProcess == null){
+            if (statusCode.containsKey('grey')) {
+              statusCode.update('grey', (int) => statusCode['grey']+1);
+            }else{
+              statusCode.addAll({"grey": 1});
+            }
+          }
+          else if(item.segments[i].activeProcess == 'watching'){
+            if (statusCode.containsKey('yellow')) {
+              statusCode.update('yellow', (int) => statusCode['yellow']+1);
+            }else{
+              statusCode.addAll({"yellow": 1});
+            }
+          }
+          else if(item.segments[i].status == 'issued'){
+            if (statusCode.containsKey('green')) {
+              statusCode.update('red', (int) => statusCode['green']+1);
+            }else{
+              statusCode.addAll({"green": 1});
+            }
+          }
+          else if(item.segments[i].status == 'returned'){
+            if (statusCode.containsKey('red')) {
+              statusCode.update('red', (int) => statusCode['red']+1);
+            }else{
+              statusCode.addAll({"red": 1});
+            }
+          }
+          else if(item.segments[i].status == 'canceled'){
+            if (statusCode.containsKey('canceled')) {
+              statusCode.update('canceled', (int) => statusCode['canceled']+1);
+            }else{
+              statusCode.addAll({"canceled": 1});
+            }
+          }
+        }
+        else if(item.status == 'partly'){
+          if(item.segments[i].status == "opened" && item.segments[i].activeProcess == null){
+            if (statusCode.containsKey('grey')) {
+              statusCode.update('grey', (int) => statusCode['grey']+1);
+            }else{
+              statusCode.addAll({"grey": 1});
+            }
+          }
+          else if(item.segments[i].activeProcess == 'watching'){
+            if (statusCode.containsKey('yellow')) {
+              statusCode.update('yellow', (int) => statusCode['yellow']+1);
+            }else{
+              statusCode.addAll({"yellow": 1});
+            }
+          }
+          else if(item.segments[i].status == 'issued'){
+            if (statusCode.containsKey('green')) {
+              statusCode.update('red', (int) => statusCode['green']+1);
+            }else{
+              statusCode.addAll({"green": 1});
+            }
+          }
+          else if(item.segments[i].status == 'returned' || item.segments[i].status == 'canceled'){
+            if (statusCode.containsKey('red')) {
+              statusCode.update('red', (int) => statusCode['red']+1);
+            }else{
+              statusCode.addAll({"red": 1});
+            }
+          }
+          else if(item.segments[i].status == 'canceled'){
+            if (statusCode.containsKey('canceled')) {
+              statusCode.update('canceled', (int) => statusCode['canceled']+1);
+            }else{
+              statusCode.addAll({"canceled": 1});
+            }
+          }
+        }
+        else if(item.status == 'issued'){
+          if(item.segments[i].status == "opened" && item.segments[i].activeProcess == null){
+            if (statusCode.containsKey('grey')) {
+              statusCode.update('grey', (int) => statusCode['grey']+1);
+            }else{
+              statusCode["grey"] = 1;
+            }
+          }
+          else if(item.segments[i].activeProcess == 'watching'){
+            if (statusCode.containsKey('yellow')) {
+              statusCode.update('yellow', (int) => statusCode['yellow']+1);
+            }else{
+              statusCode["yellow"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'issued'){
+            if (statusCode.containsKey('green')) {
+              statusCode.update('red', (int) => statusCode['green']+1);
+            }else{
+              statusCode["green"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'returned' || item.segments[i].status == 'canceled' ){
+            if (statusCode.containsKey('red')) {
+              statusCode.update('red', (int) => statusCode['red']+1);
+            }else{
+              statusCode["red"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'canceled'){
+            if (statusCode.containsKey('canceled')) {
+              statusCode.update('canceled', (int) => statusCode['canceled']+1);
+            }else{
+              statusCode.addAll({"canceled": 1});
+            }
+          }
+        }
+        else if(item.status == 'canceled'){
+          if(item.segments[i].status == "opened" && item.segments[i].activeProcess == null){
+            if (statusCode.containsKey('grey')) {
+              statusCode.update('grey', (int) => statusCode['grey']+1);
+            }else{
+              statusCode["grey"] = 1;
+            }
+          }
+          else if(item.segments[i].activeProcess == 'watching'){
+            if (statusCode.containsKey('yellow')) {
+              statusCode.update('yellow', (int) => statusCode['yellow']+1);
+            }else{
+              statusCode["yellow"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'issued'){
+            if (statusCode.containsKey('green')) {
+              statusCode.update('red', (int) => statusCode['green']+1);
+            }else{
+              statusCode["green"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'returned' || item.segments[i].status == 'canceled' ){
+            if (statusCode.containsKey('red')) {
+              statusCode.update('red', (int) => statusCode['red']+1);
+            }else{
+              statusCode["red"] = 1;
+            }
+          }
+          else if(item.segments[i].status == 'canceled'){
+            if (statusCode.containsKey('canceled')) {
+              statusCode.update('canceled', (int) => statusCode['canceled']+1);
+            }else{
+              statusCode.addAll({"canceled": 1});
+            }
+          }
+        }
+      }
+      return statusCode;
+    }
+    else if(item.status == 'opened' && item.segments.isEmpty){
+      statusCode = {'all' : 0};
+      return statusCode;
+    }
+    else{
+      return null;
     }
   }
 
@@ -98,7 +317,6 @@ class LoginProvider with ChangeNotifier {
       notifyListeners();
       return _data;
     }
-    notifyListeners();
     return null;
   }
 

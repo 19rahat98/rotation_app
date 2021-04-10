@@ -92,17 +92,8 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            tripData.shift == 'day'
+                            tripData.shift == 'night'
                                 ? Container(
-                                    margin: EdgeInsets.only(right: 5),
-                                    child: SvgPicture.asset(
-                                      'assets/svg/Moon.svg',
-                                      width: 24,
-                                      height: 24,
-                                      color: AppTheme.nearlyWhite,
-                                    ),
-                                  )
-                                : Container(
                                     width: 32,
                                     height: 32,
                                     margin: EdgeInsets.only(right: 5),
@@ -117,6 +108,15 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                                         width: 24,
                                         height: 24,
                                       ),
+                                    ),
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.only(right: 5),
+                                    child: SvgPicture.asset(
+                                      'assets/svg/Moon.svg',
+                                      width: 24,
+                                      height: 24,
+                                      color: AppTheme.nearlyWhite,
                                     ),
                                   ),
                             /*tripData.overTime > 0 && tripData.overTime != null ? Container(
@@ -156,12 +156,11 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                               width: 32,
                               height: 32,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color:
-                                      tripData.segments.first.activeProcess ==
-                                              "watching"
-                                          ? Color(0xffEA9F3F)
-                                          : Color(0xffC5CAD1)),
+                                borderRadius: BorderRadius.circular(50),
+                                color: tripData.segments.first.activeProcess == "watching"
+                                    ? Color(0xffEA9F3F)
+                                    : Color(0xffC5CAD1),
+                              ),
                               child: Center(
                                 child: SvgPicture.asset(
                                   "assets/svg/Train.svg",
@@ -181,6 +180,7 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                   tripData.endStation != null
                       ? "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}"
                       : "",
+                  maxLines: 1,
                   style: TextStyle(
                       fontFamily: "Root",
                       fontSize: 14,
@@ -344,7 +344,7 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-          if (tripData.overTime != 0)
+          /*if (tripData.overTime != 0)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -362,7 +362,7 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            )*/
         ],
       ),
     );

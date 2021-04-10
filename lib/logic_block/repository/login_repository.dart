@@ -26,6 +26,10 @@ class UserRepository {
     return await Api.userInfo();
   }
 
+  Future<dynamic> getEmployeeDocuments() async{
+    return await Api.getEmployeeDocuments();
+  }
+
   ///update usr data
   Future<dynamic> updateUserData(
       {String firstName,
@@ -48,12 +52,23 @@ class UserRepository {
   }
 
   ///Get all employee data
-  Future<dynamic> getApplication() async {
-    final params = {
-      "page": 1,
-      "per_page": 100,
-    };
-    return await Api.getApplication(params);
+  Future<dynamic> getApplication({String applicationId}) async {
+    if(applicationId != null ){
+      final params = {
+        "page": 1,
+        "per_page": 10,
+        "application_id": applicationId,
+      };
+      return await Api.getApplication(params);
+    }else{
+      final params = {
+        "page": 1,
+        "per_page": 10,
+        "order_dir": "desc",
+        "order_by": "id",
+      };
+      return await Api.getApplication(params);
+    }
   }
 
   ///Fetch api login

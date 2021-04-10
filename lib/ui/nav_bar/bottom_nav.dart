@@ -27,15 +27,12 @@ class BottomNavigation extends StatelessWidget {
         fontSize: 11,
         fontWeight: FontWeight.w500,
       ),
-      items: tabs
-          .map(
-            (e) => _buildItem(
+      items: tabs.map((e) => _buildItem(
           index: e.getIndex(),
           icon: e.icon,
           tabName: e.tabName,
         ),
-      )
-          .toList(),
+      ).toList(),
       onTap: (index) => onSelectTab(
         index,
       ),

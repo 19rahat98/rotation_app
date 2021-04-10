@@ -5,8 +5,14 @@ class ArticlesListRepository{
     return await Api.getArticlesList();
   }
 
-  Future<dynamic> aboutMore({int id}) async {
+  Future<dynamic> aboutMore({String id}) async {
     return await Api.aboutMoreArticle(id: id);
   }
+
+   Future<dynamic> markAsReadNews({String id}) async {
+    return await Api.markAsReadNews(idArticle: id);
+  }
+
+
 
 }

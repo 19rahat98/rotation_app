@@ -1,22 +1,23 @@
 import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:rotation_app/ui/trips_pages/on_waiting_list.dart';
 import 'package:rotation_app/ui/trips_pages/returned_ticket.dart';
-import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
 import 'custom_trip_widget.dart';
 import 'inactive_trip_widget.dart';
 import 'tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/trips_pages/active_widget.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
 class ActiveTripsWidget extends StatelessWidget {
   final List<Application> tripsList;
-
   const ActiveTripsWidget({Key key, this.tripsList}) : super(key: key);
+
 
   void _onOpenMore(BuildContext context, {routName}) {
     double h = MediaQuery.of(context).size.height;
@@ -45,20 +46,25 @@ class ActiveTripsWidget extends StatelessWidget {
       },
     );
   }
+  static ScrollController _controller = ScrollController(keepScrollOffset: true);
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.height;
+    Map applicationStatus = Map();
     double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    //lp.getStatusApplication(tripsList.where((element) => DateTime.now().isBefore(DateTime.parse(element))));
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
+          controller: _controller,
           key: GlobalKey(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          children: tripsList.map(
-            (item) {
+          children: tripsList.map((item) {
               if (DateTime.now().isBefore(DateTime.parse(item.date))){
+                item.applicationStatus = lp.getStatusApplication(item);
                 if(item.segments.isEmpty && item.status == "opened"){
                   return InkWell(
                     onTap: () {
@@ -81,22 +87,9 @@ class ActiveTripsWidget extends StatelessWidget {
                     child: SingleCustomDetailsTripWidget(tripData: item),
                   );
                 }
-                /*else if(item.segments.length == 1 && item.status == "returned"){
-                  return InkWell(
-                    onTap: () {
-                      _onOpenMore(context,
-                          routName: ReturnedTicketBottomSheet(
-                            tripData: item,
-                          ));
-                    },
-                    child: ReturnedTicketWidget(tripData: item),
-                  );
-                }*/
                 else if(item.segments.length == 1 && item.status == "issued"){
                   return InkWell(
                     onTap: () {
-                      print(item.segments.first.status);
-                      print(item.id);
                       _onOpenMore(context,
                           routName: TicketsBottomSheet(
                             tripData: item,
@@ -105,11 +98,12 @@ class ActiveTripsWidget extends StatelessWidget {
                     child: SingleActiveWidget(tripData: item),
                   );
                 }
-                else if(item.segments.length > 1 && (item.segments.first.status != "returned" && item.segments[1].status != "returned" && item.segments.first.status != "canceled" && item.segments[1].status != "canceled")){
+                else if(item.segments.isNotEmpty && item.segments.length > 1 && !(item.applicationStatus.length == 1 && item.applicationStatus.containsKey('red'))){
                   return InkWell(
                     onTap: () {
-                      print(item.id);
-                      _onOpenMore(context,
+                      print(item.applicationStatus);
+                      _onOpenMore(
+                          context,
                           routName: CustomTripSheet(
                             tripData: item,
                           ),
@@ -119,7 +113,6 @@ class ActiveTripsWidget extends StatelessWidget {
                   );
                 }
                 else{
-                  print(item.id);
                   return Container();
                 }
               }

@@ -28,6 +28,7 @@ class Application {
   String productKey;
   int overTime;
   List<Segments> segments;
+  Map applicationStatus;
 
   Application(
       {this.id,
@@ -58,7 +59,15 @@ class Application {
         this.endStation,
         this.productKey,
         this.overTime,
-        this.segments});
+        this.segments,
+        this.applicationStatus,
+      });
+
+
+  @override
+  String toString() {
+    return 'Application: {id: ${id}, userId: ${userId}, startStation: ${startStation}, endStation: ${endStation}, age: ${endStation},   segments: ${segments},  }';
+  }
 
   Application.fromJson(Map<String, dynamic> json) {
     id = json['id'];

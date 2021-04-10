@@ -1,15 +1,29 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/logic_block/models/articles_model.dart';
+import 'package:rotation_app/logic_block/models/notification_item.dart';
+import 'package:rotation_app/logic_block/providers/articles_provider.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/ui/home_pages/widgets/push_notification_list_widget.dart';
 
 
 import 'package:rotation_app/ui/nav_bar/tab_item.dart';
 import 'package:rotation_app/ui/nav_bar/bottom_nav.dart';
 import 'package:rotation_app/ui/home_pages/home_page.dart';
+import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
+import 'package:rotation_app/ui/support_pages/press_service_screen.dart';
+import 'package:rotation_app/ui/support_pages/social_media_widget.dart';
+import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
 import 'package:rotation_app/ui/trips_pages/trips_screen.dart';
 import 'package:rotation_app/ui/support_pages/support_screen.dart';
 import 'package:rotation_app/ui/user_pages/user_profile_screen.dart';
 import 'package:rotation_app/ui/user_pages/notifications_list_screen.dart';
+import 'package:rotation_app/ui/widgets/emptyPage.dart';
 
 class App extends StatefulWidget {
   @override
@@ -20,15 +34,38 @@ class AppState extends State<App> {
   static int currentTab = 0;
   final _firebaseMessaging = FirebaseMessaging();
 
-  void _fcmHandle() async {
-    print('testtest');
 
-    _firebaseMessaging.requestNotificationPermissions();
+
+  static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
+
+    print('myBackgroundMessageHandler');
+    /*if (message.containsKey('data')) {
+      print(message);
+      // Handle data message
+      final dynamic data = message['data'];
+    }
+
+    if (message.containsKey('notification')) {
+      // Handle notification message
+      print(message);
+      print(message['notification']);
+      print(message['data']);
+      final dynamic notification = message['notification'];
+    }*/
+    return null;
+    // Or do other work.
+  }
+
+  void _fcmHandle() async {
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings(sound: true, badge: true, alert: true));
+    }
+    //_firebaseMessaging.requestNotificationPermissions(const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        _navigateToItemDetail(message);
-      },
+      onBackgroundMessage: myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         _navigateToItemDetail(message);
@@ -37,29 +74,194 @@ class AppState extends State<App> {
         print("onResume: $message");
         _navigateToItemDetail(message);
       },
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        _navigateToItemDetail(message);
+      },
+
     );
   }
 
+  void _onOpenMore(BuildContext context, String id, String type) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    ArticlesProvider ap = Provider.of<ArticlesProvider>(context, listen: false);
+    showModalBottomSheet<void>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        if(type == "application" || type == "ticket" ){
+          return FutureBuilder<Application>(
+              future: lp.findApplicationById(id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.none)
+                  return Container(
+                  width: w,
+                  constraints: new BoxConstraints(
+                    maxHeight: h * 0.9,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                  ),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+                else if(snapshot.data != null){
+                  return Container(
+                    width: w,
+                    constraints: new BoxConstraints(
+                      maxHeight: h * 0.90,
+                      minHeight: h * 0.80,
+                    ),
+                    //height: h * 0.90,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: CustomTripSheet(tripData: snapshot.data,),
+                  );
+                }
+                else if (snapshot.hasError){
+                  Navigator.pop(context);
+                  return Container();
+                }
+                else return Container(
+                    width: w,
+                    constraints: new BoxConstraints(
+                      maxHeight: h * 0.9,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+              }
+          );
+        }
+        else if(type == 'article'){
+          return FutureBuilder<MoreAboutArticle>(
+              future: ap.aboutMoreArticle(articleId: id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.none)
+                  return Container(
+                    width: w,
+                    constraints: new BoxConstraints(
+                      maxHeight: h * 0.9,
+                      minHeight: h * 0.80,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                else if(snapshot.data != null){
+                  return Container(
+                    width: w,
+                    constraints: new BoxConstraints(
+                      maxHeight: h * 0.9,
+                      minHeight: h * 0.80,
+                    ),
+                    //height: h * 0.90,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: MoreArticleWidget(
+                      title: snapshot.data.title,
+                      articleText: snapshot.data.content,
+                      informationDate: snapshot.data.publishedOn,),
+                  );
+                }
+                else if (snapshot.hasError){
+                  Navigator.pop(context);
+                  return Container();
+                }
+                else return Container(
+                    width: w,
+                    constraints: new BoxConstraints(
+                      maxHeight: h * 0.9,
+                    ),
+                    //height: h * 0.90,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
+                    ),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+              }
+          );
+        }
+        else return Container();
+      },
+    );
+  }
 
   final Map<String, Item> _items = <String, Item>{};
-  Item _itemForMessage(Map<String, dynamic> message) {
+  Item _itemForMessage(Map<String, dynamic> message, BuildContext context) {
     final dynamic data = message['data'] ?? message;
     final String itemId = data['id'];
+    if(data['type'] == 'article'){
+      final Item item = _items.putIfAbsent(itemId, () => Item(itemId: itemId))
+        .._contentAvailable = data['content_available']
+        .._priority = data['priority']
+        .._type = data['type']
+        .._id = data['id']
+        .._isImportant = data['is_important']
+        .._content = data['content']
+        .._title = data['title'];
+      return item;
+    }
+    else if(data['type'] == "application" || data['type'] == "ticket" ){}
     final Item item = _items.putIfAbsent(itemId, () => Item(itemId: itemId))
       .._contentAvailable = data['content_available']
       .._priority = data['priority']
       .._type = data['type']
-      //.._segmentId = data['segment_id']
-      //.._isImportant = data['is_important']
+      .._applicationId = data['application_id']
+      //.._segmentId = data['application_id']
+      .._isImportant = data['is_important']
       .._content = data['content']
       .._title = data['title'];
     return item;
   }
 
   void _navigateToItemDetail(Map<String, dynamic> message) {
-    final Item item = _itemForMessage(message);
+    final Item item = _itemForMessage(message, context);
     Navigator.popUntil(context, (Route<dynamic> route) => route is PageRoute);
-    if(Navigator.canPop(context)){
+    if(item._type == "application" || item._type == "ticket" ){
+      showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => NotificationBottomSheet(onPressed:() { Navigator.pop(context); _onOpenMore(context, item._applicationId, item._type);}, contentAvailable: item._contentAvailable, isImportant: item._isImportant, type: item._type, orderId: item._applicationId, title: item._title, content: item._content,));
+      //_onOpenMore(context, item._applicationId);
+    }
+    else if(item._type == 'article'){
+      showCupertinoModalPopup<void>(
+          context: context,
+          builder: (BuildContext context) => NotificationBottomSheet(onPressed:() { Navigator.pop(context); _onOpenMore(context, item._id, item._type);}, contentAvailable: item._contentAvailable, isImportant: item._isImportant, type: item._type, orderId: item._applicationId, title: item._title, content: item._content,));
+    }
+    else if(Navigator.canPop(context)){
       Navigator.pop(context);
       Navigator.push(context, item.route);
     }
@@ -68,6 +270,7 @@ class AppState extends State<App> {
     }
     else{
       Navigator.push(context, item.route);
+      //Navigator.of(context, rootNavigator: false).push(item.route);
     }
   }
 
@@ -133,8 +336,6 @@ class AppState extends State<App> {
 
           if (currentTab != 0) {
             // select 'main' tab
-            print('currentTab');
-
             _selectTab(0);
             // back button handled by app
             return false;
@@ -183,6 +384,13 @@ class Item {
     _controller.add(this);
   }
 
+  String _id;
+  String get id => _contentAvailable;
+  set id(String value) {
+    _id = value;
+    _controller.add(this);
+  }
+
   String _priority;
   String get priority => _priority;
   set priority(String value) {
@@ -197,6 +405,14 @@ class Item {
     _controller.add(this);
   }
 
+  String _applicationId;
+  String get applicationId => _applicationId;
+  set applicationId(String value) {
+    _applicationId = value;
+    _controller.add(this);
+  }
+
+
   int _segmentId;
   int get segmentId => _segmentId;
   set segmentId(int value) {
@@ -204,9 +420,9 @@ class Item {
     _controller.add(this);
   }
 
-  bool _isImportant;
-  bool get isImportant => _isImportant;
-  set isImportant(bool value) {
+  String _isImportant;
+  String get isImportant => _isImportant;
+  set isImportant(String value) {
     _isImportant = value;
     _controller.add(this);
   }
@@ -233,13 +449,45 @@ class Item {
     final String routeName = '/detail/$itemId';
     print(routes);
     routes.clear();
-    return routes.putIfAbsent(
-      routeName,
-          () => MaterialPageRoute<void>(
+    if(_type == "ticket" || _type == "application"){
+      print('ticket test');
+      print(_applicationId);
+      /*return routes.putIfAbsent(
+        routeName, () => MaterialPageRoute<void>(
         settings: RouteSettings(name: routeName),
-        builder: (BuildContext context) => NotificationsListScreen(itsAction: true, contentAvailable: _contentAvailable, priority: _priority, type: _type, orderId: itemId, segmentId: _segmentId, isImportant: _isImportant, content: _content, title: _title,),
+        builder: (BuildContext context) => HomePage(pushMessage: true, applicationId: _applicationId,),
         //builder: (BuildContext context) => NotificationsListScreen(),
-      ),
-    );
+        ),
+      );*/
+    }
+    else if(_type == "article"){
+      return routes.putIfAbsent(routeName, () => MaterialPageRoute<void>(
+          settings: RouteSettings(name: routeName),
+          builder: (BuildContext context) => PressServiceScreen(
+            pushMessage: true,
+            articleId: _id,
+          ),
+        ),
+      );
+    }
+    else{
+      return routes.putIfAbsent(routeName, () => MaterialPageRoute<void>(
+          settings: RouteSettings(name: routeName),
+          builder: (BuildContext context) => NotificationsListScreen(
+            itsAction: true,
+            contentAvailable: _contentAvailable,
+            priority: _priority,
+            type: _type,
+            orderId: itemId,
+            segmentId: _segmentId,
+            isImportant: _isImportant,
+            content: _content,
+            title: _title,
+          ),
+          //builder: (BuildContext context) => NotificationsListScreen(),
+        ),
+      );
+    }
+
   }
 }

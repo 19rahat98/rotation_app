@@ -8,6 +8,7 @@ import 'package:flutter_html/flutter_html.dart';
 
 import 'package:rotation_app/config/app+theme.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/ui/trips_pages/active_widget.dart';
 import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
 import 'package:rotation_app/ui/trips_pages/inactive_trip_widget.dart';
@@ -23,12 +24,13 @@ class NearestTripWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map applicationStatus = Map();
     double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
     if(tripsList != null && tripsList.isNotEmpty){
-      print(tripsList.length);
       for(int i = 0; i < tripsList.length; i++){
         if (DateTime.now().isBefore(DateTime.parse(tripsList[i].date))) {
-          print(tripsList[i].date);
+          tripsList[i].applicationStatus = lp.getStatusApplication(tripsList[i]);
           /*if(tripsList[i].segments.isEmpty && tripsList[i].status == "opened"){
             return InkWell(
               onTap: () {
@@ -75,13 +77,14 @@ class NearestTripWidget extends StatelessWidget {
             );
           }
           else if(tripsList[i].segments.length > 1 && (tripsList[i].status == 'issued' || (tripsList[i].status == 'opened' && (tripsList[i].segments.first.activeProcess == "watching" || tripsList[i].segments[1].activeProcess == "watching")) || tripsList[i].status == 'partly')){
+            applicationStatus = lp.getStatusApplication(tripsList[i]);
             return InkWell(
               onTap: () {
-                print(tripsList[i].id);
                 _onOpenMore(context,
                     routName: CustomTripSheet(
                       tripData: tripsList[i],
-                    ));
+                    ),
+                );
               },
               child: CustomTripPage(tripData: tripsList[i]),
             );

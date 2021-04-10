@@ -21,11 +21,32 @@ class Api {
   static const String GET_CONVERSATION_USD = "https://v6.exchangerate-api.com/v6/da783f775edf8a75a7afc001/latest/USD";
   static const String UPDATE_USER_DATA = "/employees/update-data";
   static const String GET_USER_INFO = "/employees/info";
+  static const String GET_EMPLOYEE_DOCUMENTS = "employees/get-documents";
   static const String UPDATE_USER_DOCUMENT = "/employees/update-document";
   static const String SEND_FMC_TOKEN = "/employees/fix";
+  static const String GET_NOTIFICATION_LIST = "/notifications";
+  static const String MARK_AS_READ_NEWS = "/mark-as-read";
+
+
 
   static Future<dynamic> sendFmcTokenToServer(params) async{
     final result = await httpManager.post(url: SEND_FMC_TOKEN, data: params);
+    return ResponseApi.fromJson(result);
+  }
+
+
+  static Future<dynamic> getEmployeeDocuments() async{
+    final result = await httpManager.get(url: GET_EMPLOYEE_DOCUMENTS);
+    return ResponseApi.fromJson(result);
+  }
+
+  static Future<dynamic> markAsReadNews({String idArticle}) async{
+    final result = await httpManager.post(url: GET_MORE_ABOUT_ARTICLE + idArticle + MARK_AS_READ_NEWS);
+    return ResponseApi.fromJson(result);
+  }
+
+  static Future<dynamic> getNotificationList() async{
+    final result = await httpManager.get(url: GET_NOTIFICATION_LIST);
     return ResponseApi.fromJson(result);
   }
 
@@ -58,9 +79,9 @@ class Api {
     return Map<String, dynamic>.from(jsonDecode(result.body));
   }
 
-  static Future<dynamic> aboutMoreArticle({int id}) async{
+  static Future<dynamic> aboutMoreArticle({String id}) async{
     final result = await httpManager.get(
-        url: GET_MORE_ABOUT_ARTICLE + id.toString(),
+        url: GET_MORE_ABOUT_ARTICLE + id,
     );
     return result;
   }
@@ -78,6 +99,7 @@ class Api {
 
   /// GET all data about trips and user
   static Future<dynamic> getApplication(params) async {
+    //sprint(httpManager.baseOptions.headers['Authorization']);
     final result = await httpManager.get(url: GET_APPLICATION, params: params);
     return ResponseApi.fromJson(result);
   }

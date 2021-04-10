@@ -1,16 +1,19 @@
 import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
-import 'package:rotation_app/ui/trips_pages/returned_ticket.dart';
-import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+
 
 import 'inactive_trip_widget.dart';
 import 'tickets_bottom_sheet.dart';
 import 'package:rotation_app/ui/trips_pages/active_widget.dart';
+import 'package:rotation_app/ui/trips_pages/returned_ticket.dart';
+import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
 class ArchiveTrips extends StatelessWidget{
   final List<Application> tripsList;
@@ -50,6 +53,8 @@ class ArchiveTrips extends StatelessWidget{
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    Map applicationStatus = Map();
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
@@ -57,11 +62,11 @@ class ArchiveTrips extends StatelessWidget{
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: tripsList.map((item) {
-            if (DateTime.now().isAfter(DateTime.parse(item.date)) || ((item.segments.first.status == "returned" || item.segments[1].status == "returned" || item.segments.first.status == "canceled" || item.segments[1].status == "canceled"))) {
+            applicationStatus = lp.getStatusApplication(item);
+            if (DateTime.now().isAfter(DateTime.parse(item.date)) || (!applicationStatus.containsKey('all') && !applicationStatus.containsKey('grey') && !applicationStatus.containsKey('green') && !applicationStatus.containsKey('yellow'))) {
               if(item.segments.isEmpty && item.status == "opened"){
                 return InkWell(
                   onTap: () {
-                    print(item.id);
                     showCupertinoModalPopup(
                         context: context,
                         builder: (BuildContext context) =>
@@ -73,8 +78,6 @@ class ArchiveTrips extends StatelessWidget{
               else if(item.segments.length == 1 && item.status == "opened"){
                 return InkWell(
                   onTap: () {
-                    print(item.id);
-
                     _onOpenMore(context,
                         routName: WithDetailsTripSheet(
                           tripData: item,
@@ -86,8 +89,7 @@ class ArchiveTrips extends StatelessWidget{
               else if(item.segments.length == 1 && item.status == "returned" || item.segments.length == 1 && item.status == "canceled"){
                 return InkWell(
                   onTap: () {
-                    print(item.id);
-                  _onOpenMore(context,
+                    _onOpenMore(context,
                         routName: ReturnedTicketBottomSheet(
                           tripData: item,
                         ));
@@ -98,8 +100,7 @@ class ArchiveTrips extends StatelessWidget{
               else if(item.segments.length == 1 && item.status == "issued"){
                 return InkWell(
                   onTap: () {
-                    print(item.id);
-                  _onOpenMore(context,
+                    _onOpenMore(context,
                         routName: TicketsBottomSheet(
                           tripData: item,
                         ));
@@ -110,30 +111,22 @@ class ArchiveTrips extends StatelessWidget{
               else if(item.segments.length > 1 ){
                 return InkWell(
                   onTap: () {
-                    print(item.id);
-                    print(item.id);
                     _onOpenMore(context,
-                        routName: CustomTripSheet(
-                          tripData: item,
-                        ),
+                      routName: CustomTripSheet(
+                        tripData: item,
+                      ),
                     );
                   },
                   child: CustomTripPage(tripData: item),
                 );
               }
               else{
-                print(item.id);
-                return Container(
-                  width: w,
-                  height: 50,
-                  color: Colors.red,
-                );
+                return Container();
               }
             }
             else{
               return Container();
             }
-
               /*if (item.status == "opened" && item.segments.isEmpty) {
                 return InkWell(
                   onTap: () {
