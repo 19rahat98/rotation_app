@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:ui';
 import 'dart:isolate';
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
@@ -55,6 +58,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
 
   @override
   void initState() {
+    print(widget.tripData.id);
     super.initState();
     statusCode();
   }
@@ -1096,6 +1100,38 @@ class CustomTripSheet extends StatefulWidget {
 class _CustomTripSheetState extends State<CustomTripSheet> {
   int _totalPrice = 0;
 
+  Dio dio = Dio();
+
+  Future download2(Dio dio, String url, String savePath) async {
+    try {
+      Response response = await dio.get(
+        url,
+        onReceiveProgress: showDownloadProgress,
+        //Received data with List<int>
+        options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+            validateStatus: (status) {
+              return status < 500;
+            }),
+      );
+      print(response.headers);
+      File file = File(savePath);
+      var raf = file.openSync(mode: FileMode.write);
+      // response.data is List<int> type
+      raf.writeFromSync(response.data);
+      await raf.close();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void showDownloadProgress(received, total) {
+    if (total != -1) {
+      print((received / total * 100).toStringAsFixed(0) + "%");
+    }
+  }
+
   void _calculateTicketPrice() {
     if (widget.tripData.segments.isNotEmpty) {
       for (int i = 0; i < widget.tripData.segments.length; i++) {
@@ -1184,8 +1220,21 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Container(
+                        width: w * 0.40,
+                        margin: EdgeInsets.only(bottom: 2),
+                        child: Text(
+                          "Заявка №${widget.tripData.id}",
+                          style: TextStyle(
+                            fontFamily: "Root",
+                            fontSize: 14,
+                            color: Color(0xff0C2B4C),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 6),
+                        padding: EdgeInsets.only(bottom: 2),
                         child: Row(
                           children: [
                             Text(
@@ -1194,10 +1243,11 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                   ? 'На вахту, '
                                   : 'Домой, ',
                               style: TextStyle(
-                                  fontFamily: "Root",
-                                  fontSize: 22,
-                                  color: Color(0xff0C2B4C),
-                                  fontWeight: FontWeight.bold),
+                                fontFamily: "Root",
+                                fontSize: 22,
+                                color: Color(0xff0C2B4C),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Text(
                               DateFormat.MMMd('ru')
@@ -1215,50 +1265,58 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: w * 0.45,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(right: 4.0),
                             child: Text(
-                      "В ${widget.tripData.endStation[0].toUpperCase()}${widget.tripData.endStation.toLowerCase().substring(1)}. " + durationToString().toString() + " в пути",
+                              "В ${widget.tripData.endStation[0].toUpperCase()}${widget.tripData.endStation.toLowerCase().substring(1)}. " + durationToString().toString() + " в пути",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff748595).withOpacity(0.7),
+                              ),
+                            ),
+                          ),
+                          if(widget.tripData.shift == 'night')
+                          SvgPicture.asset(
+                            "assets/svg/Moon.svg",
+                          ),
+                          if(widget.tripData.shift == 'night')
+                            Padding(
+                            padding: EdgeInsets.only(left: 5.0),
+                            child:  Text(
+                              'Ночная смена',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontFamily: "Root",
-                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: Color(0xff748595).withOpacity(0.7),
-                              ),
+                                  fontSize: 14,
+                                  color: Color(0xff748595)
+                                      .withOpacity(0.7)),
                             ),
                           ),
-                          widget.tripData.shift == 'night'
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/svg/Moon.svg",
-                                    ),
-                                    Container(
-                                      width: w * 0.3,
-                                      child: Text(
-                                        'Ночная смена',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontFamily: "Root",
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color: Color(0xff748595)
-                                                .withOpacity(0.7)),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Container(),
                         ],
                       ),
                     ],
                   ),
-                  GestureDetector(
+                  IconButton(
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.all(0.0),
+                    icon: Icon(
+                      Icons.close,
+                      size: 24,
+                      color: Color(0xff748595),
+                    ),
+                  ),
+                  /*GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -1270,7 +1328,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                         color: Color(0xff748595),
                       ),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             ),
@@ -1293,7 +1351,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            if((widget.tripData.segments[index].status == "opened" && widget.tripData.segments[index].activeProcess == null) || widget.tripData.segments[index].status == "canceled")
+                            if((widget.tripData.segments[index].status == "opened" && (widget.tripData.segments[index].activeProcess == null || widget.tripData.segments[index].activeProcess == "booking" )) || widget.tripData.segments[index].status == "canceled")
                               Column(
                               children: [
                                 widget.tripData.productKey == "rail"
@@ -2658,42 +2716,31 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
               ),
               child: InkWell(
                 onTap: () async {
-                  if(widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.ticketUrl != null){
+                  if (widget.tripData.segments.first.ticket != null &&
+                      widget.tripData.segments.first.ticket.ticketUrl != null) {
                     final status = await Permission.storage.request();
 
                     if (status.isGranted) {
-                      final externalDir = await getExternalStorageDirectory();
+                      var tempDir = await getTemporaryDirectory();
+                      String fullPath = tempDir.path + "/boo2.pdf'";
+                      print('full path ${fullPath}');
 
-                      final id = await FlutterDownloader.enqueue(
-                        url: widget.tripData.segments.first.ticket.ticketUrl,
-                        savedDir: externalDir.path,
-                        fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
-                        ).toString().replaceAll('.', ',')}",
-                        showNotification: true,
-                        openFileFromNotification: true,
-                      );
+                      download2(dio, widget.tripData.segments.first.ticket.ticketUrl, fullPath).whenComplete(() {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PDFScreen(
+                              path: fullPath,
+                              title:
+                              "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(
+                                DateTime.parse(widget.tripData.segments[0]
+                                    .train.depDateTime),
+                              ).toString()}",
+                            ),
+                          ),
+                        );
+                      });
                     }
-                    else if(widget.tripData.segments[1].ticket != null && widget.tripData.segments[1].ticket.ticketUrl != null){
-                      final status = await Permission.storage.request();
-
-                      if (status.isGranted) {
-                      final externalDir = await getExternalStorageDirectory();
-
-                      final id = await FlutterDownloader.enqueue(
-                        url: widget.tripData.segments.first.ticket.ticketUrl,
-                        savedDir: externalDir.path,
-                        fileName: "Билет ${widget.tripData.segments[1].train.depStation} - ${widget.tripData.segments[1].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[1].train.depDateTime),).toString().replaceAll('.', ',')}",
-                        showNotification: true,
-                        openFileFromNotification: true,
-                      );
-                    }
-                    else {
-                      print("Permission deined");
-                      }
-                    }
-                  }
-                  else{
-                    print("Ticket not found");
                   }
                 },
                 child: widget.tripData.segments.first.status == "issued" ?

@@ -154,9 +154,23 @@ class NotificationProvider with ChangeNotifier{
 
   Future<bool> sendFmcTokenToServer() async {
     final _token = await fcm.getToken();
-    Map<String, dynamic> _params ={
-      "token": _token
-    };
+    Map<String, dynamic> _params;
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) { // import 'dart:io'
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      _params ={
+        "token": _token,
+        'device_type': iosInfo.utsname.machine,
+      };
+    } else {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      _params ={
+        "token": _token,
+        'device_type': androidInfo.model,
+        'devise_os': 'android ' + androidInfo.version.release,
+      };
+    }
+
     print(_token);
     final SharedPreferences prefs = await _prefs;
     final _userToken = prefs.getString("userToken");
@@ -164,6 +178,7 @@ class NotificationProvider with ChangeNotifier{
     httpManager.baseOptions.headers["Authorization"] = "Bearer " + _userToken;
     final ResponseApi result = await fmcNotificationProvider.sendToken(_params);
     print(_token);
+    print(_params);
     if(result.code == 200){
       return true;
     }

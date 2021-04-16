@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 import 'dart:isolate';
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,6 +25,37 @@ class TicketsBottomSheet extends StatefulWidget {
 
 class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
   int _totalPrice = 0;
+  Dio dio = Dio();
+
+  Future download2(Dio dio, String url, String savePath) async {
+    try {
+      Response response = await dio.get(
+        url,
+        onReceiveProgress: showDownloadProgress,
+        //Received data with List<int>
+        options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+            validateStatus: (status) {
+              return status < 500;
+            }),
+      );
+      print(response.headers);
+      File file = File(savePath);
+      var raf = file.openSync(mode: FileMode.write);
+      // response.data is List<int> type
+      raf.writeFromSync(response.data);
+      await raf.close();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void showDownloadProgress(received, total) {
+    if (total != -1) {
+      print((received / total * 100).toStringAsFixed(0) + "%");
+    }
+  }
 
   void _calculateTicketPrice() {
     if (widget.tripData.segments.isNotEmpty) {
@@ -663,34 +696,32 @@ class _TicketsBottomSheetState extends State<TicketsBottomSheet> {
               ),
               child: InkWell(
                 onTap: () async {
-                  if(widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.ticketUrl != null){
+                  if (widget.tripData.segments.first.ticket != null &&
+                      widget.tripData.segments.first.ticket.ticketUrl != null) {
                     final status = await Permission.storage.request();
-                    String path = await ExtStorage.getExternalStoragePublicDirectory(
-                        ExtStorage.DIRECTORY_DOWNLOADS);
+
                     if (status.isGranted) {
-                      FlutterDownloader.enqueue(
-                        url: widget.tripData.segments.first.ticket.ticketUrl,
-                        savedDir: path,
-                        fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
-                        ).toString()}",
-                        showNotification: true,
-                        openFileFromNotification: true,
-                      ).whenComplete(() {
+                      var tempDir = await getTemporaryDirectory();
+                      String fullPath = tempDir.path + "/test2.pdf'";
+                      print('full path: ${fullPath}');
+
+                      download2(dio, "", fullPath).whenComplete(() {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PDFScreen(path: path, title: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
-                            ).toString()}",),
+                            builder: (context) => PDFScreen(
+                              path: fullPath,
+                              title:
+                              "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(
+                                DateTime.parse(widget.tripData.segments[0]
+                                    .train.depDateTime),
+                              ).toString()}",
+                            ),
                           ),
                         );
                       });
-                    } else {
-                      print("Permission deined");
                     }
-                  }else{
-                    print("Ticket not found");
                   }
-
                 },
                 child: Center(
                     child: Text(

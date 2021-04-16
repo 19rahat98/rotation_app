@@ -1,10 +1,18 @@
+import 'dart:io';
+import 'dart:ui';
+import 'dart:isolate';
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ext_storage/ext_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
 import 'package:rotation_app/config/app+theme.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/ui/pdf_viewer.dart';
 
 class SingleCustomDetailsTripWidget extends StatelessWidget {
   final Application tripData;
@@ -207,11 +215,21 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                       children: [
                         tripData.segments[index].icon != null &&
                                 tripData.segments[index].icon.isNotEmpty
-                            ? Image(
-                                image:
-                                    NetworkImage(tripData.segments[index].icon),
-                                width: 31,
-                                height: 22,
+                            ? Container(
+                              width: 22,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image.network(
+                                    tripData.segments[index].icon,
+                                    colorBlendMode: BlendMode.color,
+                                    color: Colors.grey,
+                                    fit: BoxFit.fill,
+                                  ),
+                              ),
                               )
                             : SvgPicture.asset(
                                 "assets/svg/avia-bekair.svg",
@@ -379,6 +397,43 @@ class WithDetailsTripSheet extends StatefulWidget {
 }
 
 class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
+
+  Dio dio = Dio();
+
+  Future<bool> download2(Dio dio, String url, String savePath) async {
+    try {
+      Response response = await dio.get(
+        url,
+        onReceiveProgress: showDownloadProgress,
+        //Received data with List<int>
+        options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+            validateStatus: (status) {
+              return status < 500;
+            }),
+      ).whenComplete(() {
+        return true;
+      });
+      print(response.headers);
+      File file = File(savePath);
+      var raf = file.openSync(mode: FileMode.write);
+      // response.data is List<int> type
+      raf.writeFromSync(response.data);
+      await raf.close();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  void showDownloadProgress(received, total) {
+    if (total != -1) {
+      print((received / total * 100).toStringAsFixed(0) + "%");
+    }
+  }
+
   String durationToString() {
     int minutes = 0;
     initializeDateFormatting();
@@ -420,104 +475,132 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
         padding: EdgeInsets.symmetric(vertical: 25, horizontal: 16),
         child: Column(
           children: [
-            Container(
-              margin: EdgeInsets.only(bottom: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 6),
-                        child: Row(
+            InkWell(
+              onTap: ()async{
+                Directory documents = await getApplicationDocumentsDirectory();
+                final status = await Permission.storage.request();
+                if (status.isGranted) {
+                  var tempDir = await getTemporaryDirectory();
+                  String fullPath = tempDir.path + "/test44.pdf";
+                  print('full path: ${fullPath}');
+
+                  download2(dio, "https://tmp.ptravels.kz/download-print/32460/issue", fullPath).then((value) {
+                    if(value){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PDFScreen(
+                            path: '/data/user/0/kz.iitu.rotation_app/cache/test44.pdf',
+                            title:
+                            "Билет",
+                          ),
+                        ),
+                      );
+                    }else{
+                      print('error');
+                    }
+                  });
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.only(bottom: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 6),
+                          child: Row(
+                            children: [
+                              Text(
+                                widget.tripData.direction != null &&
+                                        widget.tripData.direction == "to-work"
+                                    ? 'На вахту, '
+                                    : 'Домой, ',
+                                style: TextStyle(
+                                    fontFamily: "Root",
+                                    fontSize: 22,
+                                    color: Color(0xff0C2B4C),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                DateFormat.MMMd('ru')
+                                    .format(DateTime.parse(widget.tripData.date))
+                                    .toString()
+                                    .replaceAll('.', ''),
+                                style: TextStyle(
+                                    fontFamily: "Root",
+                                    fontSize: 22,
+                                    color: Color(0xff0C2B4C),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              widget.tripData.direction != null &&
-                                      widget.tripData.direction == "to-work"
-                                  ? 'На вахту, '
-                                  : 'Домой, ',
-                              style: TextStyle(
-                                  fontFamily: "Root",
-                                  fontSize: 22,
-                                  color: Color(0xff0C2B4C),
-                                  fontWeight: FontWeight.bold),
+                            Container(
+                              width: w * 0.45,
+                              child: Text(
+                                "В ${widget.tripData.endStation[0].toUpperCase()}${widget.tripData.endStation.toLowerCase().substring(1)}. " +
+                                    durationToString().toString() +
+                                    " в пути",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontFamily: "Root",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff748595).withOpacity(0.7)),
+                              ),
                             ),
-                            Text(
-                              DateFormat.MMMd('ru')
-                                  .format(DateTime.parse(widget.tripData.date))
-                                  .toString()
-                                  .replaceAll('.', ''),
-                              style: TextStyle(
-                                  fontFamily: "Root",
-                                  fontSize: 22,
-                                  color: Color(0xff0C2B4C),
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            widget.tripData.shift == 'night'
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/svg/Moon.svg",
+                                      ),
+                                      Container(
+                                        width: w * 0.3,
+                                        child: Text(
+                                          'Ночная смена',
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontFamily: "Root",
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                              color: Color(0xff748595)
+                                                  .withOpacity(0.7)),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
                           ],
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: w * 0.45,
-                            child: Text(
-                              "В ${widget.tripData.endStation[0].toUpperCase()}${widget.tripData.endStation.toLowerCase().substring(1)}. " +
-                                  durationToString().toString() +
-                                  " в пути",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontFamily: "Root",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xff748595).withOpacity(0.7)),
-                            ),
-                          ),
-                          widget.tripData.shift == 'night'
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/svg/Moon.svg",
-                                    ),
-                                    Container(
-                                      width: w * 0.3,
-                                      child: Text(
-                                        'Ночная смена',
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                            fontFamily: "Root",
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
-                                            color: Color(0xff748595)
-                                                .withOpacity(0.7)),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: Icon(
-                        Icons.close,
-                        size: 24,
-                        color: Color(0xff748595),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.close,
+                          size: 24,
+                          color: Color(0xff748595),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Divider(

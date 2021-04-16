@@ -1,10 +1,6 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:rotation_app/ui/trips_pages/returned_ticket.dart';
 
 import 'custom_trip_widget.dart';
 import 'inactive_trip_widget.dart';
@@ -16,7 +12,8 @@ import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
 class ActiveTripsWidget extends StatelessWidget {
   final List<Application> tripsList;
-  const ActiveTripsWidget({Key key, this.tripsList}) : super(key: key);
+  final ScrollController scrollController;
+  const ActiveTripsWidget({Key key, this.tripsList, this.scrollController}) : super(key: key);
 
 
   void _onOpenMore(BuildContext context, {routName}) {
@@ -46,7 +43,6 @@ class ActiveTripsWidget extends StatelessWidget {
       },
     );
   }
-  static ScrollController _controller = ScrollController(keepScrollOffset: true);
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +54,15 @@ class ActiveTripsWidget extends StatelessWidget {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
-          controller: _controller,
-          key: GlobalKey(),
+          controller: scrollController,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: tripsList.map((item) {
               if (DateTime.now().isBefore(DateTime.parse(item.date))){
-                item.applicationStatus = lp.getStatusApplication(item);
                 if(item.segments.isEmpty && item.status == "opened"){
                   return InkWell(
                     onTap: () {
+                      print(item.id);
                       showCupertinoModalPopup(
                           context: context,
                           builder: (BuildContext context) =>
@@ -76,7 +71,7 @@ class ActiveTripsWidget extends StatelessWidget {
                     child: InactiveTripWidget(tripData: item),
                   );
                 }
-                else if(item.segments.length == 1 && item.status == "opened"){
+                /*else if(item.segments.length == 1 && item.status == "opened"){
                   return InkWell(
                     onTap: () {
                       _onOpenMore(context,
@@ -97,8 +92,8 @@ class ActiveTripsWidget extends StatelessWidget {
                     },
                     child: SingleActiveWidget(tripData: item),
                   );
-                }
-                else if(item.segments.isNotEmpty && item.segments.length > 1 && !(item.applicationStatus.length == 1 && item.applicationStatus.containsKey('red'))){
+                }*/
+                else if(item.segments.isNotEmpty && !(item.applicationStatus.length == 1 && item.applicationStatus.containsKey('red'))){
                   return InkWell(
                     onTap: () {
                       print(item.applicationStatus);

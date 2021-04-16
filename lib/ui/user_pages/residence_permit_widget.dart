@@ -2,41 +2,57 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:masked_text/masked_text.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:rotation_app/logic_block/models/user_documents.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 
-import 'more_about_document_widget.dart';
-
-class MoreAboutPassport extends StatefulWidget {
+class MoreAboutResidencePermitWidget extends StatefulWidget {
   final Documents userDocument;
 
-  const MoreAboutPassport({Key key, this.userDocument}) : super(key: key);
+  const MoreAboutResidencePermitWidget({Key key, this.userDocument}) : super(key: key);
   @override
-  _MoreAboutPassportState createState() => _MoreAboutPassportState();
+  _MoreAboutResidencePermitWidgetState createState() =>
+      _MoreAboutResidencePermitWidgetState();
 }
 
-class _MoreAboutPassportState extends State<MoreAboutPassport> {
+class _MoreAboutResidencePermitWidgetState extends State<MoreAboutResidencePermitWidget> {
   final TextEditingController _userNameTextController = TextEditingController();
   final TextEditingController _userSecondNameTextController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _userMiddleNameTextController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _userIdTextController = TextEditingController();
   final TextEditingController _userDocumentNumberController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _userBirthdayDateController =
   TextEditingController();
   final TextEditingController _userCountryNameTextController =
   TextEditingController();
-  final TextEditingController _dateOfIssueController =
-  TextEditingController();
+  final TextEditingController _dateOfIssueController = TextEditingController();
   final TextEditingController _idValidityDayController =
   TextEditingController();
 
+  DateTime dateOfIssue, idValidityDay; // instance of DateTi
 
-  DateTime dateOfIssue, idValidityDay; // instance of DateTime
+  initState(){
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    dateOfIssue = DateTime.parse(widget.userDocument.issueDate);
+    idValidityDay = DateTime.parse(widget.userDocument.expireDate);
+    lp.getEmployeeData();
+    _userNameTextController.text = lp.employee.firstName;
+    _userSecondNameTextController.text = lp.employee.lastName;
+    _userMiddleNameTextController.text = lp.employee.patronymic;
+    _userIdTextController.text = lp.employee.iin;
+    _userDocumentNumberController.text = lp.employee.docNumber;
+    _userCountryNameTextController.text = widget.userDocument.issueBy;
+    dateOfIssue = DateTime.parse(widget.userDocument.issueDate);
+    idValidityDay = DateTime.parse(widget.userDocument.expireDate);
+    _dateOfIssueController.text = DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.issueDate)).toString();
+    _idValidityDayController.text = DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.expireDate)).toString();
+    super.initState();
+  }
 
   Future<void> _showMessage(String message) async {
     return showDialog<void>(
@@ -73,29 +89,10 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
   }
 
   @override
-  void initState() {
-    _userNameTextController.addListener(() {});
-    _userSecondNameTextController.addListener(() {});
-    _userMiddleNameTextController.addListener(() {});
-    _userIdTextController.addListener(() {});
-    _userNameTextController.addListener(() {});
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
-    lp.getEmployeeData();
-    _userNameTextController.text = lp.employee.firstNameEn;
-    _userSecondNameTextController.text = lp.employee.lastNameEn;
-    _userIdTextController.text = lp.employee.iin;
-    _userDocumentNumberController.text = lp.employee.docNumber;
-    _userCountryNameTextController.text = widget.userDocument.issueBy;
-    dateOfIssue = DateTime.parse(widget.userDocument.issueDate);
-    idValidityDay = DateTime.parse(widget.userDocument.expireDate);
-    _dateOfIssueController.text = DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.issueDate)).toString();
-    _idValidityDayController.text = DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.expireDate)).toString();
+
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -107,7 +104,7 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
               children: [
                 Container(
                   child: Text(
-                    'Паспорт',
+                    'Вид на жительство',
                     style: TextStyle(
                       fontFamily: "Root",
                       fontSize: 24,
@@ -164,17 +161,17 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                 decoration: CommonStyle.textFieldStyle(
                     labelTextStr: "Имя", hintTextStr: "Имя (на латинце)"),
                 validator: (value) {
-                  if (value.length == 0)
-                    return ("Comments can't be empty!");
+                  if (value.length == 0) return ("Comments can't be empty!");
 
                   return value = null;
                 },
               ),
             ),
+
             Container(
               width: w,
               margin: EdgeInsets.only(top: 12),
-              child:  TextFormField(
+              child: TextFormField(
                 autofocus: false,
                 toolbarOptions: ToolbarOptions(
                   copy: true,
@@ -194,177 +191,146 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                     labelTextStr: "Фамилия",
                     hintTextStr: "Фамилия (на латинце)"),
                 validator: (value) {
-                  if (value.length == 0)
-                    return ("Comments can't be empty!");
+                  if (value.length == 0) return ("Comments can't be empty!");
 
                   return value = null;
                 },
               ),
             ),
-            /*Container(
+            Container(
               width: w,
               margin: EdgeInsets.only(top: 12),
-              child: Column(
-                children: [
-                  Container(
-                    child: TextFormField(
-                      autofocus: false,
-                      toolbarOptions: ToolbarOptions(
-                        copy: true,
-                        cut: true,
-                        paste: true,
-                        selectAll: true,
-                      ),
-                      controller: _userMiddleNameTextController,
-                      //initialValue: 'Руслан',
-                      style: TextStyle(
-                        fontFamily: "Root",
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff15304D),
-                      ),
-                      decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "Отчество", hintTextStr: "Отчество"),
-                      validator: (value) {
-                        if (value.length == 0)
-                          return ("Comments can't be empty!");
+              child: TextFormField(
+                autofocus: false,
+                toolbarOptions: ToolbarOptions(
+                  copy: true,
+                  cut: true,
+                  paste: true,
+                  selectAll: true,
+                ),
+                controller: _userMiddleNameTextController,
+                //initialValue: 'Руслан',
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
+                ),
+                decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "Отчество", hintTextStr: "Отчество"),
+                validator: (value) {
+                  if (value.length == 0) return ("Comments can't be empty!");
 
-                        return value = null;
-                      },
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                ],
+                  return value = null;
+                },
+              ),
+            ),
+            /*Form(
+              autovalidate: true,
+              child: MaskedTextField(
+                maskedTextFieldController: _userBirthdayDateController,
+                mask: "xx.xx.xxxx",
+                maxLength: 10,
+                keyboardType: TextInputType.phone,
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
+                ),
+                inputDecoration: CommonStyle.textFieldStyle(
+                  labelTextStr: "Дата рождения",
+                  hintTextStr: "Дата рождения",
+                  istDate: true,
+                  contentPadding: EdgeInsets.only(top: 15, bottom: 4),
+                ),
+                validator: (value) {
+                  if (value.length > 9) {
+                    DateFormat inputFormat = DateFormat("dd/MM/yyyy");
+                    if (!DateValidator('dd/MM/yyyy', errorText: "")
+                        .isValid(value.replaceAll('.', '/'))) {
+                      _isValidate = true;
+
+                      return ("Введите корректное значение!");
+                    }
+                    else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                      return ("Введите корректное значение!");
+                    }
+                    else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
+                      return ("Введите корректное значение!");
+                    }
+                  }
+                  return value = null;
+                },
               ),
             ),*/
+            ///Example
             Container(
               width: w,
-              //margin: EdgeInsets.only(top: 12),
-              child: Form(
-                autovalidate: true,
-                child: MaskedTextField(
-                  maskedTextFieldController: _userBirthdayDateController,
-                  mask: "xx.xx.xxxx",
-                  maxLength: 10,
-                  keyboardType: TextInputType.phone,
-                  style: TextStyle(
-                    fontFamily: "Root",
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff15304D),
-                  ),
-                  inputDecoration: CommonStyle.textFieldStyle(
-                    labelTextStr: "Дата рождения",
-                    hintTextStr: "Дата рождения",
-                    istDate: true,
-                    contentPadding: EdgeInsets.only(top: 15, bottom: 4),
-                  ),
-                  validator: (value) {
-                    if (value.length > 9) {
-                      DateFormat inputFormat = DateFormat("dd/MM/yyyy");
-                      if (!DateValidator('dd/MM/yyyy', errorText: "")
-                          .isValid(value.replaceAll('.', '/'))) {
-                        return ("Введите корректное значение!");
-                      }
-                      else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
-                        return ("Введите корректное значение!");
-                      }
-                      else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
-                        return ("Введите корректное значение!");
-                      }
-                    }
-                    return value = null;
-                  },
+              margin: EdgeInsets.only(top: 12),
+              child: TextFormField(
+                autofocus: false,
+                keyboardType: TextInputType.number,
+                toolbarOptions: ToolbarOptions(
+                  copy: true,
+                  cut: true,
+                  paste: true,
+                  selectAll: true,
                 ),
+                controller: _userIdTextController,
+                //initialValue: 'Руслан',
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
+                ),
+                decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "ИИН",
+                    hintTextStr: "Индивидуальный идентификационный номер"),
+                validator: (value) {
+                  if (value.length == 0) return ("Comments can't be empty!");
+
+                  return value = null;
+                },
               ),
             ),
             Container(
               width: w,
               margin: EdgeInsets.only(top: 12),
-              child: Column(
-                children: [
-                  Container(
-                    child: TextFormField(
-                      autofocus: false,
-                      keyboardType: TextInputType.number,
-                      toolbarOptions: ToolbarOptions(
-                        copy: true,
-                        cut: true,
-                        paste: true,
-                        selectAll: true,
-                      ),
-                      controller: _userIdTextController,
-                      //initialValue: 'Руслан',
-                      style: TextStyle(
-                        fontFamily: "Root",
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff15304D),
-                      ),
-                      decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "ИИН",
-                          hintTextStr:
-                              "Индивидуальный идентификационный номер"),
-                      validator: (value) {
-                        if (value.length == 0)
-                          return ("Comments can't be empty!");
-
-                        return value = null;
-                      },
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                ],
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                autofocus: false,
+                toolbarOptions: ToolbarOptions(
+                  copy: true,
+                  cut: true,
+                  paste: true,
+                  selectAll: true,
+                ),
+                controller: _userDocumentNumberController,
+                //initialValue: 'Руслан',
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
+                ),
+                decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "№ документа",
+                    hintTextStr:
+                    "Kод индивидуального идентификационного номера"),
+                validator: MultiValidator([
+                  LengthRangeValidator(
+                      max: 8,
+                      min: 8,
+                      errorText: "Номер документа состоит из 8 цифр"),
+                  // PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: 'passwords must have at least one special character')
+                ]),
               ),
             ),
             Container(
               width: w,
-              margin: EdgeInsets.only(top: 12),
-              child: Column(
-                children: [
-                  Container(
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      autofocus: false,
-                      toolbarOptions: ToolbarOptions(
-                        copy: true,
-                        cut: true,
-                        paste: true,
-                        selectAll: true,
-                      ),
-                      controller: _userDocumentNumberController,
-                      //initialValue: 'Руслан',
-                      style: TextStyle(
-                        fontFamily: "Root",
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff15304D),
-                      ),
-                      decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "№ документа",
-                          hintTextStr:
-                              "Kод индивидуального идентификационного номера"),
-                      validator: (value) {
-                        if (value.length == 0)
-                          return ("Comments can't be empty!");
-
-                        return value = null;
-                      },
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: w,
-              margin: EdgeInsets.only(top: 16),
+              //margin: EdgeInsets.only(top: 16),
               child: Form(
                 autovalidate: true,
                 child: MaskedTextField(
@@ -402,6 +368,7 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
                   },
                 ),
               ),
+
             ),
             Container(
               width: w,
@@ -447,40 +414,30 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
             Container(
               width: w,
               margin: EdgeInsets.only(top: 12),
-              child: Column(
-                children: [
-                  Container(
-                    child: TextFormField(
-                      autofocus: false,
-                      toolbarOptions: ToolbarOptions(
-                        copy: true,
-                        cut: true,
-                        paste: true,
-                        selectAll: true,
-                      ),
-                      controller: _userCountryNameTextController,
-                      //initialValue: 'Руслан',
-                      style: TextStyle(
-                        fontFamily: "Root",
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff15304D),
-                      ),
-                      decoration: CommonStyle.textFieldStyle(
-                          labelTextStr: "Орган выдачи",
-                          hintTextStr: "Орган выдачи документа"),
-                      validator: (value) {
-                        if (value.length == 0)
-                          return ("Comments can't be empty!");
+              child: TextFormField(
+                autofocus: false,
+                toolbarOptions: ToolbarOptions(
+                  copy: true,
+                  cut: true,
+                  paste: true,
+                  selectAll: true,
+                ),
+                controller: _userCountryNameTextController,
+                //initialValue: 'Руслан',
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
+                ),
+                decoration: CommonStyle.textFieldStyle(
+                    labelTextStr: "Орган выдачи",
+                    hintTextStr: "Орган выдачи документа"),
+                validator: (value) {
+                  if (value.length == 0) return ("Comments can't be empty!");
 
-                        return value = null;
-                      },
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                  ),
-                ],
+                  return value = null;
+                },
               ),
             ),
             Container(
@@ -507,30 +464,37 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
               ),
               child: InkWell(
                 onTap: () {
-                  if (_idValidityDayController.text.isNotEmpty) {
-                    idValidityDay = DateFormat().add_yMd().parse(
-                        _idValidityDayController.text.replaceAll('.', '/'));
-                  }
-                  if (_dateOfIssueController.text.isNotEmpty) {
-                    dateOfIssue = DateFormat().add_yMd().parse(
-                        _dateOfIssueController.text.replaceAll('.', '/'));
-                  }
-                  lp.updateUserDocument(
-                    type: "passport",
-                    number: _userIdTextController.text,
-                    issueDate: dateOfIssue,
-                    expireDate: idValidityDay,
-                    issueBy: _userCountryNameTextController.text,
-                  ).then((value) {
-                    if (value) {
-                      Navigator.pop(context);
-                    } else {
-                      _showMessage(
-                        'Ошибка на сервере',
-                      );
+                  if ( _idValidityDayController.text.isNotEmpty &&
+                      _dateOfIssueController.text.isNotEmpty) {
+                    if (_idValidityDayController.text.isNotEmpty) {
+                      idValidityDay = DateFormat().add_yMd().parse(
+                          _idValidityDayController.text.replaceAll('.', '/'));
                     }
-                  });
-                  print('press');
+                    if (_dateOfIssueController.text.isNotEmpty) {
+                      dateOfIssue = DateFormat().add_yMd().parse(
+                          _dateOfIssueController.text.replaceAll('.', '/'));
+                    }
+                    lp.updateUserDocument(
+                      type: "residence",
+                      number: _userIdTextController.text,
+                      issueDate: dateOfIssue,
+                      expireDate: idValidityDay,
+                      issueBy: _userCountryNameTextController.text,
+                    ).then((value) {
+                      if (value) {
+                        Navigator.pop(context);
+                      } else {
+                        _showMessage(
+                          'Ошибка на сервере',
+                        );
+                      }
+                    });
+                    print('press');
+                  } else{
+                    _showMessage(
+                      'Заполните поля ',
+                    );
+                  }
                 },
                 child: Center(
                   child: Text(
@@ -551,4 +515,31 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
   }
 }
 
-
+class CommonStyle {
+  static InputDecoration textFieldStyle(
+      {String labelTextStr = "", String hintTextStr = "", istDate = false, EdgeInsetsGeometry contentPadding }) {
+    return InputDecoration(
+      suffixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
+      suffixIcon: istDate
+          ? SvgPicture.asset(
+        'assets/svg/Calendar.svg',
+        color: Color(0xff1262CB),
+      ) : null,
+      labelStyle: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w500,
+        color: Color(0xff748595),
+      ),
+      isDense: true,
+      contentPadding: contentPadding == null ? EdgeInsets.only(top: 4, bottom: 8) : contentPadding,
+      labelText: labelTextStr,
+      hintText: hintTextStr,
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Color(0xffEBEBEB)),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Color(0xff1262CB)),
+      ),
+    );
+  }
+}

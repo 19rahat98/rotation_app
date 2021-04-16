@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:masked_text/masked_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:group_button/group_button.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 
@@ -21,16 +21,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   TextEditingController _userSecondNameTextController = TextEditingController();
   TextEditingController _userMiddleNameTextController = TextEditingController();
   TextEditingController _userIdTextController = TextEditingController();
-  TextEditingController _userCountryNameTextController =
-      TextEditingController();
-  TextEditingController _userPhoneNumberTextController =
-      TextEditingController();
+  TextEditingController _userPhoneNumberTextController = TextEditingController();
   TextEditingController _userEmailTextController = TextEditingController();
   TextEditingController _userBirthdayDateController = TextEditingController();
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
-  var dateTextFormatter = new MaskTextInputFormatter(
-      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
 
   DateTime birthDate; // instance of DateTime
   String _gender = "male";
@@ -78,14 +71,23 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
 
   @override
   void initState() {
-    _userNameTextController.addListener(() {});
-    _userSecondNameTextController.addListener(() {});
-    _userMiddleNameTextController.addListener(() {});
-    _userIdTextController.addListener(() {});
-    _userPhoneNumberTextController.addListener(() {});
-    _userEmailTextController.addListener(() {});
-    _userNameTextController.addListener(() {});
-    _userBirthdayDateController.addListener(() {});
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    lp.getEmployeeData();
+    lp.getEmployeePhoneNumber();
+    _userNameTextController.text = lp.employee.firstName;
+    _userSecondNameTextController.text = lp.employee.lastName;
+    _userMiddleNameTextController.text = lp.employee.patronymic;
+    _userIdTextController.text = lp.employee.iin;
+    _frequencyValue = lp.employee.countryCode;
+    if (lp.userPhoneNumber != null) {
+      _userPhoneNumberTextController.text =
+          lp.userPhoneNumber.substring(1, 4) +
+          ") " +
+          lp.userPhoneNumber.substring(4, 7) +
+          " " +
+          lp.userPhoneNumber.substring(7, lp.userPhoneNumber.length);
+    }
+
     super.initState();
   }
 
@@ -96,20 +98,6 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
     lp.getEmployeeData();
     lp.getEmployeePhoneNumber();
-    _userNameTextController.text = lp.employee.firstName;
-    _userSecondNameTextController.text = lp.employee.lastName;
-    _userMiddleNameTextController.text = lp.employee.patronymic;
-    _userIdTextController.text = lp.employee.iin;
-    _userCountryNameTextController.text = "Казахстан";
-    if (lp.userPhoneNumber != null) {
-      _userPhoneNumberTextController.text = "+ ${lp.userPhoneNumber[0]}" +
-          "(" +
-          lp.userPhoneNumber.substring(1, 4) +
-          ") " +
-          lp.userPhoneNumber.substring(4, 7) +
-          " " +
-          lp.userPhoneNumber.substring(7, lp.userPhoneNumber.length);
-    }
 
     return Scaffold(
       backgroundColor: Color(0xffF3F6FB),
@@ -338,29 +326,24 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
-                      margin: EdgeInsets.only(top: 12),
+                      //margin: EdgeInsets.only(top: 16),
                       child: Form(
                         autovalidate: true,
-                        child: TextFormField(
-                          autofocus: false,
-                          toolbarOptions: ToolbarOptions(
-                            copy: true,
-                            cut: true,
-                            paste: true,
-                            selectAll: true,
-                          ),
-                          controller: _userBirthdayDateController,
-                          inputFormatters: [dateTextFormatter],
-                          keyboardType: TextInputType.datetime,
+                        child: MaskedTextField(
+                          maskedTextFieldController: _userBirthdayDateController,
+                          mask: "xx.xx.xxxx",
+                          maxLength: 10,
+                          keyboardType: TextInputType.phone,
                           style: TextStyle(
                             fontFamily: "Root",
                             fontSize: 17,
                             fontWeight: FontWeight.w500,
                             color: Color(0xff15304D),
                           ),
-                          decoration: CommonStyle.textFieldStyle(
+                          inputDecoration: CommonStyle.textFieldStyle(
                             labelTextStr: "Дата рождения",
                             hintTextStr: "Дата рождения",
+                            contentPadding: EdgeInsets.only(top: 15, bottom: 4),
                             istDate: true,
                           ),
                           validator: (value) {
@@ -370,7 +353,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                   .isValid(value.replaceAll('.', '/'))) {
                                 return ("Введите корректное значение!");
                               }
-                              else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                              else if(inputFormat.parse("01.01.2050".replaceAll('.', '/')).isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
                                 return ("Введите корректное значение!");
                               }
                               else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
@@ -630,43 +613,87 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                             ),
                           ),
                           Container(
-                            child: TextFormField(
-                              autofocus: false,
-                              controller: _userPhoneNumberTextController,
-                              inputFormatters: [maskFormatter],
-                              keyboardType: TextInputType.phone,
-                              //initialValue: 'Руслан',
-                              style: TextStyle(
-                                fontFamily: "Root",
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff15304D),
-                              ),
-                              decoration: InputDecoration(
-                                isDense: true,
-                                contentPadding:
-                                    EdgeInsets.only(top: 4, bottom: 7),
-                                border: InputBorder.none,
-                                /*hintText: "Найти…",
-                                hintStyle: TextStyle(
+                            width: w,
+                            child: Row(
+                              children: [
+                                Text(
+                                  '+ 7 (',
+                                  style: TextStyle(
+                                    fontFamily: "Root",
                                     fontSize: 17,
                                     fontWeight: FontWeight.w500,
-                                    color: Color(0xff748595)),*/
-                              ),
-                              validator: (value) {
-                                if (value.length == 0)
-                                  return ("Comments can't be empty!");
-
-                                return value = null;
-                              },
+                                    color: Color(0xff15304D),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: MaskedTextField(
+                                    maskedTextFieldController: _userPhoneNumberTextController,
+                                    mask: "xxx) xxx xxxxx",
+                                    maxLength: 13,
+                                    keyboardType: TextInputType.phone,
+                                    style: TextStyle(
+                                      fontFamily: "Root",
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff15304D),
+                                    ),
+                                    inputDecoration: CommonStyle.textFieldStyle(
+                                      hintTextStr: "",
+                                      contentPadding: EdgeInsets.only(top: 8, bottom: 8),
+                                      istDate: false,
+                                      removeBorder: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          /*Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: w * 0.7,
+                                child: TextFormField(
+                                  autofocus: false,
+                                  controller: _userCountryNameTextController,
+                                  style: TextStyle(fontFamily: "Root",
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff15304D),
+                                  ),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding:
+                                        EdgeInsets.only(top: 4, bottom: 7),
+                                    border: InputBorder.none,
+                                    */ /*hintText: "Найти…",
+                                    hintStyle: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff748595)),*/ /*
+                                  ),
+                                  validator: (value) {
+                                    if (value.length == 0)
+                                      return ("Comments can't be empty!");
+
+                                    return value = null;
+                                  },
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: Color(0xff1262CB),
+                                size: 24,
+                              ),
+                            ],
+                          ),*/
                           Divider(
                             height: 0,
                           ),
                         ],
                       ),
                     ),
+
                     Container(
                       width: w,
                       margin: EdgeInsets.only(top: 16),

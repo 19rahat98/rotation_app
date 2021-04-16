@@ -1,8 +1,9 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -178,7 +179,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Future<void> _onRefresh() async {
     setState(() {
       Provider.of<LoginProvider>(context, listen: false).getUserInfo();
-      Provider.of<LoginProvider>(context, listen: false).getEmployeeApplication();
+      Provider.of<LoginProvider>(context, listen: false).getNewEmployeeApplicationData();
       Provider.of<ConversationRatesProvider>(context, listen: false).getExchangeRate();
     });
   }
@@ -242,8 +243,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void timerVoid() {
     if(true){
       setState(() {
-        Provider.of<LoginProvider>(context, listen: false).getEmployeeApplication();
-        print('test');
+        Provider.of<LoginProvider>(context, listen: false).getNewEmployeeApplicationData();
       });
     }
   }
@@ -338,7 +338,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             return Scaffold(
               backgroundColor: Color(0xffF3F6FB),
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(45.0),
+                preferredSize: Size.fromHeight(30.0),
                 child: AppBar(
                   automaticallyImplyLeading: false,
                   title: Text(
@@ -1038,7 +1038,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               color: Color(0xffD0DAE7)),
                                           color: Colors.white),
                                       child: InkWell(
-                                        onTap: () {
+                                        onTap: () async {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

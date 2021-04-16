@@ -64,9 +64,7 @@ class ActiveWidget extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              DateFormat.MMMd('ru')
-                                  .format(DateTime.parse(tripData.date))
-                                  .toString()
+                              DateFormat.MMMd('ru').format(DateTime.parse(tripData.date)).toString()
                                   .replaceAll('.', ''),
                               style: TextStyle(
                                   fontFamily: "Root",

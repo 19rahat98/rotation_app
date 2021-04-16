@@ -132,7 +132,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                           ),
                           Text(
                             widget.phoneNumber != null
-                                ? 'На номер ${widget.phoneNumber} отправлено SMS с кодом авторизации'
+                                ? 'На номер +7 (${widget.phoneNumber} отправлено SMS с кодом авторизации'
                                 : 'На ваш номер отправлено SMS с кодом авторизации',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontFamily: "Root",

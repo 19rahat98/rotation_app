@@ -21,7 +21,7 @@ class TripsPage extends StatefulWidget {
 class _TripsPageState extends State<TripsPage> {
   Timer timer;
   LoginProvider lp;
-
+  ScrollController scrollController = ScrollController(keepScrollOffset: false);
   void timerVoid() {
     if(true){
       _onRefresh();
@@ -31,7 +31,7 @@ class _TripsPageState extends State<TripsPage> {
   @override
   void initState() {
     super.initState();
-    //timer = Timer.periodic(Duration(seconds: 2), (Timer t) => timerVoid());
+    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => timerVoid());
     lp = Provider.of<LoginProvider>(context, listen: false);
   }
 
@@ -124,6 +124,7 @@ class _TripsPageState extends State<TripsPage> {
                             child: lp.data != null && lp.data.isNotEmpty
                                 ? ActiveTripsWidget(
                                   tripsList: lp.data,
+                                  scrollController: scrollController,
                                 )
                                 : Container(),
                           ),
@@ -134,6 +135,7 @@ class _TripsPageState extends State<TripsPage> {
                             child: lp.data != null && lp.data.isNotEmpty
                                 ? ArchiveTrips(
                                   tripsList: lp.data,
+                                  scrollController: scrollController,
                                 )
                                 : Container(),
                           ),
@@ -152,7 +154,7 @@ class _TripsPageState extends State<TripsPage> {
 
   @override
   void dispose() {
-    //timer.cancel();
+    timer.cancel();
     super.dispose();
   }
 }

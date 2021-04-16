@@ -17,8 +17,8 @@ import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
 class ArchiveTrips extends StatelessWidget{
   final List<Application> tripsList;
-
-  const ArchiveTrips({Key key, this.tripsList}) : super(key: key);
+  final ScrollController scrollController;
+  const ArchiveTrips({Key key, this.tripsList, this.scrollController}) : super(key: key);
 
 
   void _onOpenMore(BuildContext context, {routName}) {
@@ -58,13 +58,12 @@ class ArchiveTrips extends StatelessWidget{
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
-          key: GlobalKey(),
+          controller: scrollController,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: tripsList.map((item) {
-            applicationStatus = lp.getStatusApplication(item);
-            if (DateTime.now().isAfter(DateTime.parse(item.date)) || (!applicationStatus.containsKey('all') && !applicationStatus.containsKey('grey') && !applicationStatus.containsKey('green') && !applicationStatus.containsKey('yellow'))) {
-              if(item.segments.isEmpty && item.status == "opened"){
+            if (DateTime.now().isAfter(DateTime.parse(item.date)) || (!item.applicationStatus.containsKey('all') && !item.applicationStatus.containsKey('grey') && !item.applicationStatus.containsKey('green') && !item.applicationStatus.containsKey('yellow'))) {
+              if(item.segments.isEmpty && item.status == "opened" ){
                 return InkWell(
                   onTap: () {
                     showCupertinoModalPopup(
@@ -108,7 +107,7 @@ class ArchiveTrips extends StatelessWidget{
                   child: SingleActiveWidget(tripData: item),
                 );
               }
-              else if(item.segments.length > 1 ){
+              else if(item.segments.length > 1 && item.applicationStatus != null ){
                 return InkWell(
                   onTap: () {
                     _onOpenMore(context,

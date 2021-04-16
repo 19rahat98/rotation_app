@@ -83,7 +83,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                           Text(
                             widget.phoneNumber == null
                                 ? 'Номер не найден.  Пожалуйста, введите ваш ИИН'
-                                : 'Номер ${widget.phoneNumber} не найден.  Пожалуйста, введите ваш ИИН',
+                                : 'Номер +7 (${widget.phoneNumber} не найден.  Пожалуйста, введите ваш ИИН',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,

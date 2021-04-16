@@ -1,13 +1,17 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:masked_text/masked_text.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rotation_app/logic_block/models/user_documents.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 
 class MoreAboutDocumentWidget extends StatefulWidget {
+  final Documents userDocument;
+
+  const MoreAboutDocumentWidget({Key key, this.userDocument}) : super(key: key);
   @override
   _MoreAboutDocumentWidgetState createState() =>
       _MoreAboutDocumentWidgetState();
@@ -29,15 +33,26 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
   final TextEditingController _dateOfIssueController = TextEditingController();
   final TextEditingController _idValidityDayController =
       TextEditingController();
-  bool _isValidate = false;
-  var idValidityDayMask = new MaskTextInputFormatter(
-      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
-  var dateOfIssueMask = new MaskTextInputFormatter(
-      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
-  var dateTextFormatter = new MaskTextInputFormatter(
-      mask: '##.##.####', filter: {"#": RegExp(r'[0-9]')});
 
   DateTime dateOfIssue, idValidityDay; // instance of DateTi
+
+  initState(){
+    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
+    dateOfIssue = DateTime.parse(widget.userDocument.issueDate);
+    idValidityDay = DateTime.parse(widget.userDocument.expireDate);
+    lp.getEmployeeData();
+    _userNameTextController.text = lp.employee.firstName;
+    _userSecondNameTextController.text = lp.employee.lastName;
+    _userMiddleNameTextController.text = lp.employee.patronymic;
+    _userIdTextController.text = lp.employee.iin;
+    _userDocumentNumberController.text = lp.employee.docNumber;
+    _userCountryNameTextController.text = widget.userDocument.issueBy;
+    dateOfIssue = DateTime.parse(widget.userDocument.issueDate);
+    idValidityDay = DateTime.parse(widget.userDocument.expireDate);
+    _dateOfIssueController.text = DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.issueDate)).toString();
+    _idValidityDayController.text = DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.expireDate)).toString();
+    super.initState();
+  }
 
   Future<void> _showMessage(String message) async {
     return showDialog<void>(
@@ -77,12 +92,7 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
-    lp.getEmployeeData();
-    _userNameTextController.text = lp.employee.firstName;
-    _userSecondNameTextController.text = lp.employee.lastName;
-    _userMiddleNameTextController.text = lp.employee.patronymic;
-    _userIdTextController.text = lp.employee.iin;
-    _userDocumentNumberController.text = lp.employee.docNumber;
+
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -215,56 +225,44 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
                 },
               ),
             ),
-
-            ///Example
-            Container(
-              width: w,
-              margin: EdgeInsets.only(top: 12),
-              child: Form(
-                autovalidate: true,
-                child: TextFormField(
-                  autofocus: false,
-                  toolbarOptions: ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    paste: true,
-                    selectAll: true,
-                  ),
-                  controller: _userBirthdayDateController,
-                  inputFormatters: [dateTextFormatter],
-                  keyboardType: TextInputType.datetime,
-                  style: TextStyle(
-                    fontFamily: "Root",
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xff15304D),
-                  ),
-                  decoration: CommonStyle.textFieldStyle(
-                    labelTextStr: "Дата рождения",
-                    hintTextStr: "Дата рождения",
-                    istDate: true,
-                  ),
-                  validator: (value) {
-                    if (value.length > 9) {
-                      DateFormat inputFormat = DateFormat("dd/MM/yyyy");
-                      if (!DateValidator('dd/MM/yyyy', errorText: "")
-                          .isValid(value.replaceAll('.', '/'))) {
-                        _isValidate = true;
-
-                        return ("Введите корректное значение!");
-                      }
-                      else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
-                        return ("Введите корректное значение!");
-                      }
-                      else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
-                        return ("Введите корректное значение!");
-                      }
-                    }
-                    return value = null;
-                  },
+            Form(
+              autovalidate: true,
+              child: MaskedTextField(
+                maskedTextFieldController: _userBirthdayDateController,
+                mask: "xx.xx.xxxx",
+                maxLength: 10,
+                keyboardType: TextInputType.phone,
+                style: TextStyle(
+                  fontFamily: "Root",
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff15304D),
                 ),
+                inputDecoration: CommonStyle.textFieldStyle(
+                  labelTextStr: "Дата рождения",
+                  hintTextStr: "Дата рождения",
+                  istDate: true,
+                  contentPadding: EdgeInsets.only(top: 15, bottom: 4),
+                ),
+                validator: (value) {
+                  if (value.length > 9) {
+                    DateFormat inputFormat = DateFormat("dd/MM/yyyy");
+                    if (!DateValidator('dd/MM/yyyy', errorText: "")
+                        .isValid(value.replaceAll('.', '/'))) {
+                      return ("Введите корректное значение!");
+                    }
+                    else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                      return ("Введите корректное значение!");
+                    }
+                    else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
+                      return ("Введите корректное значение!");
+                    }
+                  }
+                  return value = null;
+                },
               ),
             ),
+            ///Example
             Container(
               width: w,
               margin: EdgeInsets.only(top: 12),
@@ -330,19 +328,13 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
             ),
             Container(
               width: w,
-              margin: EdgeInsets.only(top: 16),
+              //margin: EdgeInsets.only(top: 16),
               child: Form(
                 autovalidate: true,
-                child: TextFormField(
-                  autofocus: false,
-                  toolbarOptions: ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    paste: true,
-                    selectAll: true,
-                  ),
-                  controller: _dateOfIssueController,
-                  inputFormatters: [dateOfIssueMask],
+                child: MaskedTextField(
+                  maskedTextFieldController: _dateOfIssueController,
+                  mask: "xx.xx.xxxx",
+                  maxLength: 10,
                   keyboardType: TextInputType.phone,
                   style: TextStyle(
                     fontFamily: "Root",
@@ -350,18 +342,17 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
                     fontWeight: FontWeight.w500,
                     color: Color(0xff15304D),
                   ),
-                  decoration: CommonStyle.textFieldStyle(
+                  inputDecoration: CommonStyle.textFieldStyle(
                     labelTextStr: "Дата выдачи",
                     hintTextStr: "Дата выдачи",
                     istDate: true,
+                    contentPadding: EdgeInsets.only(top: 15, bottom: 4),
                   ),
                   validator: (value) {
                     if (value.length > 9) {
                       DateFormat inputFormat = DateFormat("dd/MM/yyyy");
                       if (!DateValidator('dd/MM/yyyy', errorText: "")
                           .isValid(value.replaceAll('.', '/'))) {
-                        _isValidate = true;
-
                         return ("Введите корректное значение!");
                       }
                       else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
@@ -375,22 +366,17 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
                   },
                 ),
               ),
+
             ),
             Container(
               width: w,
-              margin: EdgeInsets.only(top: 16),
+              //margin: EdgeInsets.only(top: 16),
               child: Form(
                 autovalidate: true,
-                child: TextFormField(
-                  autofocus: false,
-                  toolbarOptions: ToolbarOptions(
-                    copy: true,
-                    cut: true,
-                    paste: true,
-                    selectAll: true,
-                  ),
-                  controller: _idValidityDayController,
-                  inputFormatters: [idValidityDayMask],
+                child: MaskedTextField(
+                  maskedTextFieldController: _idValidityDayController,
+                  mask: "xx.xx.xxxx",
+                  maxLength: 10,
                   keyboardType: TextInputType.phone,
                   style: TextStyle(
                     fontFamily: "Root",
@@ -398,20 +384,20 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
                     fontWeight: FontWeight.w500,
                     color: Color(0xff15304D),
                   ),
-                  decoration: CommonStyle.textFieldStyle(
+                  inputDecoration: CommonStyle.textFieldStyle(
                     labelTextStr: "Срок действия",
                     hintTextStr: "Срок действия документа",
                     istDate: true,
+                    contentPadding: EdgeInsets.only(top: 15, bottom: 4),
                   ),
                   validator: (value) {
                     if (value.length > 9) {
                       DateFormat inputFormat = DateFormat("dd/MM/yyyy");
                       if (!DateValidator('dd/MM/yyyy', errorText: "")
                           .isValid(value.replaceAll('.', '/'))) {
-                        _isValidate = true;
                         return ("Введите корректное значение!");
                       }
-                      else if(DateTime.now().isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
+                      else if(inputFormat.parse("01.01.2050".replaceAll('.', '/')).isBefore(inputFormat.parse(value.replaceAll('.', '/')))){
                         return ("Введите корректное значение!");
                       }
                       else if(inputFormat.parse("01.01.1900".replaceAll('.', '/')).isAfter(inputFormat.parse(value.replaceAll('.', '/')))){
@@ -476,18 +462,15 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
               ),
               child: InkWell(
                 onTap: () {
-                  if (_isValidate &&
-                      idValidityDayMask.getMaskedText().isNotEmpty &&
-                      dateOfIssueMask.getMaskedText().isNotEmpty) {
-                    if (idValidityDayMask.getMaskedText().isNotEmpty) {
+                  if (_idValidityDayController.text.isNotEmpty &&
+                      _dateOfIssueController.text.isNotEmpty) {
+                    if (_idValidityDayController.text.isNotEmpty) {
                       idValidityDay = DateFormat().add_yMd().parse(
-                          idValidityDayMask
-                              .getMaskedText()
-                              .replaceAll('.', '/'));
+                          _idValidityDayController.text.replaceAll('.', '/'));
                     }
-                    if (dateOfIssueMask.getMaskedText().isNotEmpty) {
+                    if (_dateOfIssueController.text.isNotEmpty) {
                       dateOfIssue = DateFormat().add_yMd().parse(
-                          dateOfIssueMask.getMaskedText().replaceAll('.', '/'));
+                          _dateOfIssueController.text.replaceAll('.', '/'));
                     }
                     lp.updateUserDocument(
                       type: "id-card",
@@ -495,8 +478,7 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
                       issueDate: dateOfIssue,
                       expireDate: idValidityDay,
                       issueBy: _userCountryNameTextController.text,
-                    )
-                        .then((value) {
+                    ).then((value) {
                       if (value) {
                         Navigator.pop(context);
                       } else {
@@ -506,6 +488,10 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
                       }
                     });
                     print('press');
+                  } else{
+                    _showMessage(
+                      'Заполните поля ',
+                    );
                   }
                 },
                 child: Center(
@@ -529,30 +515,30 @@ class _MoreAboutDocumentWidgetState extends State<MoreAboutDocumentWidget> {
 
 class CommonStyle {
   static InputDecoration textFieldStyle(
-      {String labelTextStr = "", String hintTextStr = "", istDate = false}) {
+      {String labelTextStr = "", String hintTextStr = "", istDate = false, EdgeInsetsGeometry contentPadding, bool removeBorder = false}) {
     return InputDecoration(
       suffixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
       suffixIcon: istDate
           ? SvgPicture.asset(
               'assets/svg/Calendar.svg',
               color: Color(0xff1262CB),
-            )
-          : null,
+            ) : null,
       labelStyle: TextStyle(
         fontSize: 17,
         fontWeight: FontWeight.w500,
         color: Color(0xff748595),
       ),
+      counterText: "",
       isDense: true,
-      contentPadding: EdgeInsets.only(top: 4, bottom: 8),
-      labelText: labelTextStr,
+      contentPadding: contentPadding == null ? EdgeInsets.only(top: 4, bottom: 8) : contentPadding,
+      labelText: labelTextStr == "" ? null : labelTextStr,
       hintText: hintTextStr,
-      enabledBorder: UnderlineInputBorder(
+      enabledBorder: !removeBorder ? UnderlineInputBorder(
         borderSide: BorderSide(color: Color(0xffEBEBEB)),
-      ),
-      focusedBorder: UnderlineInputBorder(
+      ) : InputBorder.none,
+      focusedBorder: !removeBorder ?  UnderlineInputBorder(
         borderSide: BorderSide(color: Color(0xff1262CB)),
-      ),
+      ) : InputBorder.none,
     );
   }
 }

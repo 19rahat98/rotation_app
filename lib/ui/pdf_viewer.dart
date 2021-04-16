@@ -31,7 +31,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
       body: Stack(
         children: <Widget>[
           PDFView(
-            filePath: '${widget.path}/${widget.title}',
+            filePath: '/data/user/0/kz.iitu.rotation_app/cache/test44.pdf',
             //filePath: '/data/user/0/kz.iitu.rotation_app/files/Билет АЛМАТЫ 1 - АКТОГАЙ вт, 30 мар,.pdf',
             enableSwipe: true,
             swipeHorizontal: true,

@@ -18,6 +18,8 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  TextEditingController textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -157,10 +159,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                               ),
                                               Container(
                                                 child: lp.employee != null
-                                                    ? Text(
-                                                        '№ ' +
-                                                            lp.employee
-                                                                .docNumber,
+                                                    ? Text('№ ' + lp.employee.docNumber,
                                                         style: TextStyle(
                                                             fontFamily: "Root",
                                                             fontSize: 14,
@@ -499,14 +498,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         child: GestureDetector(
                           onTap: () async {
+                            lp.logoutUser().then((value) {
+                              if(value){
+                                lp.deleteEmployeeData().then((isSuccess){
+                                  if(isSuccess){
+                                    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()),  ModalRoute.withName('/'),);
+                                  }
+                                });
+                              }
+                            });
+                            /*final _logoutResult = await lp.logoutUser();
                             final _result = await lp.deleteEmployeeData();
-                            if (_result) {
-                              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()),  ModalRoute.withName('/'),);
-                              /*Navigator.of(context, rootNavigator: true).push(
+                            if (_result && _logoutResult) {
+                              *//*Navigator.of(context, rootNavigator: true).push(
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          LoginPage()));*/
-                            }
+                                          LoginPage()));*//*
+                            }*/
                           },
                           child: Center(
                             child: Text(

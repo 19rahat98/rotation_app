@@ -9,6 +9,7 @@
     <application
         android:name=".Application"
         android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
         android:label="Odyssey Rotation">
 
         <provider

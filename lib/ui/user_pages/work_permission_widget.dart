@@ -1,26 +1,23 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rotation_app/logic_block/models/user_documents.dart';
 
 class WorkPermission extends StatefulWidget {
+  final Documents userDocument;
+
+  const WorkPermission({Key key, this.userDocument}) : super(key: key);
+
   @override
   _WorkPermissionState createState() => _WorkPermissionState();
 }
 
 class _WorkPermissionState extends State<WorkPermission> {
 
-  final TextEditingController _workStatusTextController = TextEditingController(text: "Активно");
-  final TextEditingController _workPermissionNumberController = TextEditingController(text: "0005011");
+  final TextEditingController _workStatusTextController = TextEditingController();
+  final TextEditingController _workPermissionNumberController = TextEditingController();
 
-
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '+7 (###) ### ## ##', filter: {"#": RegExp(r'[0-9]')});
-
-  DateTime birthDate; // instance of DateTime
-  String birthDateInString = '11.09.1992';
-  DateTime dateOfIssue;
   String dateOfIssueString = '11.09.2016';
-  DateTime idValidityDay;
   String idValidityDayString = '11.09.2020';
 
   @override
@@ -33,6 +30,14 @@ class _WorkPermissionState extends State<WorkPermission> {
 
   @override
   Widget build(BuildContext context) {
+    if(DateTime.parse(widget.userDocument.expireDate).isBefore(DateTime.now())){
+      _workStatusTextController.text = "Не активно";
+    }else{
+      _workStatusTextController.text = "Активно";
+    }
+    _workPermissionNumberController.text = widget.userDocument.number.toString();
+    dateOfIssueString = DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.issueDate)).toString();
+    idValidityDayString =  DateFormat.yMd('ru').format(DateTime.parse(widget.userDocument.expireDate)).toString();
     double w = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Container(

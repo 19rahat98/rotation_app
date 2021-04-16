@@ -21,22 +21,28 @@ class Api {
   static const String GET_CONVERSATION_USD = "https://v6.exchangerate-api.com/v6/da783f775edf8a75a7afc001/latest/USD";
   static const String UPDATE_USER_DATA = "/employees/update-data";
   static const String GET_USER_INFO = "/employees/info";
-  static const String GET_EMPLOYEE_DOCUMENTS = "employees/get-documents";
+  static const String GET_EMPLOYEE_DOCUMENTS = "/employees/get-documents";
   static const String UPDATE_USER_DOCUMENT = "/employees/update-document";
   static const String SEND_FMC_TOKEN = "/employees/fix";
   static const String GET_NOTIFICATION_LIST = "/notifications";
   static const String MARK_AS_READ_NEWS = "/mark-as-read";
+  static const String LOGOUT = "/logout";
 
 
+
+  static Future<dynamic> logoutEmployee() async{
+    final result = await httpManager.post(url: LOGOUT);
+    return ResponseApi.fromJson(result);
+  }
 
   static Future<dynamic> sendFmcTokenToServer(params) async{
     final result = await httpManager.post(url: SEND_FMC_TOKEN, data: params);
     return ResponseApi.fromJson(result);
   }
 
-
   static Future<dynamic> getEmployeeDocuments() async{
     final result = await httpManager.get(url: GET_EMPLOYEE_DOCUMENTS);
+    print(result);
     return ResponseApi.fromJson(result);
   }
 
@@ -61,6 +67,7 @@ class Api {
   }
 
   static Future<dynamic> updateUserData(params) async {
+    print(params);
     final result = await httpManager.post(url: UPDATE_USER_DATA, data: params);
     return ResponseApi.fromJson(result);
   }
@@ -106,6 +113,7 @@ class Api {
 
   ///Login with phone number
   static Future<dynamic> loginByPhoneNumber(params) async {
+    print(httpManager.baseOptions.headers['deviceid']);
     final result = await httpManager.post(url: SEND_CODE_LOGIN, data: params);
     return ResponseApi.fromJson(result);
   }

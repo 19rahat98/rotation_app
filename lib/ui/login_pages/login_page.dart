@@ -35,8 +35,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     FocusScope.of(context).requestFocus(new FocusNode());
     print(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
-    if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 11) {
-      _status = auth.signInByPhoneNumber(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '')).whenComplete(() => _firstPress = true);
+    if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 10) {
+      _status = auth.signInByPhoneNumber('7' + textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '')).whenComplete(() => _firstPress = true);
       auth.userPhoneNumber = textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '');
       handleLogin();
     }
@@ -46,7 +46,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-
     return WillPopScope(
       onWillPop: () async => false,
       child: ChangeNotifierProvider(
@@ -119,22 +118,44 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(top: 5),
-                                      child: MaskedTextField(
-                                        maskedTextFieldController: textFieldCtrl,
-                                        mask: "+ 7(xxx) xxx xxxx",
-                                        maxLength: 17,
-                                        keyboardType: TextInputType.phone,
-                                        inputDecoration: new InputDecoration(
-                                          hintText: '+ 7 (',
-                                          hintStyle: TextStyle(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            '+ 7 (',
+                                            style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 17,
-                                              fontWeight: FontWeight.bold),
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.all(0.0),
-                                          border: InputBorder.none,
-                                          counterText: '',
-                                        ),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: MaskedTextField(
+                                              maskedTextFieldController: textFieldCtrl,
+                                              mask: 'xxx) xxx xxxxx',
+                                              maxLength: 13,
+                                              keyboardType: TextInputType.phone,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                              ),
+                                              inputDecoration: new InputDecoration(
+                                                hintText: "",
+                                                hintStyle: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.bold),
+                                                isDense: true,
+                                                contentPadding: EdgeInsets.all(0.0),
+                                                border: InputBorder.none,
+                                                counterText: '',
+                                              ),
+                                              onChange: (c){
+                                                print(c.length.toString());
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     /*Container(
@@ -192,9 +213,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 child: InkWell(
                                   onTap: () {
+                                    print(_firstPress);
                                     if(_firstPress){
-                                      _login();
                                       _firstPress = false;
+                                      _login();
                                     }
                                   },
                                   child: Center(
@@ -275,6 +297,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     print(auth.status);
     _status.then((value){
+      _firstPress = true;
       switch (value) {
         case Status.TooManyRequest:
           return showDialog<void>(

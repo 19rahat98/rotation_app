@@ -30,6 +30,10 @@ class UserRepository {
     return await Api.getEmployeeDocuments();
   }
 
+  Future<dynamic> logoutEmployee() async{
+    return await Api.logoutEmployee();
+  }
+
   ///update usr data
   Future<dynamic> updateUserData(
       {String firstName,
