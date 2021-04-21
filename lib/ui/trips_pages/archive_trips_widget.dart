@@ -74,7 +74,7 @@ class ArchiveTrips extends StatelessWidget{
                   child: InactiveTripWidget(tripData: item),
                 );
               }
-              else if(item.segments.length == 1 && item.status == "opened"){
+              /*else if(item.segments.length == 1 && item.status == "opened"){
                 return InkWell(
                   onTap: () {
                     _onOpenMore(context,
@@ -106,8 +106,8 @@ class ArchiveTrips extends StatelessWidget{
                   },
                   child: SingleActiveWidget(tripData: item),
                 );
-              }
-              else if(item.segments.length > 1 && item.applicationStatus != null ){
+              }*/
+              else if(item.segments.isNotEmpty && item.applicationStatus != null ){
                 return InkWell(
                   onTap: () {
                     _onOpenMore(context,

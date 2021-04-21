@@ -484,6 +484,7 @@ class _OnWaitingListTripSheetState extends State<OnWaitingListTripSheet> {
                                 child: Text(
                                   'Ночная смена',
                                   maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontFamily: "Root",
                                       fontWeight: FontWeight.w500,

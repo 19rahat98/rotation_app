@@ -189,6 +189,7 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                       ? "в ${tripData.endStation[0].toUpperCase()}${tripData.endStation.toLowerCase().substring(1)}"
                       : "",
                   maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontFamily: "Root",
                       fontSize: 14,
@@ -216,20 +217,20 @@ class SingleCustomDetailsTripWidget extends StatelessWidget {
                         tripData.segments[index].icon != null &&
                                 tripData.segments[index].icon.isNotEmpty
                             ? Container(
-                              width: 22,
-                              height: 22,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.network(
+                                width: 22,
+                                height: 22,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.network(
                                     tripData.segments[index].icon,
                                     colorBlendMode: BlendMode.color,
                                     color: Colors.grey,
                                     fit: BoxFit.fill,
                                   ),
-                              ),
+                                ),
                               )
                             : SvgPicture.asset(
                                 "assets/svg/avia-bekair.svg",
@@ -571,6 +572,7 @@ class _WithDetailsTripSheetState extends State<WithDetailsTripSheet> {
                                         child: Text(
                                           'Ночная смена',
                                           maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontFamily: "Root",
                                               fontWeight: FontWeight.w500,

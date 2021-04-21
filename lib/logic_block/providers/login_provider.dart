@@ -128,6 +128,15 @@ class LoginProvider with ChangeNotifier {
     else return false;
   }
 
+  String getWatcherTimeLimit(Application item){
+    for(int i =0; i < item.segments.length; i++){
+      if(item.segments[i].status == 'opened' && item.segments[i].watcherTimeLimit != null && item.segments[i].watcherTimeLimit != ''){
+        return item.segments[i].watcherTimeLimit;
+      }
+    }
+    return null;
+  }
+
   Map<dynamic, dynamic> getStatusApplication(Application item){
     Map statusCode = Map();
     if(item.segments != null && item.segments.isNotEmpty){
@@ -160,10 +169,12 @@ class LoginProvider with ChangeNotifier {
             }else{
               statusCode["red"] = 1;
             }
-          }else if(item.segments[i].status == 'canceled'){
+          }
+          else if(item.segments[i].status == 'canceled'){
             if (statusCode.containsKey('canceled')) {
               statusCode.update('canceled', (int) => statusCode['canceled']+1);
-            }else{
+            }
+            else{
               statusCode.addAll({"canceled": 1});
             }
           }
@@ -340,6 +351,7 @@ class LoginProvider with ChangeNotifier {
       notifyListeners();
       for(int i = 0; i < _data.length; i ++){
         _data[i].applicationStatus = getStatusApplication(_data[i]);
+        _data[i].watcherTimeLimit = getWatcherTimeLimit(_data[i]);
       }
       return _data;
     }
@@ -359,6 +371,7 @@ class LoginProvider with ChangeNotifier {
         notifyListeners();
         for(int i = 0; i < _data.length; i ++){
           _data[i].applicationStatus = getStatusApplication(_data[i]);
+          _data[i].watcherTimeLimit = getWatcherTimeLimit(_data[i]);
         }
         return _data;
       }

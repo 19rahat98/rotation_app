@@ -299,6 +299,7 @@ class _PushNotificationListWidgetState extends State<PushNotificationListWidget>
                             child: Text(
                               snapshot.data.createdAt,
                               maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 11,
@@ -604,6 +605,7 @@ class _PushNotificationListWidgetState extends State<PushNotificationListWidget>
                           child: Text(
                             snapshot.data.publishedOn,
                             maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 11,
@@ -642,6 +644,7 @@ class _PushNotificationListWidgetState extends State<PushNotificationListWidget>
                             Text(
                               'Билеты куплены',
                               maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 17,
@@ -677,6 +680,7 @@ class _PushNotificationListWidgetState extends State<PushNotificationListWidget>
                         child: Text(
                           'только что',
                           maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontFamily: "Root",
                               fontSize: 11,

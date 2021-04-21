@@ -54,36 +54,14 @@ class NearestTripWidget extends StatelessWidget {
               child: SingleCustomDetailsTripWidget(tripData: tripsList[i]),
             );
           }*/
-          if(tripsList[i].segments.length == 1 && tripsList[i].status == "issued"){
+          if(tripsList[i].applicationStatus.containsKey("green") ){
             return InkWell(
               onTap: () {
-                _onOpenMore(context,
-                    routName: TicketsBottomSheet(
-                      tripData: tripsList[i],
-                    ));
-              },
-              child: SingleActiveWidget(tripData: tripsList[i]),
-            );
-          }
-          else if(tripsList[i].segments.length == 1 && tripsList[i].status == "opened" && tripsList[i].segments.first.activeProcess == "watching"){
-            return InkWell(
-              onTap: () {
-                _onOpenMore(context,
-                    routName: WithDetailsTripSheet(
-                      tripData: tripsList[i],
-                    ));
-              },
-              child: SingleCustomDetailsTripWidget(tripData: tripsList[i]),
-            );
-          }
-          else if(tripsList[i].segments.length > 1 && (tripsList[i].status == 'issued' || (tripsList[i].status == 'opened' && (tripsList[i].segments.first.activeProcess == "watching" || tripsList[i].segments[1].activeProcess == "watching")) || tripsList[i].status == 'partly')){
-            applicationStatus = lp.getStatusApplication(tripsList[i]);
-            return InkWell(
-              onTap: () {
-                _onOpenMore(context,
-                    routName: CustomTripSheet(
-                      tripData: tripsList[i],
-                    ),
+                _onOpenMore(
+                  context,
+                  routName: CustomTripSheet(
+                    tripData: tripsList[i],
+                  ),
                 );
               },
               child: CustomTripPage(tripData: tripsList[i]),
@@ -160,10 +138,9 @@ class NearestTripWidget extends StatelessWidget {
         ),
       );
     }
-
-
-
   }
+
+  
   void _onOpenMore(BuildContext context, {routName}) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;

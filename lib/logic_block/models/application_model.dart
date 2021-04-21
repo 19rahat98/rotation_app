@@ -29,6 +29,7 @@ class Application {
   int overTime;
   List<Segments> segments;
   Map applicationStatus;
+  String watcherTimeLimit;
 
   Application(
       {this.id,
@@ -61,6 +62,7 @@ class Application {
         this.overTime,
         this.segments,
         this.applicationStatus,
+        this.watcherTimeLimit,
       });
 
 
