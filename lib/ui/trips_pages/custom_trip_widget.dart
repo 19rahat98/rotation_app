@@ -140,10 +140,30 @@ class _CustomTripPageState extends State<CustomTripPage> {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            widget.tripData.shift == 'day'
+                            if(LoginProvider().checkLargeRoute(widget.tripData))
+                              Container(
+                                margin: EdgeInsets.only(right: 8),
+                                child: SvgPicture.asset(
+                                  'assets/svg/largeRoute.svg',
+                                  width: 15,
+                                  height: 12,
+                                ),
+                              ),
+                            if(LoginProvider().checkWatcher(widget.tripData))
+                              Container(
+                                margin: EdgeInsets.only(right: 8),
+                                child: SvgPicture.asset(
+                                  'assets/svg/clock.svg',
+                                  color: Color(0xff00B688),
+                                  width: 16,
+                                  height: 16,
+                                ),
+                              ),
+                              widget.tripData.shift == 'day'
                                 ? Container(
-                                    margin: EdgeInsets.only(right: 5),
+                                    margin: EdgeInsets.only(right: 8),
                                     child: SvgPicture.asset(
                                       'assets/svg/Moon.svg',
                                       width: 24,
@@ -154,7 +174,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                 : Container(
                                     width: 32,
                                     height: 32,
-                                    margin: EdgeInsets.only(right: 5),
+                                    margin: EdgeInsets.only(right: 8),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(50),
                                       color: AppTheme.mainDarkColor,
@@ -168,8 +188,8 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                       ),
                                     ),
                                   ),
-                            for(int i = 0; i < widget.tripData.applicationStatus.length; i++)
-                              if(widget.tripData.applicationStatus.length == 1)
+                            for(int i = 0; i < widget.tripData.segments.length; i++)
+                              if(widget.tripData.applicationStatus.length == 1 && i == 0)
                                 Container(
                                   width: 32,
                                   height: 32,
@@ -186,12 +206,29 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                     ),
                                   ),
                                 )
-                              else if(widget.tripData.applicationStatus.length > 1 && i == 0)
+                              else if(widget.tripData.segments.length == 1 && widget.tripData.applicationStatus.length != 1)
+                                Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: widget.tripData.segments[i].status == "issued" ? Color(0xff00B688) : widget.tripData.segments[i].status == "opened" &&  widget.tripData.segments[i].activeProcess == 'watching' ? Color(0xffEA9F3F) : widget.tripData.segments[i].status == "returned" ? Color(0xffFF4242) : widget.tripData.segments[i].status == "opened" ||  widget.tripData.segments[i].status == "canceled" ? Color(0xffC5CAD1) :  Color(0xffC5CAD1),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? "assets/svg/Returned.svg" :  "assets/svg/Train.svg",
+                                      color: Colors.white,
+                                      width: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
+                                      height: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
+                                    ),
+                                  ),
+                                )
+                              else if(widget.tripData.segments.length > 1 && i == 0 && widget.tripData.applicationStatus.length != 1)
                                 Container(
                                   width: 26,
                                   height: 32,
                                   decoration: BoxDecoration(
-                                    color: widget.tripData.applicationStatus.keys.elementAt(i) == "green" ? Color(0xff00B688) : widget.tripData.applicationStatus.keys.elementAt(i) == "yellow" ? Color(0xffEA9F3F) : widget.tripData.applicationStatus.keys.elementAt(i) == "red" ? Color(0xffFF4242) : widget.tripData.applicationStatus.keys.elementAt(i) == "grey" ? Color(0xffC5CAD1) :  Color(0xffC5CAD1),
+                                    color: widget.tripData.segments[i].status == "issued" ? Color(0xff00B688) : widget.tripData.segments[i].status == "opened" &&  widget.tripData.segments[i].activeProcess == 'watching' ? Color(0xffEA9F3F) : widget.tripData.segments[i].status == "returned" ? Color(0xffFF4242) : widget.tripData.segments[i].status == "opened" ||  widget.tripData.segments[i].status == "canceled" ? Color(0xffC5CAD1) :  Color(0xffC5CAD1),
                                     borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(50),
                                       topLeft: Radius.circular(50),
@@ -199,33 +236,33 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                   ),
                                   child: Center(
                                     child: SvgPicture.asset(
-                                        widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled" ? "assets/svg/Returned.svg" : widget.tripData.applicationStatus.values.elementAt(i) > 1 ? "assets/svg/Trains.svg" : "assets/svg/Train.svg",
+                                      widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? "assets/svg/Returned.svg" :  "assets/svg/Train.svg",
                                       color: Colors.white,
-                                      width: widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled" ? 18 : 22,
-                                      height: widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled" ? 18 : 22,
+                                      width: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
+                                      height: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
                                     ),
                                   ),
                                 )
-                                else if(widget.tripData.applicationStatus.length > 1 && i + 1 != widget.tripData.applicationStatus.length && i != 0)
+                                else if(widget.tripData.segments.length > 1 && i + 1 != widget.tripData.segments.length && i != 0 && widget.tripData.applicationStatus.length != 1)
                                   Container(
                                     width: 26,
                                     height: 32,
-                                    color: widget.tripData.applicationStatus.keys.elementAt(i) == "green" ? Color(0xff00B688) : widget.tripData.applicationStatus.keys.elementAt(i) == "yellow" ? Color(0xffEA9F3F) : widget.tripData.applicationStatus.keys.elementAt(i) == "red" ? Color(0xffFF4242) : widget.tripData.applicationStatus.keys.elementAt(i) == "grey" ? Color(0xffC5CAD1) :  Color(0xffC5CAD1),
+                                    color: widget.tripData.segments[i].status == "issued" ? Color(0xff00B688) : widget.tripData.segments[i].status == "opened" &&  widget.tripData.segments[i].activeProcess == 'watching' ? Color(0xffEA9F3F) : widget.tripData.segments[i].status == "returned" ? Color(0xffFF4242) : widget.tripData.segments[i].status == "opened" ||  widget.tripData.segments[i].status == "canceled" ? Color(0xffC5CAD1) :  Color(0xffC5CAD1),
                                     child: Center(
                                       child: SvgPicture.asset(
-                                        widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled" ? "assets/svg/Returned.svg" : widget.tripData.applicationStatus.values.elementAt(i) > 1 ? "assets/svg/Trains.svg" : "assets/svg/Train.svg",
+                                        widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? "assets/svg/Returned.svg" :  "assets/svg/Train.svg",
                                         color: Colors.white,
-                                        width: widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled"  ? 18 : 22,
-                                        height: widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled" ? 18 : 22,
+                                        width: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
+                                        height: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
                                       ),
                                     ),
                                   )
-                                else if(widget.tripData.applicationStatus.length > 1 && i + 1 == widget.tripData.applicationStatus.length)
+                                else if(widget.tripData.segments.length> 1 && i + 1 == widget.tripData.segments.length && widget.tripData.applicationStatus.length != 1)
                                   Container(
                                     width: 26,
                                     height: 32,
                                     decoration: BoxDecoration(
-                                      color: widget.tripData.applicationStatus.keys.elementAt(i) == "green" ? Color(0xff00B688) : widget.tripData.applicationStatus.keys.elementAt(i) == "yellow" ? Color(0xffEA9F3F) : widget.tripData.applicationStatus.keys.elementAt(i) == "red" ? Color(0xffFF4242) : widget.tripData.applicationStatus.keys.elementAt(i) == "grey" ? Color(0xffC5CAD1) :  Color(0xffC5CAD1),
+                                      color: widget.tripData.segments[i].status == "issued" ? Color(0xff00B688) : widget.tripData.segments[i].status == "opened" &&  widget.tripData.segments[i].activeProcess == 'watching' ? Color(0xffEA9F3F) : widget.tripData.segments[i].status == "returned" ? Color(0xffFF4242) : widget.tripData.segments[i].status == "opened" ||  widget.tripData.segments[i].status == "canceled" ? Color(0xffC5CAD1) :  Color(0xffC5CAD1),
                                       borderRadius: BorderRadius.only(
                                         bottomRight: Radius.circular(50),
                                         topRight: Radius.circular(50),
@@ -233,10 +270,10 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                     ),
                                     child: Center(
                                       child: SvgPicture.asset(
-                                        widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled"  ? "assets/svg/Returned.svg" : widget.tripData.applicationStatus.values.elementAt(i) > 1 ? "assets/svg/Trains.svg" : "assets/svg/Train.svg",
+                                        widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? "assets/svg/Returned.svg" :  "assets/svg/Train.svg",
                                         color: Colors.white,
-                                        width: widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled" ? 18 : 22,
-                                        height: widget.tripData.applicationStatus.keys.elementAt(i) == "red" || widget.tripData.applicationStatus.keys.elementAt(i) == "canceled" ? 18 : 22,
+                                        width: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
+                                        height: widget.tripData.segments[i].status  == "returned" || widget.tripData.segments[i].status == "canceled" ? 18 : 22,
                                       ),
                                     ),
                                   ),
@@ -428,7 +465,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
                 ),
               ],
             ),
-          if(!widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
+          if(widget.tripData.applicationStatus.length != 1 && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -467,7 +504,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
                 ),
               ],
             ),
-          if(widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow'))
+          if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow'))
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1031,100 +1068,125 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        widget.tripData.segments[index].icon != null && widget.tripData.segments[index].icon.isNotEmpty
-                                            ? widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ?
-                                                Container(
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(left: 10),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            widget.tripData.segments[index].icon != null && widget.tripData.segments[index].icon.isNotEmpty
+                                                ? widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ?
+                                                    Container(
+                                                        width: 33,
+                                                        height: 33,
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                        ),
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(100),
+                                                          child: Image.network(
+                                                            widget
+                                                                .tripData
+                                                                .segments[index]
+                                                                .icon,
+                                                            colorBlendMode: BlendMode.lighten,
+                                                            color: Color(0xffCFD5DC),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : Image(
+                                                        image: NetworkImage(widget
+                                                        .tripData
+                                                        .segments[index]
+                                                        .icon),
                                                     width: 33,
                                                     height: 33,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(100),
-                                                      child: Image.network(
-                                                        widget
-                                                            .tripData
-                                                            .segments[index]
-                                                            .icon,
-                                                        colorBlendMode: BlendMode.lighten,
-                                                        color: Color(0xffCFD5DC),
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
                                                   )
-                                                : Image(
-                                                    image: NetworkImage(widget
-                                                    .tripData
-                                                    .segments[index]
-                                                    .icon),
-                                                width: 33,
-                                                height: 33,
-                                              )
-                                            : SvgPicture.asset(
-                                                "assets/svg/avia-bekair.svg",
-                                                width: 33,
-                                                height: 33,
-                                              ),
-                                        Container(
-                                          margin: EdgeInsets.only(left: 10, bottom: 16),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                DateFormat.MMMEd('ru').format(
-                                                      DateTime.parse(widget
-                                                          .tripData
-                                                          .segments[index]
-                                                          .train
-                                                          .depDateTime),
-                                                    ).toString().replaceAll('.', ','),
-                                                style: TextStyle(
-                                                    fontFamily: "Root",
-                                                    fontSize: 16,
-                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.only(
-                                                    top: 4, bottom: 4),
-                                                child: Text(
-                                                  DateFormat.Hm()
-                                                      .format(DateTime.parse(
-                                                          widget
+                                                : SvgPicture.asset(
+                                                    "assets/svg/avia-bekair.svg",
+                                                    width: 33,
+                                                    height: 33,
+                                                  ),
+                                            Container(
+                                              margin: EdgeInsets.only(left: 10, bottom: 16),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    DateFormat.MMMEd('ru').format(
+                                                          DateTime.parse(widget
                                                               .tripData
                                                               .segments[index]
                                                               .train
-                                                              .depDateTime))
-                                                      .toString()
-                                                      .replaceAll('.', ''),
-                                                  style: TextStyle(
-                                                      fontFamily: "Root",
-                                                      fontSize: 20,
-                                                      color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F),
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
+                                                              .depDateTime),
+                                                        ).toString().replaceAll('.', ','),
+                                                    style: TextStyle(
+                                                        fontFamily: "Root",
+                                                        fontSize: 16,
+                                                        color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 4, bottom: 4),
+                                                    child: Text(
+                                                      DateFormat.Hm()
+                                                          .format(DateTime.parse(
+                                                              widget
+                                                                  .tripData
+                                                                  .segments[index]
+                                                                  .train
+                                                                  .depDateTime))
+                                                          .toString()
+                                                          .replaceAll('.', ''),
+                                                      style: TextStyle(
+                                                          fontFamily: "Root",
+                                                          fontSize: 20,
+                                                          color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F),
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "${widget.tripData.segments[index].train.depStationName[0].toUpperCase()}${widget.tripData.segments[index].train.depStationName.toLowerCase().substring(1)}, ${widget.tripData.segments[index].depStationName[0].toUpperCase()}${widget.tripData.segments[index].depStationName.toLowerCase().substring(1)}",
+                                                    style: TextStyle(
+                                                        fontFamily: "Root",
+                                                        fontSize: 14,
+                                                        color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F).withOpacity(0.7),
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
-                                              Text(
-                                                "${widget.tripData.segments[index].train.depStationName[0].toUpperCase()}${widget.tripData.segments[index].train.depStationName.toLowerCase().substring(1)}, ${widget.tripData.segments[index].depStationName[0].toUpperCase()}${widget.tripData.segments[index].depStationName.toLowerCase().substring(1)}",
-                                                style: TextStyle(
-                                                    fontFamily: "Root",
-                                                    fontSize: 14,
-                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F).withOpacity(0.7),
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                            ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if(LoginProvider().checkLargeRoute(widget.tripData))
+                                        Container(
+                                          margin: EdgeInsets.only(right: 8),
+                                          child: SvgPicture.asset(
+                                            'assets/svg/largeRoute.svg',
+                                            width: 15,
+                                            height: 12,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      if(LoginProvider().checkWatcher(widget.tripData))
+                                        Container(
+                                          margin: EdgeInsets.only(right: 8),
+                                          child: SvgPicture.asset(
+                                            'assets/svg/clock.svg',
+                                            color: Color(0xff00B688),
+                                            width: 16,
+                                            height: 16,
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(left: 10),
@@ -1135,8 +1197,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(
-                                        top: 16, left: 10, bottom: 16),
+                                    margin: EdgeInsets.only(top: 16, left: 10, bottom: 16),
                                     child: Column(
                                       children: [
                                         Row(
@@ -1806,64 +1867,9 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: w,
-                    height: 52,
-                    margin: EdgeInsets.only(top: 16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      gradient: RadialGradient(radius: 4,
-                        colors: [
-                          Color(0xff1989DD),
-                          Color(0xff1262CB),
-                        ],
-                      ),
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        if(widget.tripData.segments.first.ticket != null && widget.tripData.segments.first.ticket.ticketUrl != null){
-                          final status = await Permission.storage.request();
-
-                          if (status.isGranted) {
-                            final externalDir = await getExternalStorageDirectory();
-                            FlutterDownloader.enqueue(
-                              url: widget.tripData.segments.first.ticket.ticketUrl,
-                              savedDir: externalDir.path,
-                              fileName: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
-                              ).toString().replaceAll('.', ',')}",
-                              showNotification: true,
-                              openFileFromNotification: true,
-                            ).then((value) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PDFScreen(path: externalDir.path, title: "Билет ${widget.tripData.segments[0].train.depStation} - ${widget.tripData.segments[0].train.arrStation} ${DateFormat.MMMEd('ru').format(DateTime.parse(widget.tripData.segments[0].train.depDateTime),
-                                  ).toString().replaceAll('.', ',')}",),
-                                ),
-                              );
-                            });
-                          } else {
-                            print("Permission deined");
-                          }
-                        }else{
-                          print("Ticket not found");
-                        }
-
-                      },
-                      child: Center(
-                          child: Text(
-                            'Скачать билеты',
-                            style: TextStyle(
-                                fontFamily: "Root",
-                                fontSize: 17,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )),
-                    ),
-                  ),
                 ],
               ),
-            if(!widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
+            if(widget.tripData.applicationStatus.length != 1 && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
               Column(
                 children: [
                   Container(
@@ -1949,7 +1955,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                       ],
                     ),
                   ),
-                  Container(
+                  /*Container(
                     width: w,
                     height: 52,
                     margin: EdgeInsets.only(top: 16),
@@ -2003,7 +2009,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                 fontWeight: FontWeight.bold),
                           )),
                     ),
-                  ),
+                  ),*/
                 ],
               ),
             if(!widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
@@ -2021,7 +2027,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   ),
                 ),
               ),
-            if(widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow'))
+            if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow'))
               Container(
                 width: w,
                 margin: EdgeInsets.only(top: 12),
@@ -2089,73 +2095,106 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   if(widget.tripData.segments[i].status == 'issued')
-                    Container(
-                      width: w,
-                      margin: EdgeInsets.only(top: 12),
-                      padding: EdgeInsets.only(top: 10, bottom: 8),
-                      decoration: new BoxDecoration(
-                        gradient: new RadialGradient(
-                          radius: 3,
-                          colors: [
-                            Color(0xFF1989DD),
-                            Color(0xFF1262CB),
+                    InkWell(
+                      onTap: () async{
+                        if (widget.tripData.segments[i].ticket != null &&
+                            widget.tripData.segments[i].ticket.ticketUrl != null) {
+                          final status = await Permission.storage.request();
+
+                          if (status.isGranted) {
+                            String dirloc = "";
+                            if (Platform.isAndroid) {
+                              dirloc = "/sdcard/download/${widget.tripData.segments[i].id}.pdf";
+                            } else {
+                              dirloc = (await getApplicationDocumentsDirectory()).path + '/' + widget.tripData.segments[i].id.toString() + '.pdf';
+                            }
+                            print('full path ${dirloc}');
+
+                            download2(dio, widget.tripData.segments[i].ticket.ticketUrl, dirloc).whenComplete(() {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PDFScreen(
+                                    path: dirloc,
+                                    title:
+                                    "Билет ${widget.tripData.segments[i].train.depStation} - ${widget.tripData.segments[i].train.arrStation} ${DateFormat.MMMEd('ru').format(
+                                      DateTime.parse(widget.tripData.segments[i].train.depDateTime),
+                                    ).toString()}",
+                                  ),
+                                ),
+                              );
+                            });
+                          }
+                        }
+                      },
+                      child: Container(
+                        width: w,
+                        margin: EdgeInsets.only(top: 12),
+                        padding: EdgeInsets.only(top: 10, bottom: 8),
+                        decoration: new BoxDecoration(
+                          gradient: new RadialGradient(
+                            radius: 3,
+                            colors: [
+                              Color(0xFF1989DD),
+                              Color(0xFF1262CB),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.12),
+                              spreadRadius: 0,
+                              blurRadius: 4,
+                              offset: Offset(
+                                  0, 2), // changes position of shadow
+                            ),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.12),
-                            spreadRadius: 0,
-                            blurRadius: 4,
-                            offset: Offset(
-                                0, 2), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              child: SvgPicture.asset("assets/svg/download.svg", color: Colors.white,),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 2, right: 8),
-                              child: VerticalDivider(
-                                indent: 0.0,
-                                endIndent: 0.0,
-                                width: 2,
-                                color: Colors.white,
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                child: SvgPicture.asset("assets/svg/download.svg", color: Colors.white,),
                               ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} ',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text(
-                                      'скачать билет',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white.withOpacity(0.7),
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ],
+                              Container(
+                                margin: EdgeInsets.only(left: 2, right: 8),
+                                child: VerticalDivider(
+                                  indent: 0.0,
+                                  endIndent: 0.0,
+                                  width: 2,
+                                  color: Colors.white,
                                 ),
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        'скачать билет',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white.withOpacity(0.7),
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -2190,7 +2229,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} ',
+                                      '${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} ',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -2200,7 +2239,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                       ),
                                     ),
                                     Text(
-                                      widget.tripData.segments[i].closedReason != null ? widget.tripData.segments[i].closedReason : '',
+                                      widget.tripData.segments[i].closedReason != null && widget.tripData.segments[i].ticket != null ? widget.tripData.segments[i].closedReason + '. Инициатор: ${widget.tripData.segments[i].ticket.returnUserId}' + '. Дата отмены: ${DateFormat.yMMMMd('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))} в ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))}' : '',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Color(0xff748595).withOpacity(0.5),
@@ -2246,7 +2285,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} ',
+                                      '${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} ',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -2256,7 +2295,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                       ),
                                     ),
                                     Text(
-                                      widget.tripData.segments[i].closedReason != null ? widget.tripData.segments[i].closedReason : '',
+                                      widget.tripData.segments[i].closedReason != null && widget.tripData.segments[i].ticket != null ? widget.tripData.segments[i].closedReason + '. Инициатор: ${widget.tripData.segments[i].ticket.returnUserId}' + '. Дата отмены: ${DateFormat.yMMMMd('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))} в ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))}' : '',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Color(0xff748595).withOpacity(0.5),
@@ -2302,7 +2341,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} ',
+                                        '${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} ',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -2312,7 +2351,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                         ),
                                       ),
                                       Text(
-                                        'билет отменен',
+                                        'билет не оформлен',
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: Color(0xff748595).withOpacity(0.5),
@@ -2358,7 +2397,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} ',
+                                      ' ${widget.tripData.segments[i].depStationName[0].toUpperCase()}${widget.tripData.segments[i].depStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[i].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[i].train.arrStationName.toLowerCase().substring(1)} ',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -2383,7 +2422,6 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                         ),
                       ),
                     ),
-
                 ],
               )
 

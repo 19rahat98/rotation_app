@@ -137,6 +137,28 @@ class LoginProvider with ChangeNotifier {
     return null;
   }
 
+  bool checkLargeRoute(Application item){
+    if(item.segments != null && item.segments.isNotEmpty) {
+      for(int i = 0; i < item.segments.length; i++){
+        if(item.segments[i].train != null && item.segments[i].train.largeRoute != null && item.segments[i].train.largeRoute == true && item.segments[i].status == 'issued')
+          return true;
+      }
+      return false;
+      }
+    else return false;
+    }
+
+  bool checkWatcher(Application item){
+    if(item.segments != null && item.segments.isNotEmpty) {
+      for(int i = 0; i < item.segments.length; i++) {
+        if(item.segments[i].ticket != null && item.segments[i].ticket.byWatcher != null && item.segments[i].ticket.byWatcher == true && item.segments[i].status == 'issued')
+          return true;
+      }
+      return false;
+      }
+    else return false;
+    }
+
   Map<dynamic, dynamic> getStatusApplication(Application item){
     Map statusCode = Map();
     if(item.segments != null && item.segments.isNotEmpty){

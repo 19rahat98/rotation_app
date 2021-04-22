@@ -18,6 +18,8 @@ class Application {
   String createdAt;
   String updatedAt;
   bool fromOld;
+  bool largeRoute;
+  bool byWatcher;
   dynamic oldId;
   dynamic deletedAt;
   bool isStored;
@@ -63,6 +65,8 @@ class Application {
         this.segments,
         this.applicationStatus,
         this.watcherTimeLimit,
+        this.largeRoute,
+        this.byWatcher,
       });
 
 
@@ -100,6 +104,8 @@ class Application {
     endStation = json['end_station'];
     productKey = json['product_key'];
     overTime = json['overtime'];
+    largeRoute = json['large_route'];
+    byWatcher = json['by_watcher'];
     if (json['segments'] != null) {
       segments = new List<Segments>();
       json['segments'].forEach((v) {
@@ -138,6 +144,8 @@ class Application {
     data['end_station'] = this.endStation;
     data['product_key'] = this.productKey;
     data['overtime'] = this.overTime;
+    data['large_route'] = this.largeRoute;
+    data['by_watcher'] = this.byWatcher;
     if (this.segments != null) {
       data['segments'] = this.segments.map((v) => v.toJson()).toList();
     }
@@ -257,6 +265,7 @@ class Train {
   String updatedAt;
   String depStation;
   String arrStation;
+  dynamic largeRoute;
 
   Train(
       {this.id,
@@ -275,7 +284,9 @@ class Train {
         this.createdAt,
         this.updatedAt,
         this.depStation,
-        this.arrStation});
+        this.arrStation,
+        this.largeRoute,
+      });
 
   Train.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -295,6 +306,7 @@ class Train {
     updatedAt = json['updated_at'];
     depStation = json['dep_station'];
     arrStation = json['arr_station'];
+    largeRoute = json['large_route'];
   }
 
   Map<String, dynamic> toJson() {
@@ -316,6 +328,7 @@ class Train {
     data['updated_at'] = this.updatedAt;
     data['dep_station'] = this.depStation;
     data['arr_station'] = this.arrStation;
+    data['large_route'] = this.largeRoute;
     return data;
   }
 }
