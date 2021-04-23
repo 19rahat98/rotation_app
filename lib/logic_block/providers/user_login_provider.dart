@@ -133,13 +133,17 @@ class UserLoginProvider with ChangeNotifier {
     return _status;
   }
 
-  Future<Status> updatePhoneNumber({String phone}) async {
+  Future<Status> updatePhoneNumber({String phone, String firstName, String lastName, String employeeId, String employeeNumber}) async {
+    print(_userPhoneNumber);
     final ResponseApi result = await userRepository.updateEmployeePhoneNumber(
         iinNumber: _userIIN, phoneNumber: phone, type: "test");
+    await userRepository.updatePhoneNumber(
+        iinNumber: _userIIN, phoneNumber: phone, firstName: firstName, lastName: lastName, employeeId: employeeId, employeeNumber: employeeNumber);
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
     _userPhoneNumber = phone;
     notifyListeners();
-
+    print(result.data);
+    print(result.code);
     try {
       if (result.code == 200) {
         _status = Status.SecondStepSuccessful;

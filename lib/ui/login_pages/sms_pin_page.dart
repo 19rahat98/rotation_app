@@ -26,6 +26,7 @@ class SmsPinPage extends StatefulWidget {
 
 class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
   Timer timer;
+  int _numberOfFailedAttempts = 0;
   var textFieldCtrl = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
   int secondValue = 60;
@@ -66,6 +67,9 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
               builder: (BuildContext context) =>
                   DeactivateAccountBottomSheet());
         case Status.LoginFail:
+          setState(() {
+            _numberOfFailedAttempts += 1;
+          });
           return showDialog<void>(
               context: context,
               barrierDismissible: false, // user  must tap button!
@@ -114,9 +118,9 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
               children: [
                 Container(),
                 Container(
-                  height: h * 0.45,
+                  //height: 360,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children: [
@@ -161,6 +165,7 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                         children: [
                           Container(
                             width: w * 0.7,
+                            margin: EdgeInsets.only(top: 60),
                             child: PinPut(
                               fieldsCount: 4,
                               eachFieldWidth: 56.0,
@@ -196,6 +201,51 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
+                          if(_numberOfFailedAttempts > 3)
+                            Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(top: 25, bottom: 20),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'К вам не поступил SMS-код? Свяжитесь с нашей службой поддержки.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: "Root",
+                                      fontSize: 14,
+                                      color: Color(0xffCFD5DC),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: w * 0.9,
+                                  height: 60,
+                                  decoration: new BoxDecoration(
+                                    color: Color(0xffFFFFFF).withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              SocialMediaBottomSheet());
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        'Обратиться в поддержку',
+                                        style: TextStyle(fontFamily: "Root",
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          if(_numberOfFailedAttempts <= 3)
                           secondValue > 0
                               ? Container(
                                   margin: EdgeInsets.only(top: 40, bottom: 20),

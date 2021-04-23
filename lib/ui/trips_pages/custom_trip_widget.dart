@@ -283,7 +283,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
                     ),
                   ],
                 ),
-                widget.tripData.applicationStatus.length == 1 && widget.tripData.applicationStatus.keys.elementAt(0) == "green" ?
+                widget.tripData.applicationStatus.length == 1 && widget.tripData.applicationStatus.keys.elementAt(0) == "green" && DateTime.now().isBefore(DateTime.parse(widget.tripData.date)) ?
                 Text(widget.tripData.endStation != null
                       ? "в ${widget.tripData.endStation[0].toUpperCase()}${widget.tripData.endStation.toLowerCase().substring(1)} + (${getTimeToWork(tripeDate: widget.tripData.date)})"
                       : "",
@@ -465,7 +465,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
                 ),
               ],
             ),
-          if(widget.tripData.applicationStatus.length != 1 && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
+          if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -504,7 +504,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
                 ),
               ],
             ),
-          if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow'))
+          if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('canceled'))
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -1869,7 +1869,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   ),
                 ],
               ),
-            if(widget.tripData.applicationStatus.length != 1 && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
+            if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('all') && !widget.tripData.applicationStatus.containsKey('grey'))
               Column(
                 children: [
                   Container(
@@ -2027,7 +2027,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   ),
                 ),
               ),
-            if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow'))
+            if(widget.tripData.applicationStatus.length != 1 && widget.tripData.applicationStatus.containsKey('green') && !widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('canceled'))
               Container(
                 width: w,
                 margin: EdgeInsets.only(top: 12),
@@ -2042,7 +2042,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   ),
                 ),
               ),
-            if(widget.tripData.applicationStatus.containsKey('green') && widget.tripData.applicationStatus.containsKey('yellow'))
+            if(widget.tripData.applicationStatus.containsKey('green') && widget.tripData.applicationStatus.containsKey('yellow') && !widget.tripData.applicationStatus.containsKey('red') && !widget.tripData.applicationStatus.containsKey('canceled'))
               Container(
                 width: w,
                 margin: EdgeInsets.only(top: 12,),

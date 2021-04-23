@@ -10,7 +10,8 @@ class Api {
   static const String SEND_CODE_LOGIN = "/employees/send-code-login";
   static const String LOGIN = "/employees/login";
   static const String FIND_EMPLOYEE_BY_IIN = "/employees/get-employee-by-iin";
-  static const String UPDATE_PHONE_NUMBER = "/employees/send-code-update";
+  static const String UPDATE_EMPLOYEE_PHONE_NUMBER = "/employees/send-code-update";
+  static const String UPDATE_PHONE_NUMBER = "/employees/update-phone";
   static const String CONFIRMATION_PHONE_NUMBER = "/employees/confirm-phone-update";
   static const String RETRY_SEND_SMS_CODE = "/employees/retry-send-code";
   static const String GET_APPLICATION = "/employees/get-applications";
@@ -93,8 +94,8 @@ class Api {
     return result;
   }
 
-  static Future<dynamic> getArticlesList() async{
-    final result = await httpManager.get(url: GET_ARTICLES);
+  static Future<dynamic> getArticlesList(params) async{
+    final result = await httpManager.get(url: GET_ARTICLES, params: params);
     return ResponseApi.fromJson(result);
   }
 
@@ -137,7 +138,12 @@ class Api {
   }
 
   static Future<dynamic> updateEmployeePhoneNumber(params) async {
+    final result = await httpManager.post(url: UPDATE_EMPLOYEE_PHONE_NUMBER, data: params);
+    return ResponseApi.fromJson(result);
+  }
+  static Future<dynamic> updatePhoneNumber(params) async {
     final result = await httpManager.post(url: UPDATE_PHONE_NUMBER, data: params);
+    print(result);
     return ResponseApi.fromJson(result);
   }
 

@@ -1,10 +1,10 @@
 import 'dart:async';
-
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:md2_tab_indicator/md2_tab_indicator.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:rotation_app/ui/widgets/emptyPage.dart';
 import 'package:rotation_app/ui/trips_pages/active_trips_widget.dart';
@@ -27,12 +27,44 @@ class _TripsPageState extends State<TripsPage> {
       _onRefresh();
     }
   }
-
+  final _pagingController = PagingController<int, Application>(
+    // 2
+    firstPageKey: 1,
+  );
   @override
   void initState() {
     super.initState();
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
     timer = Timer.periodic(Duration(seconds: 30), (Timer t) => timerVoid());
     lp = Provider.of<LoginProvider>(context, listen: false);
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final newPage = await lp.getNewEmployeeApplicationData(
+        pageNumber: pageKey,
+        perPage: 10,
+      );
+
+      final previouslyFetchedItemsCount =
+      // 2
+      _pagingController.itemList?.length ?? 0;
+
+      final isLastPage = pageKey >= await lp.pageCount(pageNumber: pageKey, perPage: 10,);
+      final newItems = newPage;
+      if (isLastPage) {
+        // 3
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      // 4
+      _pagingController.error = error;
+    }
   }
 
   void _onRefresh(){
@@ -121,23 +153,44 @@ class _TripsPageState extends State<TripsPage> {
                             onRefresh: () async {
                               _onRefresh();
                             },
-                            child: lp.data != null && lp.data.isNotEmpty
-                                ? ActiveTripsWidget(
-                                  tripsList: lp.data,
-                                  scrollController: scrollController,
-                                )
-                                : Container(),
+                            child: lp.data != null && lp.data.isNotEmpty ? PagedListView.separated(
+                              pagingController: _pagingController,
+                              padding: const EdgeInsets.all(16),
+                              builderDelegate: PagedChildBuilderDelegate<Application>(
+                                itemBuilder: (context, article, index){
+                                  return ActiveTripsWidget(
+                                    tripsList: article,
+                                    scrollController: scrollController,
+                                  );
+                                }
+                              ),
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 0,
+                              ),
+                                ) : Container(),
                           ),
                           RefreshIndicator(
                             onRefresh: () async {
                               _onRefresh();
                             },
-                            child: lp.data != null && lp.data.isNotEmpty
-                                ? ArchiveTrips(
-                                  tripsList: lp.data,
-                                  scrollController: scrollController,
-                                )
-                                : Container(),
+                            child: lp.data != null && lp.data.isNotEmpty ? PagedListView.separated(
+                              pagingController: _pagingController,
+                              padding: const EdgeInsets.all(16),
+                              builderDelegate: PagedChildBuilderDelegate<Application>(
+                                  itemBuilder: (context, article, index){
+                                    return ArchiveTrips(
+                                      tripsList: article,
+                                      scrollController: scrollController,
+                                    );
+                                  },
+                                  noItemsFoundIndicatorBuilder:(context) {
+                                    return Container();
+                                  },
+                              ),
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 0,
+                              ),
+                            ) : Container(),
                           ),
                         ],
                       ),

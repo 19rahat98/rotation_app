@@ -361,10 +361,11 @@ class LoginProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Application>> getNewEmployeeApplicationData() async {
+  Future<List<Application>> getNewEmployeeApplicationData({int pageNumber, int perPage}) async {
     await _sendDeviceId();
-    final ResponseApi result = await userRepository.getApplication();
+    final ResponseApi result = await userRepository.getApplication(pageNumber: pageNumber, perPage: perPage);
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
+    pageCount(perPage: perPage, pageNumber: pageNumber);
     if (result.code == 200) {
       Iterable _convertList = decodeData.data["data"];
       _data = _convertList.map((item) {
@@ -380,10 +381,24 @@ class LoginProvider with ChangeNotifier {
     return null;
   }
 
-  Future<List<Application>> getEmployeeApplication() async {
+  Future<int> pageCount({int pageNumber, int perPage}) async{
+    final ResponseApi result = await userRepository.getApplication(pageNumber: pageNumber, perPage: perPage);
+    final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
+    if(decodeData.data != null){
+      print( decodeData.data['last_page']);
+      print('adasdasdasd');
+      return decodeData.data['last_page'];
+    }
+    else {
+      print('adasasdasdasddasdasd');
+      return 1;
+    }
+  }
+
+  Future<List<Application>> getEmployeeApplication({int pageNumber, int perPage}) async {
     if(_data.isEmpty){
       await _sendDeviceId();
-      final ResponseApi result = await userRepository.getApplication();
+      final ResponseApi result = await userRepository.getApplication(pageNumber: pageNumber, perPage: 10);
       final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
       if (result.code == 200) {
         Iterable _convertList = decodeData.data["data"];

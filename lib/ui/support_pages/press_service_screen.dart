@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rotation_app/logic_block/models/articles_model.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'package:rotation_app/ui/widgets/emptyPage.dart';
+import 'package:rotation_app/logic_block/models/articles_model.dart';
 import 'package:rotation_app/logic_block/providers/articles_provider.dart';
 import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
-import 'package:rotation_app/ui/widgets/emptyPage.dart';
 
 class PressServiceScreen extends StatefulWidget {
   final bool pushMessage;
@@ -20,9 +21,15 @@ class PressServiceScreen extends StatefulWidget {
 
 class _PressServiceScreenState extends State<PressServiceScreen> {
   final TextEditingController _searchQuestionTextController = TextEditingController();
+  ArticlesProvider ap;
   var formKey = GlobalKey<FormState>();
   String _query;
   Timer timer;
+
+  final _pagingController = PagingController<int, Articles>(
+    // 2
+    firstPageKey: 1,
+  );
 
   void timerVoid() {
     if(true){
@@ -32,7 +39,10 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
 
   @override
   void initState() {
-
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    ap = Provider.of<ArticlesProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(widget.pushMessage != null && widget.pushMessage){
         ArticlesProvider().aboutMoreArticle(articleId: widget.articleId).then((value) {
@@ -54,6 +64,27 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
     });
   }
 
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final newPage = await ap.getArticles(
+        pageNumber: pageKey,
+        perPage: 5,
+      );
+      final isLastPage = pageKey >= await ap.pageCount(pageNumber: pageKey, perPage: 10,);
+      final newItems = newPage;
+      if (isLastPage) {
+        // 3
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      // 4
+      _pagingController.error = error;
+    }
+  }
+
 /*  _updateData() {
     if (mounted) {
       new Stream.periodic(const Duration(seconds: 1), (v) => v).listen((count) {
@@ -64,8 +95,6 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
   }*/
 
   Widget afterSearchUI() {
-    final ArticlesProvider ap =
-        Provider.of<ArticlesProvider>(context, listen: false);
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return ap.filteredData.isNotEmpty && ap.filteredData != null ? ListView(
@@ -170,10 +199,113 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
   }
 
   Widget beforeSearchUI() {
-    final ArticlesProvider ap =
-        Provider.of<ArticlesProvider>(context, listen: false);
     double w = MediaQuery.of(context).size.width;
-    return ListView(
+    return PagedListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate<Articles>(
+          noItemsFoundIndicatorBuilder:(context) {
+            return Container();
+          },
+          itemBuilder: (context, item, index){
+            if (ap.articlesList.isNotEmpty) {
+              return Container(
+                margin: const EdgeInsets.only(top: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: InkWell(
+                  onTap: () async{
+                    await ap.makeAsReadArticle(articleId: item.id.toString());
+                    ap.aboutMoreArticle(articleId: item.id.toString()).then((value) {
+                      if(value != null){
+                        _onOpenMore(context, content: value.content, title: value.title, publishDate: value.publishedOn);
+                      }
+                    });
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/news_paper.svg",
+                              width: 20,
+                              height: 19,
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: w - 70,
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  child: Text(
+                                    item.title,
+                                    style: TextStyle(
+                                        fontFamily: "Root",
+                                        fontSize: 18,
+                                        color: Color(0xff15304D),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Container(
+                                  width: w - 70,
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  child: Text(
+                                    item.shortContent,
+                                    style: TextStyle(
+                                      fontFamily: "Root",
+                                      fontSize: 15,
+                                      color: Color(0xff15304D).withOpacity(0.5),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  width: w - 70,
+                                  margin: EdgeInsets.only(bottom: 12),
+                                  child: Text(
+                                    item.publishedOn,
+                                    style: TextStyle(
+                                        fontFamily: "Root",
+                                        fontSize: 12,
+                                        color: Color(0xff15304D).withOpacity(0.3)),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      item.id == ap.articlesList.last.id
+                          ? Container()
+                          : Divider(
+                        height: 0,
+                        color: Color(0xffDEE1E6),
+                        thickness: 1.2,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return Container();
+            }
+          }
+      ),
+      separatorBuilder: (context, index) => SizedBox(
+        height: 0,
+      ),
+    );
+
+
+    ListView(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -274,7 +406,7 @@ class _PressServiceScreenState extends State<PressServiceScreen> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-    ArticlesProvider ap = Provider.of<ArticlesProvider>(context, listen: false);
+    //ArticlesProvider ap = Provider.of<ArticlesProvider>(context, listen: false);
     return FutureBuilder<List<Articles>>(
         future: ap.getArticles(),
         builder: (context, snapshot) {

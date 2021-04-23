@@ -22,7 +22,6 @@ class UserIdPage extends StatefulWidget {
 class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
 
   var textFieldCtrl = TextEditingController();
-
   Future<Status> _status;
   @override
   void initState() {
@@ -137,9 +136,14 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                                   margin: EdgeInsets.only(top: 5),
                                   child: MaskedTextField(
                                     maskedTextFieldController: textFieldCtrl,
-                                    mask: "x x x x x x x x x x x x ",
+                                    mask: "x x x x x x x x x x x x",
                                     maxLength: 23,
                                     keyboardType: TextInputType.number,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     inputDecoration: new InputDecoration(
                                       hintText: '_ _ _ _ _ _ _ _ _ _ _ _',
                                       hintStyle: TextStyle(

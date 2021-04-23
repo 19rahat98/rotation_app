@@ -16,7 +16,7 @@ import 'package:rotation_app/logic_block/models/application_model.dart';
 import 'package:rotation_app/ui/trips_pages/with_datailes_trip_widget.dart';
 
 class ArchiveTrips extends StatelessWidget{
-  final List<Application> tripsList;
+  final Application tripsList;
   final ScrollController scrollController;
   const ArchiveTrips({Key key, this.tripsList, this.scrollController}) : super(key: key);
 
@@ -54,27 +54,19 @@ class ArchiveTrips extends StatelessWidget{
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
-    Map applicationStatus = Map();
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: ListView(
-          controller: scrollController,
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          children: tripsList.map((item) {
-            if (DateTime.now().isAfter(DateTime.parse(item.date)) || (!item.applicationStatus.containsKey('all') && !item.applicationStatus.containsKey('grey') && !item.applicationStatus.containsKey('green') && !item.applicationStatus.containsKey('yellow'))) {
-              if(item.segments.isEmpty && item.status == "opened" ){
-                return InkWell(
-                  onTap: () {
-                    showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            InactiveTripActionSheet(tripData: item));
-                  },
-                  child: InactiveTripWidget(tripData: item),
-                );
-              }
-              /*else if(item.segments.length == 1 && item.status == "opened"){
+    if (DateTime.now().isAfter(DateTime.parse(tripsList.date)) || (!tripsList.applicationStatus.containsKey('all') && !tripsList.applicationStatus.containsKey('grey') && !tripsList.applicationStatus.containsKey('green') && !tripsList.applicationStatus.containsKey('yellow'))) {
+      if(tripsList.segments.isEmpty && tripsList.status == "opened" ){
+        return InkWell(
+          onTap: () {
+            showCupertinoModalPopup(
+                context: context,
+                builder: (BuildContext context) =>
+                    InactiveTripActionSheet(tripData: tripsList));
+          },
+          child: InactiveTripWidget(tripData: tripsList),
+        );
+      }
+      /*else if(item.segments.length == 1 && item.status == "opened"){
                 return InkWell(
                   onTap: () {
                     _onOpenMore(context,
@@ -107,6 +99,77 @@ class ArchiveTrips extends StatelessWidget{
                   child: SingleActiveWidget(tripData: item),
                 );
               }*/
+      else if(tripsList.segments.isNotEmpty && tripsList.applicationStatus != null ){
+        return InkWell(
+          onTap: () {
+            _onOpenMore(context,
+              routName: CustomTripSheet(
+                tripData: tripsList,
+              ),
+            );
+          },
+          child: CustomTripPage(tripData: tripsList),
+        );
+      }
+      else{
+        return Container();
+      }
+    }
+    else{
+      return Container();
+    }
+    /*return Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: ListView(
+          controller: scrollController,
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          children: tripsList.map((item) {
+            if (DateTime.now().isAfter(DateTime.parse(item.date)) || (!item.applicationStatus.containsKey('all') && !item.applicationStatus.containsKey('grey') && !item.applicationStatus.containsKey('green') && !item.applicationStatus.containsKey('yellow'))) {
+              if(item.segments.isEmpty && item.status == "opened" ){
+                return InkWell(
+                  onTap: () {
+                    showCupertinoModalPopup(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            InactiveTripActionSheet(tripData: item));
+                  },
+                  child: InactiveTripWidget(tripData: item),
+                );
+              }
+              *//*else if(item.segments.length == 1 && item.status == "opened"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: WithDetailsTripSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: SingleCustomDetailsTripWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length == 1 && item.status == "returned" || item.segments.length == 1 && item.status == "canceled"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: ReturnedTicketBottomSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: ReturnedTicketWidget(tripData: item),
+                );
+              }
+              else if(item.segments.length == 1 && item.status == "issued"){
+                return InkWell(
+                  onTap: () {
+                    _onOpenMore(context,
+                        routName: TicketsBottomSheet(
+                          tripData: item,
+                        ));
+                  },
+                  child: SingleActiveWidget(tripData: item),
+                );
+              }*//*
               else if(item.segments.isNotEmpty && item.applicationStatus != null ){
                 return InkWell(
                   onTap: () {
@@ -126,7 +189,7 @@ class ArchiveTrips extends StatelessWidget{
             else{
               return Container();
             }
-              /*if (item.status == "opened" && item.segments.isEmpty) {
+              *//*if (item.status == "opened" && item.segments.isEmpty) {
                 return InkWell(
                   onTap: () {
                     showCupertinoModalPopup(
@@ -137,7 +200,7 @@ class ArchiveTrips extends StatelessWidget{
                   child: InactiveTripWidget(tripData: item),
                 );
               }
-              else if (*//*item.status == "opened" && *//*item.segments.length == 1) {
+              else if (*//**//*item.status == "opened" && *//**//*item.segments.length == 1) {
                 if (item.segments.first.activeProcess == 'watching' &&
                     item.segments.first.status == "opened") {
                   return InkWell(
@@ -203,8 +266,8 @@ class ArchiveTrips extends StatelessWidget{
                   },
                   child: ActiveWidget(tripData: item),
                 );
-              }*/
-              /*else if(item.status == "opened" &&  item.segments.isNotEmpty){
+              }*//*
+              *//*else if(item.status == "opened" &&  item.segments.isNotEmpty){
             print(item.id);
             bool _isOpened = false;
             for(int i = 0; i < item.segments.length; i++){
@@ -213,7 +276,7 @@ class ArchiveTrips extends StatelessWidget{
                _isOpened = true;
               }else _isOpened = false;
             }
-            */ /* Вид заявки "C деталями" запланированная, application status": "opened", segments  "status": "opened"*/ /*
+            *//* *//* Вид заявки "C деталями" запланированная, application status": "opened", segments  "status": "opened"*//* *//*
             if(_isOpened && item.segments.first.activeProcess == null){
               return InkWell(
                 onTap: () {
@@ -240,9 +303,9 @@ class ArchiveTrips extends StatelessWidget{
               },
               child: ActiveWidget(tripData: item),
             );
-          }*/
+          }*//*
             },
           ).toList(),
-        ));
+        ));*/
   }
 }

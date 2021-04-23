@@ -34,8 +34,8 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
     UserLoginProvider auth =
         Provider.of<UserLoginProvider>(context, listen: false);
     FocusScope.of(context).requestFocus(new FocusNode());
-    if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 12) {
-      _status = auth.updatePhoneNumber(phone: textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
+    if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 10) {
+      _status = auth.updatePhoneNumber(phone: '7' + textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''), firstName: auth.employee.firstName, lastName: auth.employee.lastName, employeeNumber: auth.employee.docNumber, employeeId: auth.employee.id.toString());
       handleLogin();
     }
   }
@@ -155,6 +155,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                           ),
                           Container(
                             width: w * 0.9,
+                            height: 60,
                             padding: EdgeInsets.only(left: 16, top: 5),
                             margin: EdgeInsets.only(bottom: 16),
                             decoration: BoxDecoration(
@@ -172,29 +173,79 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                   'Телефон',
                                   style: TextStyle(fontFamily: "Root",
                                       fontSize: 13,
-                                      color:
-                                          Color(0xffEBEBEB).withOpacity(0.39)),
+                                      color: Color(0xffEBEBEB)
+                                          .withOpacity(0.39)),
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(top: 5),
-                                  child: MaskedTextField(
-                                    maskedTextFieldController: textFieldCtrl,
-                                    mask: "+ 7(xxx) xxx xxx xxxx",
-                                    maxLength: 19,
-                                    keyboardType: TextInputType.number,
-                                    inputDecoration: new InputDecoration(
-                                      hintText: '+ 7 (',
-                                      hintStyle: TextStyle(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '+ 7 (',
+                                        style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 17,
-                                          fontWeight: FontWeight.bold),
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.all(0.0),
-                                      border: InputBorder.none,
-                                      counterText: '',
-                                    ),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: MaskedTextField(
+                                          maskedTextFieldController: textFieldCtrl,
+                                          mask: 'xxx) xxx xxxxx',
+                                          maxLength: 13,
+                                          keyboardType: TextInputType.phone,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          inputDecoration: new InputDecoration(
+                                            hintText: "",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold),
+                                            isDense: true,
+                                            contentPadding: EdgeInsets.all(0.0),
+                                            border: InputBorder.none,
+                                            counterText: '',
+                                          ),
+                                          onChange: (c){
+                                            print(c.length.toString());
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                /*Container(
+                                      margin: EdgeInsets.only(top: 5),
+                                      child: TextFormField(
+                                        inputFormatters: [maskFormatter],
+                                        autofocus: false,
+                                        controller: textFieldCtrl,
+                                        style: TextStyle(fontFamily: "Root",
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                        decoration: InputDecoration(
+                                          hintText: '+ 7 (',
+                                          hintStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.all(0.0),
+                                          border: InputBorder.none,
+                                        ),
+                                        keyboardType: TextInputType.phone,
+                                        validator: (value) {
+                                          if (value.length == 0)
+                                            return ("Comments can't be empty!");
+                                          return value = null;
+                                        },
+                                      ),
+                                    ),*/
                               ],
                             ),
                           ),
@@ -222,7 +273,33 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                             ),
                             child: InkWell(
                               onTap: () {
-                                _confirmPhoneNumber();
+                                if(auth.userPhoneNumber != '7' + textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '')){
+                                  return showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: false, // user  must tap button!
+                                      builder: (BuildContext context) {
+                                        return Consumer(
+                                          builder: (context, UserLoginProvider user, _) {
+                                            print(user.errorMessage);
+                                            return AlertDialog(
+                                              title: Text('Номер телефона отличается от введенного на первом шаге'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('ОК'),
+                                                  onPressed: () {
+                                                    _confirmPhoneNumber();
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      });
+                                }
+                                else {
+                                  _confirmPhoneNumber();
+                                }
                               },
                               child: Center(
                                 child: Text(

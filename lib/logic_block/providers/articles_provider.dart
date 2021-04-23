@@ -87,8 +87,21 @@ class ArticlesProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Articles>> getArticles() async {
-    final ResponseApi result = await articlesRepository.articlesFromDB();
+  Future<int> pageCount({int pageNumber, int perPage}) async{
+    final ResponseApi result = await articlesRepository.articlesFromDB(pageNumber: pageNumber, perPage: perPage);
+    final List decodeData = result.data['data'];
+    if(decodeData != null){
+      print(result.data);
+      return result.data['last_page'];
+    }
+    else {
+      return 1;
+    }
+  }
+
+
+  Future<List<Articles>> getArticles({int pageNumber, int perPage}) async {
+    final ResponseApi result = await articlesRepository.articlesFromDB(pageNumber: pageNumber, perPage: perPage);
     final List decodeData = result.data['data'];
     if (result.code == 200) {
       Iterable _convertList = decodeData;

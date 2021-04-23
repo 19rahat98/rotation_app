@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   children: [
                     Container(),
                     Container(
-                      height: h * 0.45,
+                      height: 250,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

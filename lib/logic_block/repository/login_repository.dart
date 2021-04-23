@@ -56,18 +56,18 @@ class UserRepository {
   }
 
   ///Get all employee data
-  Future<dynamic> getApplication({String applicationId}) async {
+  Future<dynamic> getApplication({String applicationId, int pageNumber, int perPage}) async {
     if(applicationId != null ){
       final params = {
-        "page": 1,
-        "per_page": 10,
+        "page": pageNumber != null ? pageNumber : 1,
+        "per_page": perPage != null ? perPage : 10,
         "application_id": applicationId,
       };
       return await Api.getApplication(params);
     }else{
       final params = {
-        "page": 1,
-        "per_page": 10,
+        "page": pageNumber != null ? pageNumber : 1,
+        "per_page": perPage != null ? perPage : 10,
         "order_dir": "desc",
         "order_by": "id",
       };
@@ -104,6 +104,18 @@ class UserRepository {
       "type": type,
     };
     return await Api.updateEmployeePhoneNumber(params);
+  }
+
+  Future<dynamic> updatePhoneNumber({String iinNumber, String phoneNumber, String firstName, String lastName, String employeeId, String employeeNumber}) async {
+    final params = {
+      "iin": iinNumber,
+      "phone_number": phoneNumber,
+      "first_name": firstName,
+      "last_name": lastName,
+      "employee_id": employeeId,
+      "employee_number": employeeNumber,
+    };
+    return await Api.updatePhoneNumber(params);
   }
 
   Future<dynamic> confirmPhoneNumber({String code, String phoneNumber, String type, int authLogId}) async {

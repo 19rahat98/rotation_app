@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
-import 'package:rotation_app/ui/home_pages/home_page.dart';
 
 class NoAccountBottomSheet extends StatelessWidget {
   @override
@@ -184,7 +185,10 @@ class DeactivateAccountBottomSheet extends StatelessWidget {
                     color: Color(0xff1262CB),
                     fontWeight: FontWeight.bold)),
             onPressed: () {
-              print('pressed');
+              showCupertinoModalPopup(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      SocialMediaBottomSheet());
             },
           ),
         ],
@@ -216,11 +220,10 @@ class SocialMediaBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    'assets/svg/phone.svg',
+                  Image.asset(
+                    'assets/svg/phone-outgoing.png',
                     height: 30,
                     width: 30,
-                    excludeFromSemantics: true,
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 12),
@@ -238,10 +241,7 @@ class SocialMediaBottomSheet extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
+              launch("tel://+7(701)7051616");
               print('pressed');
             },
           ),
@@ -252,8 +252,8 @@ class SocialMediaBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    'assets/svg/whatsapp.svg',
+                  Image.asset(
+                    'assets/svg/icons8-whatsapp.png',
                     height: 40,
                     width: 40,
                     excludeFromSemantics: true,
@@ -274,7 +274,13 @@ class SocialMediaBottomSheet extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              print('pressed');
+              if (Platform.isAndroid) {
+                print('pressed');
+                launch("https://wa.me/+77017051616/?text=");
+                //return "https://wa.me/+77017051616/?text="; // new line
+              } else {
+                launch("https://api.whatsapp.com/send?phone=+77017051616=");
+              }
             },
           ),
           CupertinoActionSheetAction(
