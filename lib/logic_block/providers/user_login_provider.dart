@@ -2,15 +2,16 @@ import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:device_info/device_info.dart';
-import 'package:rotation_app/logic_block/api/http_request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'package:rotation_app/logic_block/models/result_api_model.dart';
+import 'package:rotation_app/logic_block/api/http_request.dart';
 import 'package:rotation_app/logic_block/models/user_model.dart';
-import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/models/result_api_model.dart';
 import 'package:rotation_app/logic_block/repository/login_repository.dart';
 
 enum Status {
+  WithoutPhoneNumber,
   EmployeeFind,
   SuccessLogin,
   FirstStepSuccessful,
@@ -28,6 +29,7 @@ class UserLoginProvider with ChangeNotifier {
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final UserRepository userRepository = UserRepository();
+  FirebaseMessaging fcm = FirebaseMessaging();
 
   String _token;
   String get token => _token;
@@ -133,12 +135,72 @@ class UserLoginProvider with ChangeNotifier {
     return _status;
   }
 
+  Future<Status> addFirstEmployeePhoneNumber({String iin, String phoneNumber}) async{
+    final ResponseApi result =  await userRepository.addFirstPhoneNumber(iin: _userIIN, phone: phoneNumber);
+    _userPhoneNumber = phoneNumber;
+    notifyListeners();
+    print(result.data);
+    print(result.code);
+    try {
+      if (result.code == 200) {
+        _status = Status.SecondStepSuccessful;
+        notifyListeners();
+      } else if (result.code == 400) {
+        _status = Status.LoginFail;
+      } else if (result.code == 429) {
+        _status = Status.TooManyRequest;
+        _errorMessage = 'error';
+        notifyListeners();
+      } else {
+        _errorMessage = 'error';
+        _status = Status.LoginFail;
+        notifyListeners();
+      }
+    } catch (e) {
+      _status = Status.LoginFail;
+      _errorMessage = 'error';
+      notifyListeners();
+    }
+    return _status;
+}
+
   Future<Status> updatePhoneNumber({String phone, String firstName, String lastName, String employeeId, String employeeNumber}) async {
+    final _fmsToken = await fcm.getToken();
+    final ResponseApi result =  await userRepository.updatePhoneNumber(
+        iinNumber: _userIIN, phoneNumber: phone, firstName: firstName, lastName: lastName, employeeId: employeeId, employeeNumber: employeeNumber, firebaseToken: _fmsToken);
+    _userPhoneNumber = phone;
+    notifyListeners();
+    print(result.data);
+    print(result.code);
+    try {
+      if (result.code == 200) {
+        _status = Status.SecondStepSuccessful;
+        notifyListeners();
+      } else if (result.code == 400) {
+        _status = Status.LoginFail;
+      } else if (result.code == 429) {
+        _status = Status.TooManyRequest;
+        _errorMessage = 'error';
+        notifyListeners();
+      } else {
+        _errorMessage = 'error';
+        _status = Status.LoginFail;
+        notifyListeners();
+      }
+    } catch (e) {
+      _status = Status.LoginFail;
+      _errorMessage = 'error';
+      notifyListeners();
+    }
+    return _status;
+  }
+
+  /*Future<Status> addPhoneNumber({String phone}) async {
     print(_userPhoneNumber);
     final ResponseApi result = await userRepository.updateEmployeePhoneNumber(
         iinNumber: _userIIN, phoneNumber: phone, type: "test");
-    await userRepository.updatePhoneNumber(
-        iinNumber: _userIIN, phoneNumber: phone, firstName: firstName, lastName: lastName, employeeId: employeeId, employeeNumber: employeeNumber);
+    *//*await userRepository.updatePhoneNumber(
+        iinNumber: _userIIN, phoneNumber: phone, firstName: firstName, lastName: lastName, employeeId: employeeId, employeeNumber: employeeNumber);*//*
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
     _userPhoneNumber = phone;
     notifyListeners();
@@ -178,19 +240,24 @@ class UserLoginProvider with ChangeNotifier {
       notifyListeners();
     }
     return _status;
-  }
+  }*/
 
   Future<Status> searchEmployeeByIin({String iin}) async {
     final ResponseApi result =
         await userRepository.searchEmployeeByIIN(iinNumber: iin);
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
+    print(result.data);
     _userIIN = iin;
     notifyListeners();
 
     try {
       if (result.code == 200) {
-        _status = Status.EmployeeFind;
+        //_status = Status.EmployeeFind;
         _employee = Employee.fromJson(decodeData.data["employee"]);
+        print(_employee.isPhoneNumber);
+        if(_employee.isPhoneNumber != null && _employee.isPhoneNumber)
+          _status = Status.EmployeeFind;
+        else _status = Status.WithoutPhoneNumber;
         notifyListeners();
       } else if (result.code == 400) {
         if (decodeData.slug == "employee_not_found") {
@@ -216,6 +283,7 @@ class UserLoginProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
+      print(e);
       _status = Status.LoginFail;
       _errorMessage = decodeData.message;
       notifyListeners();

@@ -40,9 +40,10 @@ dev_dependencies:
   flutter_pdfview: ^1.1.0
   md2_tab_indicator: ^1.0.2
   form_field_validator: ^1.0.1
-  flutter_svg: ^0.20.0-nullsafety.3
+  flutter_statusbarcolor: ^0.2.3
   mask_text_input_formatter: ^1.2.0
   flutter_calendar_carousel: ^1.5.2
+  flutter_svg: ^0.20.0-nullsafety.3
   infinite_scroll_pagination: ^3.0.1
 
   # Used for logic block

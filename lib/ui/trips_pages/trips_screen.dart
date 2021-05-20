@@ -92,18 +92,21 @@ class _TripsPageState extends State<TripsPage> {
             length: 2,
             child: Scaffold(
               backgroundColor: Color(0xffF3F6FB),
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                title: Text(
-                  'Мои поездки',
-                  style: TextStyle(
-                      fontFamily: "Root",
-                      fontSize: 17,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(44.0),
+                child: AppBar(
+                  automaticallyImplyLeading: false,
+                  title: Text(
+                    'Мои поездки',
+                    style: TextStyle(
+                        fontFamily: "Root",
+                        fontSize: 17,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  centerTitle: true,
+                  backgroundColor: Color(0xff2D4461),
                 ),
-                centerTitle: true,
-                backgroundColor: Color(0xff2D4461),
               ),
               body: Container(
                 width: w,
@@ -119,7 +122,7 @@ class _TripsPageState extends State<TripsPage> {
                           TabBar(
                             unselectedLabelColor: Color(0xff748595),
                             labelStyle: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold, fontFamily: "Root", letterSpacing: 0),
                             labelColor: Color(0xff1262CB),
                             indicator: MD2Indicator(
                               indicatorHeight: 3.0,

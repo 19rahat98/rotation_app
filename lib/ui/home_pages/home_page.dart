@@ -269,22 +269,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
-    NotificationProvider np =
-        Provider.of<NotificationProvider>(context, listen: false);
-    ConversationRatesProvider crp =
-        Provider.of<ConversationRatesProvider>(context, listen: false);
     lp.getEmployeeData();
     _calendarCarouselNoHeader = CalendarCarousel<Event>(
       todayTextStyle: TextStyle(
-          fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+          fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white,fontFamily: "Root",),
       weekdayTextStyle: TextStyle(
-          fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xff748595)),
+          fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xff748595),fontFamily: "Root",),
       weekendTextStyle: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: Color(0xff1B344F).withOpacity(0.3)),
+          color: Color(0xff1B344F).withOpacity(0.3),fontFamily: "Root",),
       nextDaysTextStyle: TextStyle(
-          fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red),
+          fontSize: 13, fontWeight: FontWeight.bold, color: Colors.red,fontFamily: "Root",),
       todayButtonColor: Color(0xff1262CB),
       showHeader: false,
       showOnlyCurrentMonthDate: true,
@@ -294,7 +290,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       daysTextStyle: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: Color(0xff1B344F).withOpacity(0.3)),
+          color: Color(0xff1B344F).withOpacity(0.3),fontFamily: "Root",),
       locale: "ru",
       customDayBuilder: (
         bool isSelectable,
@@ -315,7 +311,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               style: TextStyle(
                   fontFamily: "Root",
                   fontSize: 13,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   color: Color(0xff1B344F)),
             ),
           );
@@ -338,7 +334,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             return Scaffold(
               backgroundColor: Color(0xffF3F6FB),
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(30.0),
+                preferredSize: Size.fromHeight(44.0),
                 child: AppBar(
                   automaticallyImplyLeading: false,
                   title: Text(
@@ -898,7 +894,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     color: Color(0xff748595),
                                     fontWeight: FontWeight.bold),
                               ),
-                              NearestTripWidget(tripsList: lp.data),
+                              FutureBuilder<List<Application>>(
+                                  future: lp.sortByDate(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.none || snapshot.hasError)
+                                      return Center(child: CircularProgressIndicator());
+                                    return NearestTripWidget(tripsList: lp.data);
+                                }
+                              ),
                             ],
                           ),
                         ),
@@ -920,13 +923,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 ),
                               ),
                               Container(
-                                height: 150.0,
                                 width: w,
-                                padding: EdgeInsets.only(top: 8),
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
+                                margin: EdgeInsets.only(top: 8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SizedBox(width: 16),
                                     InkWell(
                                       onTap: () {
                                         showCupertinoModalPopup(
@@ -935,27 +936,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 CallSupportWidget());
                                       },
                                       child: Container(
-                                        height: 130,
-                                        width: 121,
+                                        //height: 130,
+                                        width: w * 0.288,
                                         margin: EdgeInsets.only(right: 10),
+                                        padding: EdgeInsets.only(top: 26, bottom: 12),
                                         decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(12),
+                                            BorderRadius.circular(12),
                                             border: Border.all(
                                                 color: Color(0xffD0DAE7)),
                                             color: Colors.white),
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Image(
                                               image: AssetImage(
                                                   'assets/svg/icon-help-phone.png'),
-                                              width: 30,
-                                              height: 30,
+                                              width: 27,
+                                              height: 27,
                                             ),
                                             SizedBox(
-                                              height: 20,
+                                              height: 16,
                                             ),
                                             Text(
                                               'Позвонить',
@@ -966,22 +968,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              'в колл-центр',
+                                              'в поддержку',
                                               style: TextStyle(
-                                                  fontFamily: "Root",
-                                                  fontSize: 14,
-                                                  color: Color(0xff385780)
-                                                      .withOpacity(0.5),
-                                                  fontWeight: FontWeight.w400),
-                                            )
+                                                fontFamily: "Root",
+                                                fontSize: 14,
+                                                color: Color(0xff385780).withOpacity(0.5),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
                                     ),
                                     Container(
-                                      height: 130,
-                                      width: 121,
+                                      //height: 130,
+                                      width: w * 0.288,
                                       margin: EdgeInsets.only(right: 10),
+                                      padding: EdgeInsets.only(top: 23, bottom: 12),
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(12),
                                           border: Border.all(
@@ -989,6 +992,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           color: Colors.white),
                                       child: InkWell(
                                         onTap: () {
+                                          lp.sortByDate();
                                           showCupertinoModalPopup(
                                               context: context,
                                               builder: (BuildContext context) =>
@@ -996,16 +1000,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         },
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Image(
                                               image: AssetImage(
                                                   'assets/svg/icon-help-message.png'),
-                                              width: 30,
-                                              height: 30,
+                                              width: 32,
+                                              height: 32,
                                             ),
                                             SizedBox(
-                                              height: 20,
+                                              height: 13,
                                             ),
                                             Text(
                                               'Написать',
@@ -1022,15 +1026,189 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   fontSize: 14,
                                                   color: Color(0xff385780)
                                                       .withOpacity(0.5),
-                                                  fontWeight: FontWeight.w400),
+                                                  fontWeight: FontWeight.w500),
                                             )
                                           ],
                                         ),
                                       ),
                                     ),
                                     Container(
-                                      height: 130,
-                                      width: 121,
+                                      //height: 130,
+                                      width: w * 0.288,
+                                      //margin: EdgeInsets.only(right: 10),
+                                      padding: EdgeInsets.only(top: 25, bottom: 12),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                              color: Color(0xffD0DAE7)),
+                                          color: Colors.white),
+                                      child: InkWell(
+                                        onTap: () async {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    QuestionsAnswers()),
+                                          );
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              child: Image(
+                                                image: AssetImage(
+                                                    'assets/svg/icon-help-faq.png',
+                                                ),
+                                                fit: BoxFit.fill,
+                                                width: 24,
+                                                height: 30,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 13,
+                                            ),
+                                            Text(
+                                              'Прочитать',
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 18,
+                                                  color: Color(0xff385780),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'вопрос/ответ',
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff385780)
+                                                      .withOpacity(0.5),
+                                                  fontWeight: FontWeight.w500),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              /*Container(
+                                height: 108.0,
+                                width: w,
+                                padding: EdgeInsets.only(top: 8),
+                                child: ListView(
+                                  //shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  children: [
+                                    SizedBox(width: 16),
+                                    InkWell(
+                                      onTap: () {
+                                        showCupertinoModalPopup(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                CallSupportWidget());
+                                      },
+                                      child: Container(
+                                        //height: 130,
+                                        width: w * 0.288,
+                                        margin: EdgeInsets.only(right: 10),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: Color(0xffD0DAE7)),
+                                            color: Colors.white),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              height: 16,
+                                            ),
+                                            Image(
+                                              image: AssetImage(
+                                                  'assets/svg/icon-help-phone.png'),
+                                              width: 27,
+                                              height: 27,
+                                            ),
+                                            SizedBox(
+                                              height: 16,
+                                            ),
+                                            Text(
+                                              'Позвонить',
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 18,
+                                                  color: Color(0xff385780),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'в поддержку',
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff385780).withOpacity(0.5),
+                                                  fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      //height: 130,
+                                      width: w * 0.288,
+                                      margin: EdgeInsets.only(right: 10),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                              color: Color(0xffD0DAE7)),
+                                          color: Colors.white),
+                                      child: InkWell(
+                                        onTap: () {
+                                          lp.sortByDate();
+                                          showCupertinoModalPopup(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  SocialMediaBottomSheet());
+                                        },
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image(
+                                              image: AssetImage(
+                                                  'assets/svg/icon-help-message.png'),
+                                              width: 32,
+                                              height: 32,
+                                            ),
+                                            SizedBox(
+                                              height: 13,
+                                            ),
+                                            Text(
+                                              'Написать',
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 18,
+                                                  color: Color(0xff385780),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'в онлайн-чат',
+                                              style: TextStyle(
+                                                  fontFamily: "Root",
+                                                  fontSize: 14,
+                                                  color: Color(0xff385780)
+                                                      .withOpacity(0.5),
+                                                  fontWeight: FontWeight.w500),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      //height: 130,
+                                      width: w * 0.288,
                                       margin: EdgeInsets.only(right: 10),
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(12),
@@ -1057,7 +1235,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               height: 30,
                                             ),
                                             SizedBox(
-                                              height: 20,
+                                              height: 13,
                                             ),
                                             Text(
                                               'Прочитать',
@@ -1068,13 +1246,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              'Вопросы/Ответы',
+                                              'вопрос/ответ',
                                               style: TextStyle(
                                                   fontFamily: "Root",
                                                   fontSize: 14,
                                                   color: Color(0xff385780)
                                                       .withOpacity(0.5),
-                                                  fontWeight: FontWeight.w400),
+                                                  fontWeight: FontWeight.w500),
                                             )
                                           ],
                                         ),
@@ -1082,7 +1260,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ),
                                   ],
                                 ),
-                              ),
+                              ),*/
                             ],
                           ),
                         ),

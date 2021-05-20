@@ -11,17 +11,16 @@ import 'package:rotation_app/ui/login_pages/login_page.dart';
 import 'package:rotation_app/ui/login_pages/sms_pin_page.dart';
 import 'package:rotation_app/ui/widgets/custom_bottom_sheet.dart';
 
-class UpdatePhoneNumber extends StatefulWidget {
+class ChangePhoneNumber extends StatefulWidget {
   final String phoneNumber;
 
-  const UpdatePhoneNumber({Key key, this.phoneNumber}) : super(key: key);
+  const ChangePhoneNumber({Key key, this.phoneNumber}) : super(key: key);
 
   @override
-  _UpdatePhoneNumberState createState() => _UpdatePhoneNumberState();
+  _ChangePhoneNumberState createState() => _ChangePhoneNumberState();
 }
 
-class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
-    with TickerProviderStateMixin {
+class _ChangePhoneNumberState extends State<ChangePhoneNumber> with TickerProviderStateMixin {
   var textFieldCtrl = TextEditingController();
   Future<Status> _status;
   bool _firstPress = true;
@@ -35,12 +34,11 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
 
   ///On login
   void _confirmPhoneNumber() {
-    UserLoginProvider auth =
-        Provider.of<UserLoginProvider>(context, listen: false);
+    UserLoginProvider auth = Provider.of<UserLoginProvider>(context, listen: false);
     FocusScope.of(context).requestFocus(new FocusNode());
     print(auth.employee);
     if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 10) {
-      _status = auth.addFirstEmployeePhoneNumber(phoneNumber: '7' + textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''), ).whenComplete(() => _firstPress = true);
+      _status = auth.updatePhoneNumber(phone: '7' + textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''), firstName: auth.employee.firstName, lastName: auth.employee.lastName, employeeNumber: auth.employee.docNumber, employeeId: auth.employee.id.toString()).whenComplete(() =>  _firstPress = true);
       handleLogin();
     }
   }
@@ -106,7 +104,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                       Column(
                         children: [
                           Text(
-                            'Подтвердите данные',
+                            'Изменить номер',
                             style: TextStyle(fontFamily: "Root",
                                 fontSize: 24,
                                 color: Colors.white,
@@ -116,7 +114,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                             height: 6,
                           ),
                           Text(
-                            'С указанным ИИН найден сотрудник',
+                            'Для указаного ИИН уже закреплен  номер телефона. Желаете его изменить?',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontFamily: "Root",
                                 fontSize: 14,
@@ -310,6 +308,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                             ),
                             child: InkWell(
                               onTap: () {
+                                print(_firstPress);
                                 if(_firstPress){
                                   _firstPress = false;
                                   if(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length != 10){
@@ -354,16 +353,18 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                               );
                                             },
                                           );
-                                        });
+                                        },
+                                    );
                                   }*/
-                                  else {
+                                  else{
                                     _confirmPhoneNumber();
                                   }
                                 }
+
                               },
                               child: Center(
                                 child: Text(
-                                  'Добавить номер телефона',
+                                  'Изменить номер телефона',
                                   style: TextStyle(fontFamily: "Root",
                                       fontSize: 16,
                                       color: Colors.white,
@@ -383,7 +384,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                 Container(
                                   margin: EdgeInsets.only(top: 16),
                                   child: Text(
-                                    'Номер успешно добавлен',
+                                    'Заявка отправлена',
                                     style: TextStyle(
                                       fontFamily: "Root",
                                       fontSize: 16,
@@ -395,35 +396,16 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                                 Container(
                                   width: w,
                                   alignment: Alignment.center,
-                                  margin: EdgeInsets.only(top: 8, right: 16, left: 16),
+                                  margin: EdgeInsets.only(top: 8, right: 32, left: 32, bottom: 24),
                                   child: Text(
-                                    'По указаному ИИН успешно добавлен  номер телефона: +7 (${textFieldCtrl.text}.  Вы сможете войти в аккаунт используя  этот номер.',
+                                    '''Заявка на изменение номера телефона на 
++7 (${textFieldCtrl.text}. успешно отправлена. Обработка займет до 30 минут.  После подтверждения Вы получите уведомление на Ваш телефон.''',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontFamily: "Root",
                                       fontWeight: FontWeight.w600,
                                       color: Color(0xffCFD5DC),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: w,
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.only(top: 0, right: 16, left: 16, bottom: 12),
-                                  child:  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context, MaterialPageRoute(builder: (context) => LoginPage()));
-                                    },
-                                    child: Text(
-                                      'Перейти на страницу входа',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: "Root",
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xff40BDFF),
-                                      ),
                                     ),
                                   ),
                                 ),
@@ -462,7 +444,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
                             children: <TextSpan>[
                               new TextSpan(
                                   text:
-                                      'Авторизируясь вы автоматически соглашаетесь  с '),
+                                  'Авторизируясь вы автоматически соглашаетесь  с '),
                               new TextSpan(
                                 text: 'правилами сервиса ',
                                 style: new TextStyle(color: Color(0xff40BDFF)),
@@ -493,6 +475,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
   }
 
   handleLogin() {
+    print('asdasdasd');
     _status.then((value) {
       switch (value) {
         case Status.TooManyRequest:
@@ -524,7 +507,7 @@ class _UpdatePhoneNumberState extends State<UpdatePhoneNumber>
           });
           /*return showCupertinoModalPopup<void>(
               context: context,
-              builder: (BuildContext context) => SuccessAddedNumberBottomSheet(phoneNumber: textFieldCtrl.text,));*/
+              builder: (BuildContext context) => SendedRequestBottomSheet(phoneNumber: textFieldCtrl.text,));*/
       }
     });
   }

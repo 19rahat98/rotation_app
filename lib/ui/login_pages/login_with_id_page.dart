@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:masked_text/masked_text.dart';
 
 import 'package:rotation_app/logic_block/providers/login_provider.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
+import 'package:rotation_app/ui/login_pages/change_employee_phone_number.dart';
 import 'package:rotation_app/ui/login_pages/update_employee_phone_number.dart';
 import 'package:rotation_app/ui/login_pages/sms_pin_page.dart';
 import 'package:rotation_app/ui/widgets/custom_bottom_sheet.dart';
@@ -23,6 +25,8 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
 
   var textFieldCtrl = TextEditingController();
   Future<Status> _status;
+  bool _firstPress = true;
+
   @override
   void initState() {
     textFieldCtrl.addListener(() {});
@@ -35,7 +39,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
     FocusScope.of(context).requestFocus(new FocusNode());
     print(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
     if (textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length == 12) {
-      _status = auth.searchEmployeeByIin(iin: textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', ''));
+      _status = auth.searchEmployeeByIin(iin: textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '')).whenComplete(() {_firstPress = true;});
       handleLogin();
     }
   }
@@ -61,11 +65,43 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 16, top: 30),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/svg/icon-back.svg',
+                              width: 10,
+                              height: 16,
+                            ),
+                            SizedBox(width: 10,),
+                            Text(
+                              'Назад',
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
-                  height: h * 0.45,
+                  //height: h * 0.45,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children: [
@@ -113,7 +149,7 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                             width: w * 0.9,
                             height: 60,
                             padding: EdgeInsets.only(left: 16, top: 5),
-                            margin: EdgeInsets.only(bottom: 16),
+                            margin: EdgeInsets.only(bottom: 16,top: 60),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: Color(0xff76B0FD).withOpacity(0.19),
@@ -212,7 +248,32 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
                             ),
                             child: InkWell(
                               onTap: () {
-                                _searchEmployee();
+                                if(_firstPress){
+                                  _firstPress = false;
+                                  if(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length != 12){
+                                    return showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false, // user must tap button!
+                                        builder: (BuildContext context) {
+                                          return CupertinoAlertDialog(
+                                            title: Text('ИИН сотрудника неполный.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('изменить'),
+                                                onPressed: () {
+                                                  _firstPress = true;
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                    );
+                                  }
+                                  else {
+                                    _searchEmployee();
+                                  }
+                                }
                               },
                               child: Center(
                                 child: Text(
@@ -292,6 +353,9 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
     print(auth.status);
     _status.then((value){
       switch (value) {
+        case Status.WithoutPhoneNumber:
+          return Navigator.push(
+              context, MaterialPageRoute(builder: (context) => UpdatePhoneNumber()));
         case Status.TooManyRequest:
           return showDialog<void>(
               context: context,
@@ -313,12 +377,13 @@ class _UserIdPageState extends State<UserIdPage> with TickerProviderStateMixin{
           return Center(child: CircularProgressIndicator());
         case Status.LoginFail:
           return showCupertinoModalPopup<void>(
+              //barrierDismissible: false,
               context: context,
               builder: (BuildContext context) => SocialMediaBottomSheet());
         case Status.EmployeeFind:
           print('FirstStepSuccessful');
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UpdatePhoneNumber()));
+              context, MaterialPageRoute(builder: (context) => ChangePhoneNumber()));
       }
     });
 

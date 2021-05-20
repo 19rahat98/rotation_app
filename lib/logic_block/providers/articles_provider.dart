@@ -122,7 +122,7 @@ class ArticlesProvider with ChangeNotifier {
             }
           }
           else{
-            _articlesList[i].publishedOn = "${DateFormat.MMMd('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}, в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
+            _articlesList[i].publishedOn = "${DateFormat.MMMd('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString().replaceAll('.', ',')} в ${DateFormat.Hm('ru').format(DateTime.parse(_articlesList[i].publishedOn)).toString()}";
           }
           //print(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedAt)).inDays);
         }
@@ -140,20 +140,20 @@ class ArticlesProvider with ChangeNotifier {
     if (result['code'] == 200 && result.isNotEmpty) {
       _article = MoreAboutArticle.fromJson(result['data']);
       notifyListeners();
-      if(_article != null && _article.publishedOn != null){
-        if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inDays <= 1){
-          if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inHours <= 1){
-            _article.publishedOn = "только что";
+      if(_article != null && _article.updatedAt != null){
+        if(DateTime.now().difference(DateTime.parse(_article.updatedAt)).inDays <= 1){
+          if(DateTime.now().difference(DateTime.parse(_article.updatedAt)).inHours <= 1){
+            _article.updatedAt = "только что";
           }
-          else if(DateTime.now().difference(DateTime.parse(_article.publishedOn)).inHours > 1 && DateTime.now().difference(DateTime.parse(_article.publishedOn)).inHours < 24){
-            _article.publishedOn = "сегодня, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.publishedOn)).toString()}";
+          else if(DateTime.now().difference(DateTime.parse(_article.updatedAt)).inHours > 1 && DateTime.now().difference(DateTime.parse(_article.updatedAt)).inHours < 24){
+            _article.updatedAt = "сегодня, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.updatedAt)).toString()}";
           }
           else{
-            _article.publishedOn = "вчера, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.publishedOn)).toString()}";
+            _article.updatedAt = "вчера, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.updatedAt)).toString()}";
           }
         }
         else{
-          _article.publishedOn = "${DateFormat.MMMd('ru').format(DateTime.parse(_article.publishedOn)).toString()}, в ${DateFormat.Hm('ru').format(DateTime.parse(_article.publishedOn)).toString()}";
+          _article.updatedAt = "${DateFormat.MMMd('ru').format(DateTime.parse(_article.updatedAt)).toString().replaceAll('.', ',')} в ${DateFormat.Hm('ru').format(DateTime.parse(_article.updatedAt)).toString()}";
         }
         //print(DateTime.now().difference(DateTime.parse(_articlesList[i].publishedAt)).inDays);
       }

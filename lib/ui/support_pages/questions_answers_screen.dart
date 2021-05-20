@@ -121,143 +121,146 @@ class _QuestionsAnswersState extends State<QuestionsAnswers> {
     double w = MediaQuery.of(context).size.width;
     QuestionProvider qp = Provider.of<QuestionProvider>(context, listen: false);
     qp.getQuestions();
-    return FutureBuilder<List<Questions>>(
-        future: qp.getQuestions(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.none)
-            return Center(child: CircularProgressIndicator());
-          else if (snapshot.hasError)
-            return Center(
-                child: emptyPage(Icons.error_outline, 'Something is wrong'));
-          else if (snapshot.data != null) {
-            return Scaffold(
-              backgroundColor: Color(0xffF3F6FB),
-              appBar: AppBar(
-                leading: InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    )),
-                automaticallyImplyLeading: false,
-                title: Text(
-                  'Вопросы и ответы',
-                  style: TextStyle(
-                      fontFamily: "Root",
-                      fontSize: 17,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
-                centerTitle: true,
-                backgroundColor: Color(0xff2D4461),
-              ),
-              body: SingleChildScrollView(
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Text(
-                          'Вопросы и ответы',
-                          style: TextStyle(
-                              fontFamily: "Root",
-                              fontSize: 24,
-                              color: Color(0xff1B344F),
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 12),
-                        padding: EdgeInsets.only(left: 8),
-                        height: 48,
-                        width: w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(3),
-                          border: Border.all(
-                            width: 1,
-                            color: Color(0xffD9DBDF),
+    return Scaffold(
+      backgroundColor: Color(0xffF3F6FB),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(44.0),
+        child: AppBar(
+          leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.white,
+                size: 20,
+              )),
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Вопросы и ответы',
+            style: TextStyle(
+                fontFamily: "Root",
+                fontSize: 17,
+                color: Colors.white,
+                fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: Color(0xff2D4461),
+        ),
+      ),
+      body: FutureBuilder<List<Questions>>(
+          future: qp.getQuestions(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.none)
+              return Center(child: CircularProgressIndicator());
+            else if (snapshot.hasError)
+              return Center(
+                  child: emptyPage(Icons.error_outline, 'Something is wrong'));
+            else if (snapshot.data != null) {
+              return SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(
+                            'Вопросы и ответы',
+                            style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 24,
+                                color: Color(0xff1B344F),
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        child: Form(
-                          key: formKey,
-                          child: TextFormField(
-                            autofocus: false,
-                            controller: _searchQuestionTextController,
-                            style: TextStyle(
-                              fontFamily: "Root",
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff748595),
+                        Container(
+                          margin: EdgeInsets.only(top: 12),
+                          padding: EdgeInsets.only(left: 8),
+                          height: 48,
+                          width: w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(3),
+                            border: Border.all(
+                              width: 1,
+                              color: Color(0xffD9DBDF),
                             ),
-                            decoration: InputDecoration(
-                              suffixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
-                              suffixIcon: _query != null && _query.isNotEmpty
-                                  ? InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    _query = null;
-                                    _searchQuestionTextController.clear();
-                                  });
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/svg/Close.svg',
-                                    color: Color(0xff1262CB),
+                          ),
+                          child: Form(
+                            key: formKey,
+                            child: TextFormField(
+                              autofocus: false,
+                              controller: _searchQuestionTextController,
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff748595),
+                              ),
+                              decoration: InputDecoration(
+                                suffixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
+                                suffixIcon: _query != null && _query.isNotEmpty
+                                    ? InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                      _query = null;
+                                      _searchQuestionTextController.clear();
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: SvgPicture.asset(
+                                      'assets/svg/Close.svg',
+                                      color: Color(0xff1262CB),
+                                    ),
+                                  ),
+                                ) : null,
+                                prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
+                                prefixIcon: Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  child: Image.asset(
+                                    "assets/images/search.png",
+                                    width: 22,
+                                    height: 22,
                                   ),
                                 ),
-                              ) : null,
-                              prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 24),
-                              prefixIcon: Container(
-                                margin: EdgeInsets.only(right: 8),
-                                child: Image.asset(
-                                  "assets/images/search.png",
-                                  width: 22,
-                                  height: 22,
-                                ),
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                hintText: "Что вас интересует?",
+                                hintStyle: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff748595)),
                               ),
-                              contentPadding: EdgeInsets.zero,
-                              border: InputBorder.none,
-                              hintText: "Что вас интересует?",
-                              hintStyle: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xff748595)),
-                            ),
-                            validator: (value) {
-                              if (value.length == 0)
-                                return ("Comments can't be empty!");
+                              validator: (value) {
+                                if (value.length == 0)
+                                  return ("Comments can't be empty!");
 
-                              return value = null;
-                            },
-                            onChanged: (String value) {
-                              setState(() {
-                                _query = value;
-                                qp.afterSearch(value);
-                              });
-                            },
+                                return value = null;
+                              },
+                              onChanged: (String value) {
+                                setState(() {
+                                  _query = value;
+                                  qp.afterSearch(value);
+                                });
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      _query == null ? beforeSearchUI() : afterSearchUI()
-                    ],
+                        SizedBox(
+                          height: 4,
+                        ),
+                        _query == null ? beforeSearchUI() : afterSearchUI()
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          }
-          else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
+              );
+            }
+            else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
+    );
   }
 
   @override

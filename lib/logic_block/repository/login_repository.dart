@@ -81,6 +81,11 @@ class UserRepository {
     return await Api.loginByPhoneNumber(params);
   }
 
+  Future<dynamic> addFirstPhoneNumber({String iin, String phone}) async {
+    final params = {"iin": iin, "phone": phone};
+    return await Api.addFirstPhoneNumber(params);
+  }
+
   Future<dynamic> sendCodeForLogin({String phoneNumber, String type, String code, int authLogId}) async {
     final params = {
       "phone": phoneNumber,
@@ -106,7 +111,7 @@ class UserRepository {
     return await Api.updateEmployeePhoneNumber(params);
   }
 
-  Future<dynamic> updatePhoneNumber({String iinNumber, String phoneNumber, String firstName, String lastName, String employeeId, String employeeNumber}) async {
+  Future<dynamic> updatePhoneNumber({String iinNumber, String phoneNumber, String firstName, String lastName, String employeeId, String employeeNumber, String firebaseToken}) async {
     final params = {
       "iin": iinNumber,
       "phone_number": phoneNumber,
@@ -114,6 +119,7 @@ class UserRepository {
       "last_name": lastName,
       "employee_id": employeeId,
       "employee_number": employeeNumber,
+      "firebase_token": firebaseToken,
     };
     return await Api.updatePhoneNumber(params);
   }

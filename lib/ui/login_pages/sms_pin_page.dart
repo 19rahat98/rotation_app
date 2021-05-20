@@ -4,15 +4,13 @@ import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pinput/pin_put/pin_put.dart';
-import 'package:rotation_app/logic_block/providers/login_provider.dart';
-import 'package:rotation_app/logic_block/providers/notification_provider.dart';
-import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:rotation_app/ui/nav_bar/app.dart';
-
-import 'package:rotation_app/ui/start_page.dart';
 import 'package:rotation_app/ui/widgets/custom_bottom_sheet.dart';
+import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
+import 'package:rotation_app/logic_block/providers/notification_provider.dart';
 
-import '../splash_page.dart';
 
 class SmsPinPage extends StatefulWidget {
   final String phoneNumber;
@@ -116,7 +114,39 @@ class _SmsPinPageState extends State<SmsPinPage> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 16, top: 30),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/svg/icon-back.svg',
+                              width: 10,
+                              height: 16,
+                            ),
+                            SizedBox(width: 10,),
+                            Text(
+                              'Назад',
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
                   //height: 360,
                   child: Column(

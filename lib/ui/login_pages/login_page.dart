@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   var textFieldCtrl = TextEditingController();
-  bool _firstPress = true ;
+  bool _firstPress = true;
   Future<Status> _status;
 
   @override
@@ -39,6 +39,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       _status = auth.signInByPhoneNumber('7' + textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '')).whenComplete(() => _firstPress = true);
       auth.userPhoneNumber = textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '');
       handleLogin();
+    //_firstPress = true;
     }
   }
 
@@ -76,7 +77,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             children: [
                               Text(
                                 'Войти в аккаунт',
-                                style: TextStyle(fontFamily: "Root",
+                                style: TextStyle(
+                                    fontFamily: "Root",
                                     fontSize: 24,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
@@ -213,11 +215,34 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 ),
                                 child: InkWell(
                                   onTap: () {
-                                    print(_firstPress);
-                                    if(_firstPress){
-                                      _firstPress = false;
-                                      _login();
+                                    if(textFieldCtrl.text.replaceAll(new RegExp(r'[^\w\s]+'),'').replaceAll(' ', '').length != 10){
+                                      return showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false, // user must tap button!
+                                          builder: (BuildContext context) {
+                                            return CupertinoAlertDialog(
+                                              title: Text('Номер телефона неполный.'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('изменить'),
+                                                  onPressed: () {
+                                                    _firstPress = true;
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                      );
                                     }
+                                    else{
+                                      print(_firstPress);
+                                      if(_firstPress){
+                                        _firstPress = false;
+                                        _login();
+                                      }
+                                    }
+
                                   },
                                   child: Center(
                                     child: Text(

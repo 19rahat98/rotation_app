@@ -16,15 +16,18 @@ class SupportScreen extends StatelessWidget {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color(0xffF3F6FB),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Помощь',
-          style: TextStyle(fontFamily: "Root",
-              fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(44.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Помощь',
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: Color(0xff2D4461),
         ),
-        centerTitle: true,
-        backgroundColor: Color(0xff2D4461),
       ),
       body: SingleChildScrollView(
         child: Container(

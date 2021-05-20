@@ -26,9 +26,9 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
   TextEditingController _userBirthdayDateController = TextEditingController();
 
   DateTime birthDate; // instance of DateTime
-  String _gender = "male";
+  String _gender;
   String _frequencyValue = "KAZ";
-
+  int _radioValue = 1 ;
   static const Map<String, String> frequencyOptions = {
     "Казахстан": "KAZ",
     "Россия": "RUS",
@@ -74,11 +74,14 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
     LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
     lp.getEmployeeData();
     lp.getEmployeePhoneNumber();
+    print(DateFormat.yMd('ru').format(DateTime.parse(lp.employee.birthDate)));
     _userNameTextController.text = lp.employee.firstName;
     _userSecondNameTextController.text = lp.employee.lastName;
     _userMiddleNameTextController.text = lp.employee.patronymic;
     _userIdTextController.text = lp.employee.iin;
+    _userBirthdayDateController.text = DateFormat.yMd('ru').format(DateTime.parse(lp.employee.birthDate));
     _frequencyValue = lp.employee.countryCode;
+    _gender = lp.employee.gender;
     if (lp.userPhoneNumber != null) {
       _userPhoneNumberTextController.text =
           lp.userPhoneNumber.substring(1, 4) +
@@ -147,7 +150,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
               Container(
                 width: w,
                 margin: EdgeInsets.only(top: 12),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 24),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(3),
@@ -164,6 +167,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      margin: EdgeInsets.only(left: 4),
                       //margin: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'Основная информация',
@@ -177,7 +181,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
-                      margin: EdgeInsets.only(top: 16),
+                      margin: EdgeInsets.only(top: 16, left: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -187,6 +191,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           Container(
@@ -226,7 +231,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
-                      margin: EdgeInsets.only(top: 16),
+                      margin: EdgeInsets.only(top: 16, left: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -236,6 +241,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
+                              fontWeight: FontWeight.w500,
+
                             ),
                           ),
                           Container(
@@ -282,7 +289,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
-                      margin: EdgeInsets.only(top: 16),
+                      margin: EdgeInsets.only(top: 16, left: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -292,6 +299,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
+                              fontWeight: FontWeight.w500,
+
                             ),
                           ),
                           Container(
@@ -326,6 +335,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
+                      margin: EdgeInsets.only(left: 4),
                       //margin: EdgeInsets.only(top: 16),
                       child: Form(
                         autovalidate: true,
@@ -371,15 +381,77 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Пол',
-                            style: TextStyle(
-                              fontFamily: "Root",
-                              fontSize: 13,
-                              color: Color(0xff748595),
+                          Container(
+                            margin: EdgeInsets.only(left: 4),
+                            child: Text(
+                              'Пол',
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 13,
+                                color: Color(0xff748595),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                           Container(
+                            margin: EdgeInsets.only(top: 4, bottom: 8),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap:(){
+                                    setState(() {
+                                      _gender = 'male';
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 24,
+                                    margin: EdgeInsets.only(right: 10),
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(horizontal: 4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: _gender == 'male' ? Color(0xff1262CB) : Colors.transparent,
+                                    ),
+                                    child: Text(
+                                      'Мужской',
+                                      style: TextStyle(
+                                        fontFamily: 'Root',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        color: _gender == 'male' ? Colors.white : Color(0xff15304D),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap:(){
+                                    setState(() {
+                                      _gender = 'female';
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 24,
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.symmetric(horizontal: 4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: _gender == 'female' ? Color(0xff1262CB) : Colors.transparent,
+                                    ),
+                                    child: Text(
+                                      'Женский',
+                                      style: TextStyle(
+                                        fontFamily: 'Root',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        color: _gender == 'female' ? Colors.white : Color(0xff15304D),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          /*Container(
                             margin: EdgeInsets.only(top: 4, bottom: 7),
                             child: GroupButton(
                               isRadio: true,
@@ -401,10 +473,8 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                 setState(() {
                                   if (index == 0) {
                                     _gender = 'male';
-                                    print(_gender);
                                   } else if (index == 1) {
                                     _gender = 'female';
-                                    print(_gender);
                                   } else
                                     _gender = 'male';
                                 });
@@ -414,7 +484,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                                 "Женский",
                               ],
                             ),
-                          ),
+                          ),*/
                           Divider(
                             height: 0,
                           ),
@@ -423,7 +493,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
-                      margin: EdgeInsets.only(top: 16),
+                      margin: EdgeInsets.only(top: 16, left: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -433,6 +503,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           Container(
@@ -474,7 +545,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                     ),
                     Container(
                       width: w,
-                      margin: EdgeInsets.only(top: 16),
+                      margin: EdgeInsets.only(top: 16, left: 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -484,6 +555,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           Padding(
@@ -610,6 +682,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           Container(
@@ -706,6 +779,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                               fontFamily: "Root",
                               fontSize: 13,
                               color: Color(0xff748595),
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           Container(

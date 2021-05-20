@@ -32,7 +32,7 @@ class Application {
   List<Segments> segments;
   Map applicationStatus;
   String watcherTimeLimit;
-
+  DateTime newFormatDate;
   Application(
       {this.id,
         this.userId,

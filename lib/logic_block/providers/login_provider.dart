@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info/device_info.dart';
 import 'package:rotation_app/logic_block/models/user_documents.dart';
@@ -49,6 +50,18 @@ class LoginProvider with ChangeNotifier {
   /*LoginProvider() {
     checkSignIn();
   }*/
+
+  Future<List<Application>> sortByDate() async{
+    if(_data == null || _data.isEmpty){
+      await getNewEmployeeApplicationData();
+      _data.sort((a,b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
+      return _data;
+    }
+    else {
+      _data.sort((a,b) => DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
+      return _data;
+    }
+  }
 
   _sendDeviceId() async {
     var deviceInfo = DeviceInfoPlugin();
@@ -124,8 +137,16 @@ class LoginProvider with ChangeNotifier {
 
   Future<bool> logoutUser() async{
     final ResponseApi result = await userRepository.logoutEmployee();
-    if(result.code == 200) return true;
-    else return false;
+    if(result.code == 200) {
+      print('success logoutUser');
+      return true;
+    }
+    else {
+      print(result.data);
+      print(result.code);
+      print('error logoutUser');
+      return false;
+    }
   }
 
   String getWatcherTimeLimit(Application item){
@@ -140,7 +161,7 @@ class LoginProvider with ChangeNotifier {
   bool checkLargeRoute(Application item){
     if(item.segments != null && item.segments.isNotEmpty) {
       for(int i = 0; i < item.segments.length; i++){
-        if(item.segments[i].train != null && item.segments[i].train.largeRoute != null && item.segments[i].train.largeRoute == true && item.segments[i].status == 'issued')
+        if(item.segments[i].train != null && item.segments[i].train.largeRoute != null && item.segments[i].train.largeRoute.isNotEmpty && item.segments[i].status == 'issued')
           return true;
       }
       return false;
@@ -385,18 +406,15 @@ class LoginProvider with ChangeNotifier {
     final ResponseApi result = await userRepository.getApplication(pageNumber: pageNumber, perPage: perPage);
     final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
     if(decodeData.data != null){
-      print( decodeData.data['last_page']);
-      print('adasdasdasd');
       return decodeData.data['last_page'];
     }
     else {
-      print('adasasdasdasddasdasd');
       return 1;
     }
   }
 
   Future<List<Application>> getEmployeeApplication({int pageNumber, int perPage}) async {
-    if(_data.isEmpty){
+    if(_data == null || _data.isEmpty){
       await _sendDeviceId();
       final ResponseApi result = await userRepository.getApplication(pageNumber: pageNumber, perPage: 10);
       final ResultApiModel decodeData = ResultApiModel.fromJson(result.data);
@@ -457,9 +475,16 @@ class LoginProvider with ChangeNotifier {
     httpManager.baseOptions.headers['Authorization'] = null;
     print('Authorization');
     print(httpManager.baseOptions.headers['Authorization']);
-    await prefs.remove("phoneNumber");
+    if(await prefs.remove("phoneNumber") && await prefs.remove("userToken") && await prefs.remove("employee")){
+      print('Authorization success');
+      return true;
+    }else{
+      print('Authorization error');
+      return false;
+    }
+    /*await prefs.remove("phoneNumber");
     await prefs.remove("userToken");
-    return await prefs.remove("employee");
+    await prefs.remove("employee");*/
   }
 
   Future<bool> updateUserData(

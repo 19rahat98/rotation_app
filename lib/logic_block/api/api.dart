@@ -9,6 +9,7 @@ class Api {
   ///URL API
   static const String SEND_CODE_LOGIN = "/employees/send-code-login";
   static const String LOGIN = "/employees/login";
+  static const String ADD_NEW_PHONE_NUMBER = "/employees/fix-phone";
   static const String FIND_EMPLOYEE_BY_IIN = "/employees/get-employee-by-iin";
   static const String UPDATE_EMPLOYEE_PHONE_NUMBER = "/employees/send-code-update";
   static const String UPDATE_PHONE_NUMBER = "/employees/update-phone";
@@ -41,9 +42,13 @@ class Api {
     return ResponseApi.fromJson(result);
   }
 
+  static Future<dynamic> addFirstPhoneNumber(params) async{
+    final result = await httpManager.post(url: ADD_NEW_PHONE_NUMBER, data: params);
+    return ResponseApi.fromJson(result);
+  }
+
   static Future<dynamic> getEmployeeDocuments() async{
     final result = await httpManager.get(url: GET_EMPLOYEE_DOCUMENTS);
-    print(result);
     return ResponseApi.fromJson(result);
   }
 
@@ -68,7 +73,6 @@ class Api {
   }
 
   static Future<dynamic> updateUserData(params) async {
-    print(params);
     final result = await httpManager.post(url: UPDATE_USER_DATA, data: params);
     return ResponseApi.fromJson(result);
   }
@@ -143,7 +147,6 @@ class Api {
   }
   static Future<dynamic> updatePhoneNumber(params) async {
     final result = await httpManager.post(url: UPDATE_PHONE_NUMBER, data: params);
-    print(result);
     return ResponseApi.fromJson(result);
   }
 

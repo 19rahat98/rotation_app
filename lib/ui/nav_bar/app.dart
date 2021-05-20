@@ -1,29 +1,26 @@
-import 'dart:async';
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:rotation_app/logic_block/models/application_model.dart';
-import 'package:rotation_app/logic_block/models/articles_model.dart';
-import 'package:rotation_app/logic_block/models/notification_item.dart';
-import 'package:rotation_app/logic_block/providers/articles_provider.dart';
-import 'package:rotation_app/logic_block/providers/login_provider.dart';
-import 'package:rotation_app/ui/home_pages/widgets/push_notification_list_widget.dart';
 
 
 import 'package:rotation_app/ui/nav_bar/tab_item.dart';
 import 'package:rotation_app/ui/nav_bar/bottom_nav.dart';
 import 'package:rotation_app/ui/home_pages/home_page.dart';
-import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
-import 'package:rotation_app/ui/support_pages/press_service_screen.dart';
-import 'package:rotation_app/ui/support_pages/social_media_widget.dart';
-import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
 import 'package:rotation_app/ui/trips_pages/trips_screen.dart';
 import 'package:rotation_app/ui/support_pages/support_screen.dart';
+import 'package:rotation_app/logic_block/models/articles_model.dart';
 import 'package:rotation_app/ui/user_pages/user_profile_screen.dart';
+import 'package:rotation_app/ui/trips_pages/custom_trip_widget.dart';
+import 'package:rotation_app/ui/support_pages/social_media_widget.dart';
+import 'package:rotation_app/logic_block/providers/login_provider.dart';
+import 'package:rotation_app/logic_block/models/application_model.dart';
+import 'package:rotation_app/ui/support_pages/press_service_screen.dart';
+import 'package:rotation_app/logic_block/providers/articles_provider.dart';
 import 'package:rotation_app/ui/user_pages/notifications_list_screen.dart';
-import 'package:rotation_app/ui/widgets/emptyPage.dart';
+import 'package:rotation_app/ui/support_pages/more_article_info_widget.dart';
 
 class App extends StatefulWidget {
   @override
@@ -58,14 +55,14 @@ class AppState extends State<App> {
 
   void _fcmHandle() async {
     if (Platform.isIOS) {
-      _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings(sound: true, badge: true, alert: true));
+      _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings(sound: true, badge: true, alert: true, provisional: false));
     }
     //_firebaseMessaging.requestNotificationPermissions(const IosNotificationSettings(sound: true, badge: true, alert: true));
     _firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
     });
     _firebaseMessaging.configure(
-      onBackgroundMessage: myBackgroundMessageHandler,
+      onBackgroundMessage:  Platform.isIOS ? null : myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         _navigateToItemDetail(message);

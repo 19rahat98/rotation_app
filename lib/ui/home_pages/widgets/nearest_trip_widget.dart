@@ -24,13 +24,13 @@ class NearestTripWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map applicationStatus = Map();
     double w = MediaQuery.of(context).size.width;
-    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
     if(tripsList != null && tripsList.isNotEmpty){
       for(int i = 0; i < tripsList.length; i++){
-        if (DateTime.now().isBefore(DateTime.parse(tripsList[i].date))) {
-          tripsList[i].applicationStatus = lp.getStatusApplication(tripsList[i]);
+        var temp = DateTime.now().toUtc();
+        var d1 = DateTime.utc(temp.year,temp.month,temp.day);
+        var d2 = DateTime.utc(DateTime.parse(tripsList[i].date).year, DateTime.parse(tripsList[i].date).month, DateTime.parse(tripsList[i].date).day);
+        if (DateTime.now().isBefore(DateTime.parse(tripsList[i].date)) || d2.compareTo(d1)==0) {
           /*if(tripsList[i].segments.isEmpty && tripsList[i].status == "opened"){
             return InkWell(
               onTap: () {

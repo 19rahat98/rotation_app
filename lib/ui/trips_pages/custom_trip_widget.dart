@@ -107,9 +107,11 @@ class _CustomTripPageState extends State<CustomTripPage> {
                         child: Row(
                           children: [
                             Text(
-                              widget.tripData.direction == "to-work"
+                              widget.tripData.direction == null ? widget.tripData.isExtra != null && widget.tripData.isExtra == true ? 'Экстренная, '
+                                  : ''
+                                  : widget.tripData.direction == "to-work"
                                   ? 'На вахту, '
-                                  : 'Домой, ',
+                                  : 'Домой, ' ,
                               style: TextStyle(
                                   fontFamily: "Root",
                                   fontSize: 19,
@@ -149,6 +151,13 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                   'assets/svg/largeRoute.svg',
                                   width: 15,
                                   height: 12,
+                                ),
+                              ),
+                            if(widget.tripData.isExtra != null && widget.tripData.isExtra)
+                              Container(
+                                margin: EdgeInsets.only(right: 8),
+                                child: SvgPicture.asset(
+                                  'assets/svg/isExtra.svg',
                                 ),
                               ),
                             if(LoginProvider().checkWatcher(widget.tripData))
@@ -366,7 +375,7 @@ class _CustomTripPageState extends State<CustomTripPage> {
                           width: 5,
                         ),
                         Container(
-                          width: w * 0.35,
+                          width: w * 0.40,
                           child: Text(
                             "${widget.tripData.segments[index].train.depStationName[0].toUpperCase()}${widget.tripData.segments[index].train.depStationName.toLowerCase().substring(1)} - ${widget.tripData.segments[index].train.arrStationName[0].toUpperCase()}${widget.tripData.segments[index].train.arrStationName.toLowerCase().substring(1)}",
                             maxLines: 1,
@@ -400,8 +409,9 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                 text: new TextSpan(
                                   children: <TextSpan>[
                                     new TextSpan(
-                                      text: DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[index].train.depDateTime),).toString().replaceAll('.', ','),
+                                      text: DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[index].train.depDateTime),).toString().replaceAll('.', ',') + ',',
                                       style: TextStyle(
+                                        letterSpacing: 0,
                                         fontFamily: "Root",
                                         fontSize: 14,
                                         decoration: widget.tripData.segments[index].status == "returned" || widget.tripData.segments[index].status == "canceled"
@@ -416,6 +426,8 @@ class _CustomTripPageState extends State<CustomTripPage> {
                                     new TextSpan(
                                       text: ' ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[index].train.depDateTime))} - ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[index].train.arrDateTime))}',
                                       style: new TextStyle(
+                                          fontFamily: "Root",
+                                          letterSpacing: 0,
                                           fontSize: 14,
                                           decoration:
                                               widget.tripData.segments[index].status == "returned" || widget.tripData.segments[index].status == "canceled"
@@ -790,28 +802,44 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: w * 0.40,
-                        margin: EdgeInsets.only(bottom: 2),
-                        child: Text(
-                          "Заявка №${widget.tripData.id}",
-                          style: TextStyle(
-                            fontFamily: "Root",
-                            fontSize: 14,
-                            color: Color(0xff0C2B4C),
-                            fontWeight: FontWeight.bold,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          if(widget.tripData.isExtra != null && widget.tripData.isExtra)
+                            Container(
+                              margin: EdgeInsets.only(right: 4),
+                              child: SvgPicture.asset(
+                                'assets/svg/isExtra.svg',
+                                width: 13,
+                                height: 16,
+                              ),
+                            ),
+                          Container(
+                            width: w * 0.40,
+                            margin: EdgeInsets.only(bottom: 2),
+                            child: Text(
+                              "Заявка №${widget.tripData.id}",
+                              style: TextStyle(
+                                fontFamily: "Root",
+                                fontSize: 14,
+                                color: Color(0xff0C2B4C),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                       Padding(
                         padding: EdgeInsets.only(bottom: 2),
                         child: Row(
                           children: [
                             Text(
-                              widget.tripData.direction != null &&
-                                      widget.tripData.direction == "to-work"
+                              widget.tripData.direction == null ? widget.tripData.isExtra != null && widget.tripData.isExtra == true ? 'Экстренная, '
+                                  : ''
+                                  : widget.tripData.direction == "to-work"
                                   ? 'На вахту, '
-                                  : 'Домой, ',
+                                  : 'Домой, ' ,
                               style: TextStyle(
                                 fontFamily: "Root",
                                 fontSize: 22,
@@ -1146,6 +1174,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                                           .toString()
                                                           .replaceAll('.', ''),
                                                       style: TextStyle(
+                                                          letterSpacing: 0,
                                                           fontFamily: "Root",
                                                           fontSize: 20,
                                                           color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F),
@@ -1154,7 +1183,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    "${widget.tripData.segments[index].train.depStationName[0].toUpperCase()}${widget.tripData.segments[index].train.depStationName.toLowerCase().substring(1)}, ${widget.tripData.segments[index].depStationName[0].toUpperCase()}${widget.tripData.segments[index].depStationName.toLowerCase().substring(1)}",
+                                                    "${widget.tripData.segments[index].train.depStationName.toUpperCase()}, ${widget.tripData.segments[index].depStationName[0].toUpperCase()}${widget.tripData.segments[index].depStationName.toLowerCase().substring(1)}",
                                                     style: TextStyle(
                                                         fontFamily: "Root",
                                                         fontSize: 14,
@@ -1210,7 +1239,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F).withOpacity(0.7).withOpacity(0.7),
+                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff748595).withOpacity(0.7),
                                                 ),
                                               ),
                                             ),
@@ -1222,7 +1251,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F).withOpacity(0.7).withOpacity(0.7),
+                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F),
                                                 ),
                                               ),
                                             ),
@@ -1241,7 +1270,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F).withOpacity(0.7).withOpacity(0.7),
+                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff748595).withOpacity(0.7),
                                                 ),
                                               ),
                                             ),
@@ -1253,7 +1282,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
                                                     fontSize: 14,
-                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F).withOpacity(0.7).withOpacity(0.7),
+                                                    color: widget.tripData.segments[index].status == 'returned' || widget.tripData.segments[index].status == 'canceled' ? Color(0xff1B344F).withOpacity(0.3) : Color(0xff1B344F),
                                                 ),
                                               ),
                                             ),
@@ -1273,7 +1302,8 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                                       fontWeight: FontWeight.w500,
                                                       fontFamily: "Root",
                                                       fontSize: 14,
-                                                      color: Color(0xff748595).withOpacity(0.7)),
+                                                      color: Color(0xff748595).withOpacity(0.7),
+                                                  ),
                                                 ),
                                               ),
                                               Container(
@@ -1360,8 +1390,8 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                               Container(
                                                 width: w * 0.55,
                                                 child: Text(
-                                                  widget.tripData.segments.first.ticket.carTypeLabel != null && widget.tripData.segments.first.ticket.carNumber != null?
-                                                  '№${widget.tripData.segments.first.ticket.carNumber}, ${widget.tripData.segments.first.ticket.carTypeLabel}' :  '*',
+                                                  widget.tripData.segments[index].ticket.carTypeLabel != null && widget.tripData.segments[index].ticket.carNumber != null?
+                                                  '№${widget.tripData.segments[index].ticket.carNumber}, ${widget.tripData.segments[index].ticket.carTypeLabel}' :  '*',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
@@ -1472,8 +1502,8 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                               Container(
                                                 width: w * 0.55,
                                                 child: Text(
-                                                  widget.tripData.segments.first.ticket.places != null && widget.tripData.segments.first.ticket.places.isNotEmpty ?
-                                                  '№${widget.tripData.segments.first.ticket.places.first.number}, ${widget.tripData.segments.first.ticket.places.first.floor > 1 ? 'верхнее' : 'нижнее'}' :  '*',
+                                                  widget.tripData.segments[index].ticket.places != null && widget.tripData.segments[index].ticket.places.isNotEmpty ?
+                                                  '№${widget.tripData.segments[index].ticket.places.first.number}, ${widget.tripData.segments[index].ticket.places.first.floor > 1 ? 'верхнее' : 'нижнее'}' :  '*',
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontFamily: "Root",
@@ -1815,7 +1845,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'ЖД билет №${i}',
+                                      'ЖД билет № ${i+1}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontFamily: "Root",
@@ -2104,26 +2134,62 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                           if (status.isGranted) {
                             String dirloc = "";
                             if (Platform.isAndroid) {
-                              dirloc = "/sdcard/download/${widget.tripData.segments[i].id}.pdf";
+                              try{
+                                //dirloc = "/sdcard/download/${widget.tripData.segments[i].id}.pdf";
+                                var tempDir = await getTemporaryDirectory();
+                                dirloc = tempDir.path + '/' + widget.tripData.segments[i].id.toString() + '.pdf';
+                                download2(dio, widget.tripData.segments[i].ticket.ticketUrl, dirloc).whenComplete(() {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PDFScreen(
+                                        path: dirloc,
+                                        title:
+                                        "Билет ${widget.tripData.segments[i].train.depStation} - ${widget.tripData.segments[i].train.arrStation} ${DateFormat.MMMEd('ru').format(
+                                          DateTime.parse(widget.tripData.segments[i].train.depDateTime),
+                                        ).toString()}",
+                                      ),
+                                    ),
+                                  );
+                                });
+                              }catch(e){
+                                var tempDir = await getTemporaryDirectory();
+                                dirloc = tempDir.path + '/' + widget.tripData.segments[i].id.toString() + '.pdf';
+                                download2(dio, widget.tripData.segments[i].ticket.ticketUrl, dirloc).whenComplete(() {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PDFScreen(
+                                        path: dirloc,
+                                        title:
+                                        "Билет ${widget.tripData.segments[i].train.depStation} - ${widget.tripData.segments[i].train.arrStation} ${DateFormat.MMMEd('ru').format(
+                                          DateTime.parse(widget.tripData.segments[i].train.depDateTime),
+                                        ).toString()}",
+                                      ),
+                                    ),
+                                  );
+                                });
+                              }
                             } else {
                               dirloc = (await getApplicationDocumentsDirectory()).path + '/' + widget.tripData.segments[i].id.toString() + '.pdf';
+                              download2(dio, widget.tripData.segments[i].ticket.ticketUrl, dirloc).whenComplete(() {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PDFScreen(
+                                      path: dirloc,
+                                      title:
+                                      "Билет ${widget.tripData.segments[i].train.depStation} - ${widget.tripData.segments[i].train.arrStation} ${DateFormat.MMMEd('ru').format(
+                                        DateTime.parse(widget.tripData.segments[i].train.depDateTime),
+                                      ).toString()}",
+                                    ),
+                                  ),
+                                );
+                              });
                             }
                             print('full path ${dirloc}');
 
-                            download2(dio, widget.tripData.segments[i].ticket.ticketUrl, dirloc).whenComplete(() {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PDFScreen(
-                                    path: dirloc,
-                                    title:
-                                    "Билет ${widget.tripData.segments[i].train.depStation} - ${widget.tripData.segments[i].train.arrStation} ${DateFormat.MMMEd('ru').format(
-                                      DateTime.parse(widget.tripData.segments[i].train.depDateTime),
-                                    ).toString()}",
-                                  ),
-                                ),
-                              );
-                            });
+
                           }
                         }
                       },
@@ -2176,6 +2242,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
+                                          fontFamily: "Root",
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
@@ -2184,6 +2251,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                       Text(
                                         'скачать билет',
                                         style: TextStyle(
+                                          fontFamily: "Root",
                                           fontSize: 14,
                                           color: Colors.white.withOpacity(0.7),
                                           fontWeight: FontWeight.w400,
@@ -2233,6 +2301,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
+                                        fontFamily: "Root",
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xffFF4242),
@@ -2241,6 +2310,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                     Text(
                                       widget.tripData.segments[i].closedReason != null && widget.tripData.segments[i].ticket != null ? widget.tripData.segments[i].closedReason + '. Инициатор: ${widget.tripData.segments[i].ticket.returnUserId}' + '. Дата отмены: ${DateFormat.yMMMMd('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))} в ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))}' : '',
                                       style: TextStyle(
+                                        fontFamily: "Root",
                                         fontSize: 14,
                                         color: Color(0xff748595).withOpacity(0.5),
                                         fontWeight: FontWeight.w400,
@@ -2289,6 +2359,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
+                                        fontFamily: "Root",
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xff748595).withOpacity(0.5),
@@ -2297,6 +2368,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                     Text(
                                       widget.tripData.segments[i].closedReason != null && widget.tripData.segments[i].ticket != null ? widget.tripData.segments[i].closedReason + '. Инициатор: ${widget.tripData.segments[i].ticket.returnUserId}' + '. Дата отмены: ${DateFormat.yMMMMd('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))} в ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[i].ticket.returnedAt))}' : '',
                                       style: TextStyle(
+                                        fontFamily: "Root",
                                         fontSize: 14,
                                         color: Color(0xff748595).withOpacity(0.5),
                                         fontWeight: FontWeight.w400,
@@ -2345,6 +2417,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
+                                          fontFamily: "Root",
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold,
                                           color: Color(0xff748595).withOpacity(0.8),
@@ -2353,6 +2426,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                       Text(
                                         'билет не оформлен',
                                         style: TextStyle(
+                                          fontFamily: "Root",
                                           fontSize: 14,
                                           color: Color(0xff748595).withOpacity(0.5),
                                           fontWeight: FontWeight.w400,
@@ -2401,6 +2475,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
+                                        fontFamily: "Root",
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xffEA9F3F),
@@ -2409,6 +2484,7 @@ class _CustomTripSheetState extends State<CustomTripSheet> {
                                     Text(
                                       widget.tripData.segments[i].watcherTimeLimit != null ? 'билет на листе ожидания: до ${DateFormat.MMMd('ru').format(DateTime.parse(widget.tripData.segments[i].watcherTimeLimit))} ${DateFormat.Hm('ru').format(DateTime.parse(widget.tripData.segments[i].watcherTimeLimit))}' : 'билет на листе ожидания: до *',
                                       style: TextStyle(
+                                        fontFamily: "Root",
                                         fontSize: 14,
                                         color: Color(0xff748595).withOpacity(0.5),
                                         fontWeight: FontWeight.w400,

@@ -13,9 +13,6 @@ class ActiveTripsWidget extends StatelessWidget {
   final ScrollController scrollController;
   const ActiveTripsWidget({Key key, this.tripsList, this.scrollController}) : super(key: key);
 
-  static PagingController _pagingController = PagingController<int, Application>(firstPageKey: 1,);
-
-
   void _onOpenMore(BuildContext context, {routName}) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
@@ -51,9 +48,12 @@ class ActiveTripsWidget extends StatelessWidget {
     Map applicationStatus = Map();
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
-    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
     //lp.getStatusApplication(tripsList.where((element) => DateTime.now().isBefore(DateTime.parse(element))));
-    if (DateTime.now().isBefore(DateTime.parse(tripsList.date))){
+    var temp = DateTime.now().toUtc();
+    var d1 = DateTime.utc(temp.year,temp.month,temp.day);
+    var d2 = DateTime.utc(DateTime.parse(tripsList.date).year, DateTime.parse(tripsList.date).month, DateTime.parse(tripsList.date).day);
+    if (DateTime.now().isBefore(DateTime.parse(tripsList.date)) || d2.compareTo(d1)==0){
+
       if(tripsList.segments.isEmpty && tripsList.status == "opened"){
         return InkWell(
           onTap: () {
@@ -88,7 +88,9 @@ class ActiveTripsWidget extends StatelessWidget {
                     child: SingleActiveWidget(tripData: item),
                   );
                 }*/
-      else if(tripsList.segments.isNotEmpty && !(tripsList.applicationStatus.length == 1 && tripsList.applicationStatus.containsKey('red'))){
+    else if(tripsList.applicationStatus.length == 1 && (tripsList.applicationStatus.containsKey('red') || tripsList.applicationStatus.containsKey('canceled')))
+      return Container();
+    else if(tripsList.segments.isNotEmpty && !(tripsList.applicationStatus.length == 1 && tripsList.applicationStatus.containsKey('red'))){
         return InkWell(
           onTap: () {
             print(tripsList.applicationStatus);

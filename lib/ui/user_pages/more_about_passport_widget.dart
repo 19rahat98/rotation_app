@@ -90,7 +90,7 @@ class _MoreAboutPassportState extends State<MoreAboutPassport> {
     _userNameTextController.text = lp.employee.firstNameEn;
     _userSecondNameTextController.text = lp.employee.lastNameEn;
     _userIdTextController.text = lp.employee.iin;
-    _userDocumentNumberController.text = lp.employee.docNumber;
+    _userDocumentNumberController.text = widget.userDocument.number;
     _userCountryNameTextController.text = widget.userDocument.issueBy;
     dateOfIssue = DateTime.parse(widget.userDocument.issueDate);
     idValidityDay = DateTime.parse(widget.userDocument.expireDate);

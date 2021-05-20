@@ -45,7 +45,7 @@ class _MoreAboutResidencePermitWidgetState extends State<MoreAboutResidencePermi
     _userSecondNameTextController.text = lp.employee.lastName;
     _userMiddleNameTextController.text = lp.employee.patronymic;
     _userIdTextController.text = lp.employee.iin;
-    _userDocumentNumberController.text = lp.employee.docNumber;
+    _userDocumentNumberController.text = widget.userDocument.number;
     _userCountryNameTextController.text = widget.userDocument.issueBy;
     dateOfIssue = DateTime.parse(widget.userDocument.issueDate);
     idValidityDay = DateTime.parse(widget.userDocument.expireDate);

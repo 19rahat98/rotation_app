@@ -1,11 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:rotation_app/ui/login_pages/login_page.dart';
 import 'package:rotation_app/logic_block/providers/user_login_provider.dart';
 
 class NoAccountBottomSheet extends StatelessWidget {
@@ -27,6 +27,164 @@ class NoAccountBottomSheet extends StatelessWidget {
           //margin: EdgeInsets.symmetric(vertical: 10),
           child: Text(
             auth.userIIN == null ? 'Сотрудник не найден. Внимательно проверьте ваши данные и попробуйте снова.' : 'Сотрудник с ИИН: ${auth.userIIN} не найден. Внимательно проверьте ваши данные и попробуйте снова.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 15,
+                color: Color(0xff1B3652).withOpacity(0.5),
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            child: Text('Обратиться в поддержку',
+                style: TextStyle(fontFamily: "Root",
+                    fontSize: 17,
+                    color: Color(0xff1262CB),
+                    fontWeight: FontWeight.bold)),
+            onPressed: () {
+              return showCupertinoModalPopup<void>(
+                  context: context,
+                  builder: (BuildContext context) => SocialMediaBottomSheet());
+            },
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          child: Text(
+            'Попробовать снова',
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 17,
+                color: Color(0xff1262CB),
+                fontWeight: FontWeight.bold),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ));
+  }
+}
+
+class SuccessAddedNumberBottomSheet extends StatelessWidget {
+  final String phoneNumber;
+
+  const SuccessAddedNumberBottomSheet({Key key, this.phoneNumber}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoActionSheet(
+        title: Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Text(
+            'Номер успешно добавлен',
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 20,
+                color: Color(0xff1B344F),
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        message: Container(
+          //margin: EdgeInsets.symmetric(vertical: 10),
+          child: Text(
+            phoneNumber == null ? 'По указаному ИИН успешно добавлен номер телефона.  Вы сможете войти в аккаунт используя  этот номер.' : 'По указаному ИИН успешно добавлен номер телефона: +7 (${phoneNumber}.  Вы сможете войти в аккаунт используя  этот номер.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 15,
+                color: Color(0xff1B3652).withOpacity(0.5),
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+        cancelButton: CupertinoActionSheetAction(
+          child: Text(
+            'Перейти на страницу входа',
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 17,
+                color: Color(0xff1262CB),
+                fontWeight: FontWeight.bold),
+          ),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => LoginPage()));
+          },
+        ),
+    );
+  }
+}
+
+class SendedRequestBottomSheet extends StatelessWidget {
+  final String phoneNumber;
+
+  const SendedRequestBottomSheet({Key key, this.phoneNumber}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoActionSheet(
+        title: Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Text(
+            'Заявка отправлена',
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 20,
+                color: Color(0xff1B344F),
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        message: Container(
+          //margin: EdgeInsets.symmetric(vertical: 10),
+          child: Text(
+            phoneNumber == null ? 'Заявка на изменение номера телефона успешно отправлена. Обработка займет до 30 минут.  После подтверждения Вы получите уведомление на Ваш телефон.' : 'Заявка на изменение номера телефона  на +7 (${phoneNumber} успешно отправлена. Обработка займет до 30 минут.  После подтверждения Вы получите уведомление на Ваш телефон..',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 15,
+                color: Color(0xff1B3652).withOpacity(0.5),
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            child: Text('Обратиться в поддержку',
+                style: TextStyle(fontFamily: "Root",
+                    fontSize: 17,
+                    color: Color(0xff1262CB),
+                    fontWeight: FontWeight.bold)),
+            onPressed: () {
+              return showCupertinoModalPopup<void>(
+                  context: context,
+                  builder: (BuildContext context) => SocialMediaBottomSheet());
+            },
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          child: Text(
+            'Закрыть окно',
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 17,
+                color: Color(0xff1262CB),
+                fontWeight: FontWeight.bold),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ));
+  }
+}
+
+class ShowErrorBottomSheet extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoActionSheet(
+        title: Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Text(
+            'Произошла ошибка',
+            style: TextStyle(fontFamily: "Root",
+                fontSize: 20,
+                color: Color(0xffFF4242),
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        message: Container(
+          //margin: EdgeInsets.symmetric(vertical: 10),
+          child: Text(
+            'Не удалось добавить номер телефона  по указаному ИИН. Попробуйте снова  либо обратитесь в службу поддержки.' ,
             textAlign: TextAlign.center,
             style: TextStyle(fontFamily: "Root",
                 fontSize: 15,

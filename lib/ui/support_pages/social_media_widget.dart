@@ -194,7 +194,7 @@ class NotificationBottomSheet extends StatelessWidget {
                       Container(
                         width: w * 0.5,
                         child: Text(
-                          "Важное уведомление*",
+                          "",
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontFamily: "Root",

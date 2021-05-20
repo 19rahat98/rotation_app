@@ -53,8 +53,10 @@ class ArchiveTrips extends StatelessWidget{
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-    LoginProvider lp = Provider.of<LoginProvider>(context, listen: false);
-    if (DateTime.now().isAfter(DateTime.parse(tripsList.date)) || (!tripsList.applicationStatus.containsKey('all') && !tripsList.applicationStatus.containsKey('grey') && !tripsList.applicationStatus.containsKey('green') && !tripsList.applicationStatus.containsKey('yellow'))) {
+    var temp = DateTime.now().toUtc();
+    var d1 = DateTime.utc(temp.year,temp.month,temp.day);
+    var d2 = DateTime.utc(DateTime.parse(tripsList.date).year, DateTime.parse(tripsList.date).month, DateTime.parse(tripsList.date).day);
+    if ((DateTime.now().isAfter(DateTime.parse(tripsList.date)) && d2.compareTo(d1)!=0) || (!tripsList.applicationStatus.containsKey('all') && !tripsList.applicationStatus.containsKey('grey') && !tripsList.applicationStatus.containsKey('green') && !tripsList.applicationStatus.containsKey('yellow'))) {
       if(tripsList.segments.isEmpty && tripsList.status == "opened" ){
         return InkWell(
           onTap: () {

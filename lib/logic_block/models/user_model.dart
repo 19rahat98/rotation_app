@@ -37,6 +37,9 @@ class Employee {
   String docNumber;
   String homeStation;
   String countryCode;
+  bool isPhoneNumber;
+  String gender;
+  String birthDate;
 
   Employee(
       {this.id,
@@ -53,11 +56,14 @@ class Employee {
         this.docNumber,
         this.homeStation,
         this.orgName,
-        this.countryCode
+        this.countryCode,
+        this.isPhoneNumber,
+        this.gender,
+        this.birthDate,
       });
 
   Employee.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['id'] != null ? json['id'] : '';
     firstName = json['first_name'];
     lastName = json['last_name'];
     patronymic = json['patronymic'];
@@ -68,10 +74,13 @@ class Employee {
     factoryName = json['factory_name'];
     shiftName = json['shift_name'];
     docType = json['doc_type'];
-    docNumber = json['doc_number'];
+    docNumber = json['number'];
     homeStation = json['home_station'];
     orgName = json['org_name'];
     countryCode = json['country_code'];
+    isPhoneNumber = json['is_phone_number'];
+    gender = json['gender'];
+    birthDate = json['birth_date'];
   }
 
   Map<String, dynamic> toJson() {
@@ -87,10 +96,13 @@ class Employee {
     data['factory_name'] = this.factoryName;
     data['shift_name'] = this.shiftName;
     data['doc_type'] = this.docType;
-    data['doc_number'] = this.docNumber;
+    data['number'] = this.docNumber;
     data['home_station'] = this.homeStation;
     data['org_name'] = this.orgName;
     data['country_code'] = this.countryCode;
+    data['is_phone_number'] = this.isPhoneNumber;
+    data['gender'] = this.gender;
+    data['birth_date'] = this.birthDate;
     return data;
   }
 }
